@@ -4,8 +4,9 @@ import 'package:lista_mercado/components/item_list_confirmed.dart';
 import 'package:lista_mercado/models/item_market.dart';
 
 class ItemListPendent extends StatelessWidget {
-  ItemListPendent({super.key, required this.item});
-  ItemMarket item;
+  ItemListPendent({super.key, required this.item, required this.moveCallback});
+  final ItemMarket item;
+  final Function(ItemMarket) moveCallback;
 
   @override
   Widget build(BuildContext context) {
@@ -43,15 +44,23 @@ class ItemListPendent extends StatelessWidget {
               child: Icon(Icons.query_stats_outlined),
             ),
             Padding(
-                padding: const EdgeInsets.only(right: 15.0),
-                child: Flexible(
-                    fit: FlexFit.tight,
-                    flex: 1,
-                    child: GestureDetector(
-                        child: const Icon(Icons.check_box_outline_blank),
-                        onTap: () async {
-                          print('chamada de função confirmar item');
-                        }))),
+              padding: const EdgeInsets.only(right: 15.0),
+              child: GestureDetector(
+                  child: const Icon(Icons.check_box_outline_blank),
+                  onTap: () async {
+                    double? confirmedPrice =
+                        await ConfirmItemScreen(context: context);
+                    if (confirmedPrice != null) {
+                      item.last_price = confirmedPrice;
+                      //print('Preço confirmado: $confirmedPrice');
+                      //print('chamada de função confirmar item');
+                      moveCallback(item);
+                      //print(item.getId());
+                    } else {
+                      //print('Operação cancelada');
+                    }
+                  }),
+            ),
           ])),
       const SizedBox(
         height: 5,

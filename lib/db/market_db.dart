@@ -1,74 +1,78 @@
+import 'package:lista_mercado/models/item_market.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
-import 'dart:io';
 
-class MarketDatabase {
+class ItemMarketDB {
   late Database _database;
 
-  Future<void> open() async {
-    final databasePath = await getDatabasesPath();
-    final databasePathWithName = join(databasePath, 'my_database.db');
-    bool databaseExists = await File(databasePathWithName).exists();
+  Future<void> initDB() async {
+    final path = await getDatabasesPath();
+    _database = await openDatabase(
+      join(path, 'listMarket.db'),
+      onCreate: (db, version) {
+        return db.execute('''
+          CREATE TABLE items(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            uuid TEXT,
+            name TEXT,
+            quant INTEGER,
+            last_price REAL,
+            historic_price TEXT,
+            pendent INTEGER
+          )
+          ''');
+      },
+      version: 1,
+    );
 
-    try {
-      _database = await openDatabase(databasePathWithName);
-    } on DatabaseException {
-      if (!databaseExists) {
-        _database = await openDatabase(
-          databasePathWithName,
-          version: 1,
-          onCreate: (db, version) {
-            db.execute('''
-              CREATE TABLE item_market(
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                name TEXT NOT NULL,
-                quant INTEGER NOT NULL,
-                last_price REAL NOT NULL,
-                historic_price TEXT,
-                pendent INTEGER NOT NULL
-              )
-            ''');
-          },
-        );
-      } else {
-        rethrow; // Reenvie a exceção se ocorrer um erro diferente
-      }
+    // Inserindo um item de teste
+    await _database.insert(
+      'items',
+      {
+        'uuid': 'test_uuid',
+        'name': 'Test Item',
+        'quant': 10,
+        'last_price': 20.0,
+        'historic_price': '15.0,18.0,20.0',
+        'pendent': 1,
+      },
+    );
+  }
+
+  Future<void> insertItem(ItemMarket item) async {
+    Map<String, dynamic> toMap() {
+      return {
+        'uuid': item.uuid,
+        'name': item.name,
+        'quant': item.quant,
+        'last_price': item.last_price,
+        'historic_price': item.historic_price.join(','),
+        'pendent': item.pendent ? 1 : 0,
+      };
     }
-  }
 
-  Future<int> insertItem(Map<String, dynamic> itemData) async {
-    return await _database.insert('item_market', itemData);
-  }
-
-  Future<int> deleteItem(int id) async {
-    return await _database
-        .delete('item_market', where: 'id = ?', whereArgs: [id]);
-  }
-
-  Future<Map<String, dynamic>?> getItem(int id) async {
-    final List<Map<String, dynamic>> results =
-        await _database.query('item_market', where: 'id = ?', whereArgs: [id]);
-
-    if (results.isNotEmpty) {
-      return results[0];
-    } else {
-      return null;
-    }
+    await _database.insert(
+      'items',
+      toMap(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
   }
 
   Future<List<Map<String, dynamic>>> getAllItems() async {
-    final List<Map<String, dynamic>> results =
-        await _database.query('item_market');
-    return results;
+    return await _database.query('items');
   }
 
   Future<void> printAllItems() async {
-    final allItems = await getAllItems();
-    allItems.forEach((item) {
-      print(
-          'Item: ${item['name']}'); // Altere para refletir a estrutura do seu item
-    });
+    final items = await getAllItems();
+    for (var item in items) {
+      print('ID: ${item['id']}');
+      print('UUID: ${item['uuid']}');
+      print('Name: ${item['name']}');
+      print('Quantity: ${item['quant']}');
+      print('Last Price: ${item['last_price']}');
+      print('Historic Price: ${item['historic_price']}');
+      print('Pendent: ${item['pendent']}');
+      print('---------------------------------');
+    }
   }
-
-  void populateDatabaseWithExampleData() {}
 }

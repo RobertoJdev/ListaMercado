@@ -17,16 +17,29 @@ class ActiveList extends StatefulWidget {
 
 class _ActiveListState extends State<ActiveList> {
   TextEditingController _textEditingController = TextEditingController();
+  MarketPopulatorList _populator = MarketPopulatorList();
 
   List<ItemMarket> listItensPendent = [];
   List<ItemMarket> listItensConfirmed = [];
-  MarketPopulatorList listPopulate = MarketPopulatorList();
+  final ItemMarketDB itemMarketDB = ItemMarketDB();
+
+  @override
+  void initState() {
+    super.initState();
+    _populateItems();
+    itemMarketDB.initDB();
+    itemMarketDB.printAllItems();
+  }
+
+  void _populateItems() {
+    listItensPendent = _populator.populateList();
+  }
 
   @override
   Widget build(BuildContext context) {
     //initializeDatabase();
     String totalValue;
-    listItensPendent = listPopulate.populateList();
+    totalValue = somarList(listItensConfirmed).toStringAsFixed(2);
 
     return Scaffold(
         appBar: AppBar(
@@ -58,12 +71,20 @@ class _ActiveListState extends State<ActiveList> {
                   Flexible(
                       child: Stack(children: [
                     ListView.builder(
-                        itemCount: listItensPendent.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return ItemListPendent(
+                      itemCount: listItensPendent.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return GestureDetector(
+                          // Adicionando onTap para mover o item para a lista de confirmados
+                          onTap: () {
+                            moveItemToConfirmedList(listItensPendent[index]);
+                          },
+                          child: ItemListPendent(
                             item: listItensPendent[index],
-                          );
-                        }),
+                            moveCallback: moveItemToConfirmedList,
+                          ),
+                        );
+                      },
+                    ),
                     Container(
                         alignment: Alignment.bottomRight,
                         child: Padding(
@@ -87,8 +108,9 @@ class _ActiveListState extends State<ActiveList> {
                 ])),
             //Container(),
             Padding(
-                padding: const EdgeInsets.all(15.0),
-                child: Column(children: [
+              padding: const EdgeInsets.all(15.0),
+              child: Column(
+                children: [
                   const Text('Itens adicionados ao carrinho'),
                   Flexible(
                     fit: FlexFit.tight,
@@ -101,26 +123,36 @@ class _ActiveListState extends State<ActiveList> {
                       },
                     ),
                   ),
-                  const Flexible(
-                      child: Text(
-                    'Valor total das compras R\$: {totalValue}',
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ))
-                ]))
+                  Flexible(
+                    child: Text(
+                      'Valor total das compras R\$: $totalValue',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ],
+              ),
+            )
           ]))
         ]));
   }
 
-  Future<void> confirmItem(List confirm, List pendent, int index) async {
-    //double? priceTemp = await showItemConfirm();
+  void moveItemToConfirmedList(ItemMarket item) {
+    itemMarketDB.insertItem(item);
+    itemMarketDB.printAllItems();
+    itemMarketDB.initDB();
+    setState(() {
+      print(item.getId().toString());
+      listItensPendent.remove(item); // Remove o item da lista de pendentes
+      listItensConfirmed.add(item);
+      // Adiciona o item na lista de confirmados
+    });
   }
 
-  Future<void> initializeDatabase() async {
-    MarketDatabase database = MarketDatabase();
-    await database.open();
-    MarketPopulatorList databasePopulator = MarketPopulatorList();
-    //await databasePopulator.populateDatabaseWithExampleData();
-    print('Itens inseridos:');
-    await database.printAllItems();
+  double somarList(List<ItemMarket> list) {
+    double totalList = 0;
+    for (var item in list) {
+      totalList += item.last_price;
+    }
+    return totalList;
   }
 }
