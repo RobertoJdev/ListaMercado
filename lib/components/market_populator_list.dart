@@ -1,8 +1,8 @@
 import 'dart:math';
-import 'package:lista_mercado/models/item_market.dart';
+import 'package:lista_mercado/models/produto.dart';
 
 class MarketPopulatorList {
-  List<ItemMarket> itens = [];
+  List<Produto> itens = [];
   bool _isPopulated = false;
 
   // Singleton instance
@@ -14,10 +14,10 @@ class MarketPopulatorList {
 
   MarketPopulatorList._internal();
 
-  List<ItemMarket> populateList() {
+  List<Produto> populateList() {
     if (!_isPopulated) {
-      final produtos = [
-        'Feijão',
+      final nomesProdutos = [
+        'Feijão Mulatinho',
         'Arroz',
         'Macarrão',
         'Óleo',
@@ -27,26 +27,23 @@ class MarketPopulatorList {
         'Maçã',
       ];
 
-      for (var produto in produtos) {
-        ItemMarket itemMarket = ItemMarket(
-          produto,
-          Random().nextInt(10) + 1,
-          Random().nextDouble() * 20,
-          [10.0, 15.0, 12.5],
-          false,
+      for (var produto in nomesProdutos) {
+        Produto itemProduto = Produto.newItemList(
+          descricao: produto,
+          quantidade: Random().nextInt(10) + 1,
         );
 
-        itens.add(itemMarket);
+        itens.add(itemProduto);
       }
 
-      print('Teste de exibição lista completa');
+      print('Print: Teste de exibição lista completa');
       itens.forEach((element) {
-        print(element.name);
+        print('Print ' + element.descricao);
       });
 
       _isPopulated = true;
     } else {
-      print('A lista já foi populada. Usando dados existentes.');
+      print('Print: A lista já foi populada. Usando dados existentes.');
     }
 
     return itens;

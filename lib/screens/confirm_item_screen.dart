@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
-import 'package:lista_mercado/models/item_market.dart';
+import 'package:lista_mercado/models/produto.dart';
 
 Future<double?> ConfirmItemScreen({BuildContext? context}) async {
   TextEditingController _textEditingController = TextEditingController();

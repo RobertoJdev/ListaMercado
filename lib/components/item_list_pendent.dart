@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:lista_mercado/screens/confirm_item_screen.dart';
 import 'package:lista_mercado/components/item_list_confirmed.dart';
-import 'package:lista_mercado/models/item_market.dart';
+import 'package:lista_mercado/models/produto.dart';
 
 class ItemListPendent extends StatelessWidget {
   ItemListPendent({super.key, required this.item, required this.moveCallback});
-  final ItemMarket item;
-  final Function(ItemMarket) moveCallback;
+  final Produto item;
+  final Function(Produto) moveCallback;
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +22,7 @@ class ItemListPendent extends StatelessWidget {
                         fit: FlexFit.tight,
                         flex: 1,
                         child: Container(
-                            child: Text(item.quant.toString(),
+                            child: Text(item.quantidade.toString(),
                                 style: const TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 18,
@@ -34,7 +34,7 @@ class ItemListPendent extends StatelessWidget {
                 fit: FlexFit.tight,
                 flex: 5,
                 child: Container(
-                    child: Text(item.name,
+                    child: Text(item.descricao,
                         style: const TextStyle(
                           fontWeight: FontWeight.bold,
                         )))),
@@ -51,7 +51,7 @@ class ItemListPendent extends StatelessWidget {
                     double? confirmedPrice =
                         await ConfirmItemScreen(context: context);
                     if (confirmedPrice != null) {
-                      item.last_price = confirmedPrice;
+                      item.precoAtual = confirmedPrice;
                       //print('Preço confirmado: $confirmedPrice');
                       //print('chamada de função confirmar item');
                       moveCallback(item);

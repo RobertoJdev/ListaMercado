@@ -1,11 +1,11 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:lista_mercado/models/item_market.dart';
+import 'package:lista_mercado/models/produto.dart';
 
-Future<ItemMarket?> newItemScreen(BuildContext context) async {
+Future<Produto?> newItemScreen(BuildContext context) async {
   //Completer<ItemMarket> completer = Completer<ItemMarket>();
-  ItemMarket? newItem;
+  Produto? newItem;
 
   TextEditingController _textEditingControllerNewItem = TextEditingController();
   TextEditingController _textEditingControllerNewItemQuant =
@@ -59,12 +59,10 @@ Future<ItemMarket?> newItemScreen(BuildContext context) async {
               ),
               TextButton(
                 onPressed: () {
-                  newItem = ItemMarket(
-                    _textEditingControllerNewItem.text.toString(),
-                    int.parse(_textEditingControllerNewItemQuant.text),
-                    0,
-                    [],
-                    false,
+                  newItem = Produto.newItemList(
+                    descricao: _textEditingControllerNewItem.text.toString(),
+                    quantidade:
+                        int.parse(_textEditingControllerNewItemQuant.text),
                   );
 
                   _textEditingControllerNewItem.text = '';
@@ -81,7 +79,7 @@ Future<ItemMarket?> newItemScreen(BuildContext context) async {
     },
   );
 
-  print(newItem?.name);
+  print(newItem?.descricao);
 
   return newItem;
 }

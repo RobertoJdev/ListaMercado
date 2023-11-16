@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:lista_mercado/models/item_market.dart';
+import 'package:lista_mercado/models/produto.dart';
 
 class ItemListConfirmed extends StatelessWidget {
   ItemListConfirmed({super.key, required this.item});
-  ItemMarket item;
+  Produto item;
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +20,7 @@ class ItemListConfirmed extends StatelessWidget {
                         fit: FlexFit.tight,
                         flex: 1,
                         child: Container(
-                            child: Text(item.quant.toString(),
+                            child: Text(item.quantidade.toString(),
                                 style: const TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 18,
@@ -34,14 +34,14 @@ class ItemListConfirmed extends StatelessWidget {
                   flex: 6,
                   child: Container(
                       child: Text(
-                    item.name,
+                    item.descricao,
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ))),
               Flexible(
                 fit: FlexFit.tight,
                 flex: 4,
                 child: Container(
-                    child: Text('Preço R\$: ${item.last_price.toString()}')),
+                    child: Text('Preço R\$: ${item.precoAtual.toString()}')),
               ),
               const Padding(
                   padding: EdgeInsets.only(right: 15.0),

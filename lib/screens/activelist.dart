@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:lista_mercado/components/market_populator_list.dart';
 import 'package:lista_mercado/db/market_db.dart';
+import 'package:lista_mercado/models/lista_mercado.dart';
 import 'package:lista_mercado/screens/confirm_item_screen.dart';
 import 'package:lista_mercado/components/decoration_list_bar.dart';
 import 'package:lista_mercado/components/item_list_confirmed.dart';
 import 'package:lista_mercado/components/item_list_pendent.dart';
 import 'package:lista_mercado/screens/newItemScreen.dart';
-import 'package:lista_mercado/models/item_market.dart';
+import 'package:lista_mercado/models/produto.dart';
 
 class ActiveList extends StatefulWidget {
   const ActiveList({super.key});
@@ -19,8 +20,8 @@ class _ActiveListState extends State<ActiveList> {
   TextEditingController _textEditingController = TextEditingController();
   MarketPopulatorList _populator = MarketPopulatorList();
 
-  List<ItemMarket> listItensPendent = [];
-  List<ItemMarket> listItensConfirmed = [];
+  List<Produto> listItensPendent = [];
+  List<Produto> listItensConfirmed = [];
   final ItemMarketDB itemMarketDB = ItemMarketDB();
 
   @override
@@ -91,14 +92,20 @@ class _ActiveListState extends State<ActiveList> {
                             padding: const EdgeInsets.all(20.0),
                             child: FloatingActionButton(
                               onPressed: () async {
-                                ItemMarket? temp;
+                                Produto? temp;
                                 temp = await newItemScreen(context);
                                 setState(() {
                                   if (temp != null) {
                                     print(
-                                        'retorno do novo objeto ${temp.name}');
+                                        'retorno do novo objeto ${temp.descricao}');
                                     listItensPendent.add(temp);
-                                    print(listItensPendent[0].name);
+                                    ListaMercado lmt =
+                                        ListaMercado.getListaMercadoExemplo([
+                                      temp,
+                                      Produto.getProdutoExemplo()
+                                    ]);
+                                    itemMarketDB.insertItem(lmt, temp);
+                                    itemMarketDB.printAllItems();
                                   }
                                 });
                               },
@@ -136,8 +143,8 @@ class _ActiveListState extends State<ActiveList> {
         ]));
   }
 
-  void moveItemToConfirmedList(ItemMarket item) {
-    itemMarketDB.insertItem(item);
+  void moveItemToConfirmedList(Produto item) {
+    //itemMarketDB.insertItem(item);
     itemMarketDB.printAllItems();
     itemMarketDB.initDB();
     setState(() {
@@ -148,10 +155,10 @@ class _ActiveListState extends State<ActiveList> {
     });
   }
 
-  double somarList(List<ItemMarket> list) {
+  double somarList(List<Produto> list) {
     double totalList = 0;
     for (var item in list) {
-      totalList += item.last_price;
+      totalList += item.precoAtual;
     }
     return totalList;
   }
