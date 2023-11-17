@@ -29,12 +29,12 @@ class _ActiveListState extends State<ActiveList> {
     super.initState();
     _populateItems();
     itemMarketDB.initDB();
+    _populateDB(listItensPendent);
     itemMarketDB.printAllItems();
   }
 
-  void _populateItems() {
-    listItensPendent = _populator.populateList();
-  }
+  ListaMercado lmercadot = ListaMercado.getListaMercadoExemplo(
+      [Produto.getProdutoExemplo(), Produto.getProdutoExemplo()]);
 
   @override
   Widget build(BuildContext context) {
@@ -99,11 +99,17 @@ class _ActiveListState extends State<ActiveList> {
                                     print(
                                         'retorno do novo objeto ${temp.descricao}');
                                     listItensPendent.add(temp);
+
+                                    temp.barras = 12345678.toString();
+                                    temp.precoAtual = 5.0;
+                                    temp.historicoPreco = [4, 5, 5, 5];
+
                                     ListaMercado lmt =
                                         ListaMercado.getListaMercadoExemplo([
                                       temp,
                                       Produto.getProdutoExemplo()
                                     ]);
+
                                     itemMarketDB.insertItem(lmt, temp);
                                     itemMarketDB.printAllItems();
                                   }
@@ -141,6 +147,16 @@ class _ActiveListState extends State<ActiveList> {
             )
           ]))
         ]));
+  }
+
+  void _populateItems() {
+    listItensPendent = _populator.populateList();
+  }
+
+  void _populateDB(List<Produto> produtos) {
+    for (var element in produtos) {
+      var insertItem = itemMarketDB.insertItem(lmercadot, element);
+    }
   }
 
   void moveItemToConfirmedList(Produto item) {

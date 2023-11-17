@@ -8,6 +8,7 @@ class Produto {
   late bool pendente;
   late double precoAtual;
   late List<double> historicoPreco;
+  late List<int> historicoPrecoIds;
 
   Produto({
     required this.descricao,

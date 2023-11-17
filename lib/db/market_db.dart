@@ -31,7 +31,6 @@ class ItemMarketDB {
             barras TEXT NOT NULL,
             quantidade INTEGER NOT NULL,
             pendente INTEGER NOT NULL,
-            historicoPreco TEXT NOT NULL,
             precoAtual REAL NOT NULL
           )
         ''');
@@ -42,6 +41,15 @@ class ItemMarketDB {
             listaMercadoId INTEGER,
             produtoId INTEGER,
             FOREIGN KEY (listaMercadoId) REFERENCES ListaMercado(id),
+            FOREIGN KEY (produtoId) REFERENCES Produto(id)
+          )
+        ''');
+
+        await db.execute('''
+          CREATE TABLE HistoricoPreco (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            produtoId INTEGER,
+            valor REAL NOT NULL,
             FOREIGN KEY (produtoId) REFERENCES Produto(id)
           )
         ''');
@@ -66,7 +74,6 @@ class ItemMarketDB {
             'barras': '123456789',
             'quantidade': 5,
             'pendente': 1,
-            'historicoPreco': '[15.0, 18.0, 20.0]',
             'precoAtual': 20.0,
           },
         );
@@ -104,11 +111,17 @@ class ItemMarketDB {
           'barras': produto.barras,
           'quantidade': produto.quantidade,
           'pendente': produto.pendente ? 1 : 0,
-          'historicoPreco': produto.historicoPreco.toString(),
           'precoAtual': produto.precoAtual,
         },
       );
 
+      await txn.insert(
+        'HistoricoPreco',
+        {
+          'produtoId': produtoId,
+          'valor': produto.precoAtual,
+        },
+      );
       // Associando o produto à lista de mercado
       await txn.insert(
         'ListaMercadoProduto',
@@ -123,21 +136,20 @@ class ItemMarketDB {
   Future<List<Map<String, dynamic>>> getAllItems() async {
     print('---------***---------Teste get AllItens--------***----------');
     return await _database.rawQuery('''
-    SELECT Produto.*,
-           ListaMercadoProduto.listaMercadoId,
-           ListaMercado.custoTotal,
-           ListaMercado.data,
-           ListaMercado.supermercado,
-           ListaMercado.finalizada
+    SELECT *
     FROM Produto
     INNER JOIN ListaMercadoProduto ON Produto.id = ListaMercadoProduto.produtoId
     INNER JOIN ListaMercado ON ListaMercadoProduto.listaMercadoId = ListaMercado.id
+    INNER JOIN HistoricoPreco ON HistoricoPreco.produtoId = Produto.id
   ''');
   }
 
   Future<void> printAllItems() async {
     print('------------------Teste chamada printAllItens------------------');
     final items = await getAllItems();
+    print('------------------print todos os itens------------------');
+    print(items);
+    print('------------------********************------------------');
     for (var item in items) {
       print('ID: ${item['id']}');
       print('User ID: ${item['userId']}');
@@ -164,7 +176,6 @@ class ItemMarketDB {
         print('Barras: ${productInfo[0]['barras']}');
         print('Quantidade: ${productInfo[0]['quantidade']}');
         print('Pendente: ${productInfo[0]['pendente']}');
-        print('Histórico de Preço: ${productInfo[0]['historicoPreco']}');
         print('Preço Atual: ${productInfo[0]['precoAtual']}');
       }
 

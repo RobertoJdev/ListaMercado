@@ -49,7 +49,7 @@ class ItemListPendent extends StatelessWidget {
                   child: const Icon(Icons.check_box_outline_blank),
                   onTap: () async {
                     double? confirmedPrice =
-                        await ConfirmItemScreen(context: context);
+                        await confirmItemScreen(context: context);
                     if (confirmedPrice != null) {
                       item.precoAtual = confirmedPrice;
                       //print('Preço confirmado: $confirmedPrice');
