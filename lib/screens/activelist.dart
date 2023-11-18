@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lista_mercado/components/market_populator_list.dart';
+import 'package:lista_mercado/components/populator_itens.dart';
 import 'package:lista_mercado/db/market_db.dart';
 import 'package:lista_mercado/models/lista_mercado.dart';
 import 'package:lista_mercado/screens/confirm_item_screen.dart';
@@ -10,7 +10,8 @@ import 'package:lista_mercado/screens/newItemScreen.dart';
 import 'package:lista_mercado/models/produto.dart';
 
 class ActiveList extends StatefulWidget {
-  const ActiveList({super.key});
+  ActiveList(this.listaMercado, {super.key});
+  ListaMercado listaMercado;
 
   @override
   State<ActiveList> createState() => _ActiveListState();
@@ -18,7 +19,7 @@ class ActiveList extends StatefulWidget {
 
 class _ActiveListState extends State<ActiveList> {
   TextEditingController _textEditingController = TextEditingController();
-  MarketPopulatorList _populator = MarketPopulatorList();
+  PopuladorItens _populator = PopuladorItens();
 
   List<Produto> listItensPendent = [];
   List<Produto> listItensConfirmed = [];
@@ -150,7 +151,7 @@ class _ActiveListState extends State<ActiveList> {
   }
 
   void _populateItems() {
-    listItensPendent = _populator.populateList();
+    listItensPendent = _populator.popularListaProdutos();
   }
 
   void _populateDB(List<Produto> produtos) {

@@ -6,6 +6,12 @@ import 'package:path/path.dart';
 class ItemMarketDB {
   late Database _database;
 
+  Future<void> openDB() async {
+    if (!(_database?.isOpen ?? false)) {
+      await initDB();
+    }
+  }
+
   Future<void> initDB() async {
     final path = await getDatabasesPath();
     _database = await openDatabase(
@@ -23,7 +29,6 @@ class ItemMarketDB {
             finalizada INTEGER NOT NULL
           )
         ''');
-
         await db.execute('''
           CREATE TABLE Produto (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -34,7 +39,6 @@ class ItemMarketDB {
             precoAtual REAL NOT NULL
           )
         ''');
-
         await db.execute('''
           CREATE TABLE ListaMercadoProduto (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -44,7 +48,6 @@ class ItemMarketDB {
             FOREIGN KEY (produtoId) REFERENCES Produto(id)
           )
         ''');
-
         await db.execute('''
           CREATE TABLE HistoricoPreco (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -53,18 +56,30 @@ class ItemMarketDB {
             FOREIGN KEY (produtoId) REFERENCES Produto(id)
           )
         ''');
-
         // Inserindo uma lista de mercado de teste associada ao usuário
         final listaMercadoId = await db.insert(
           'ListaMercado',
           {
             'userId': 1, // Substitua pelo ID do usuário real
             'custoTotal': 100.0,
-            'data': '2023-01-01',
+            'data': '2023-01-02',
             'supermercado': 'Test Supermarket',
             'finalizada': 0,
           },
         );
+
+        for (var i = 0; i < 3; i++) {
+          await db.insert(
+            'ListaMercado',
+            {
+              'userId': 1, // Substitua pelo ID do usuário real
+              'custoTotal': 200.0,
+              'data': '2024-01-01',
+              'supermercado': 'Test Supermarket $i',
+              'finalizada': 1,
+            },
+          );
+        }
 
         // Inserindo um produto de teste associado à lista de mercado
         final produtoId = await db.insert(
@@ -77,7 +92,6 @@ class ItemMarketDB {
             'precoAtual': 20.0,
           },
         );
-
         // Associando o produto à lista de mercado
         await db.insert(
           'ListaMercadoProduto',
@@ -89,67 +103,55 @@ class ItemMarketDB {
       },
       version: 1,
     );
+
+    await openDB(); // Chama openDB após a inicialização do banco de dados.
   }
 
   Future<void> insertItem(ListaMercado listaMercado, Produto produto) async {
+    await openDB(); // Garante que o banco de dados está aberto.
     await _database.transaction((txn) async {
-      final listaMercadoId = await txn.insert(
-        'ListaMercado',
-        {
-          'userId': listaMercado.userId,
-          'custoTotal': listaMercado.custoTotal,
-          'data': listaMercado.data,
-          'supermercado': listaMercado.supermercado,
-          'finalizada': listaMercado.finalizada ? 1 : 0,
-        },
-      );
-
-      final produtoId = await txn.insert(
-        'Produto',
-        {
-          'descricao': produto.descricao,
-          'barras': produto.barras,
-          'quantidade': produto.quantidade,
-          'pendente': produto.pendente ? 1 : 0,
-          'precoAtual': produto.precoAtual,
-        },
-      );
-
-      await txn.insert(
-        'HistoricoPreco',
-        {
-          'produtoId': produtoId,
-          'valor': produto.precoAtual,
-        },
-      );
-      // Associando o produto à lista de mercado
-      await txn.insert(
-        'ListaMercadoProduto',
-        {
-          'listaMercadoId': listaMercadoId,
-          'produtoId': produtoId,
-        },
-      );
+      // ... (o restante do seu código de inserção de itens)
     });
   }
 
+  Future<int> novaListaMercado(ListaMercado listaMercado) async {
+    await openDB(); // Garante que o banco de dados está aberto.
+
+    // Cria um mapa com os valores da ListaMercado
+    Map<String, dynamic> listaMercadoMap = {
+      'userId': listaMercado.userId,
+      'custoTotal': listaMercado.custoTotal,
+      'data': listaMercado.data,
+      'supermercado': listaMercado.supermercado,
+      'finalizada': listaMercado.finalizada,
+      // Adicione outros campos conforme necessário
+    };
+    // Use o método insert do SQLite para inserir a ListaMercado e obtenha o ID inserido
+    int listaMercadoId =
+        await _database.insert('ListaMercado', listaMercadoMap);
+
+    return listaMercadoId;
+  }
+
   Future<List<Map<String, dynamic>>> getAllItems() async {
+    await openDB(); // Certifique-se de que o banco de dados está aberto.
     print('---------***---------Teste get AllItens--------***----------');
     return await _database.rawQuery('''
-    SELECT *
-    FROM Produto
-    INNER JOIN ListaMercadoProduto ON Produto.id = ListaMercadoProduto.produtoId
-    INNER JOIN ListaMercado ON ListaMercadoProduto.listaMercadoId = ListaMercado.id
-    INNER JOIN HistoricoPreco ON HistoricoPreco.produtoId = Produto.id
-  ''');
+      SELECT *
+      FROM Produto
+      INNER JOIN ListaMercadoProduto ON Produto.id = ListaMercadoProduto.produtoId
+      INNER JOIN ListaMercado ON ListaMercadoProduto.listaMercadoId = ListaMercado.id
+      INNER JOIN HistoricoPreco ON HistoricoPreco.produtoId = Produto.id
+    ''');
   }
 
   Future<void> printAllItems() async {
-    print('------------------Teste chamada printAllItens------------------');
+    print(
+        '********************------------------Teste chamada printAllItens------------------********************');
     final items = await getAllItems();
-    print('------------------print todos os itens------------------');
+    //print('------------------print todos os itens------------------');
     print(items);
-    print('------------------********************------------------');
+    //print('------------------********************------------------');
     for (var item in items) {
       print('ID: ${item['id']}');
       print('User ID: ${item['userId']}');
@@ -180,6 +182,34 @@ class ItemMarketDB {
       }
 
       print('------------------------------------------------------------');
+    }
+  }
+
+  Future<bool> getUnfinishedLists() async {
+    List<Map<String, dynamic>> listasMercadoNaoFinalizadas =
+        await _database.rawQuery('''
+    SELECT *
+    FROM ListaMercado
+    WHERE finalizada = 0
+  ''');
+
+    List<Map<String, dynamic>> todasListas = await _database.rawQuery('''
+    SELECT *
+    FROM ListaMercado
+  ''');
+
+    print('Todas as listas de Mercado:');
+    for (var i = 0; i < todasListas.length; i++) {
+      print(todasListas[i]);
+    }
+
+    print('Listas de Mercado não finalizadas:');
+    print(listasMercadoNaoFinalizadas);
+
+    if (listasMercadoNaoFinalizadas.length == 0) {
+      return true;
+    } else {
+      return false;
     }
   }
 }

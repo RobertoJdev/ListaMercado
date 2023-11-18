@@ -1,20 +1,29 @@
 import 'dart:math';
+import 'package:lista_mercado/models/lista_mercado.dart';
 import 'package:lista_mercado/models/produto.dart';
 
-class MarketPopulatorList {
+class PopuladorItens {
   List<Produto> itens = [];
   bool _isPopulated = false;
 
   // Singleton instance
-  static final MarketPopulatorList _singleton = MarketPopulatorList._internal();
+  static final PopuladorItens _singleton = PopuladorItens._internal();
 
-  factory MarketPopulatorList() {
+  factory PopuladorItens() {
     return _singleton;
   }
 
-  MarketPopulatorList._internal();
+  PopuladorItens._internal();
 
-  List<Produto> populateList() {
+  static List<ListaMercado> popularListaMercado() {
+    Produto produtoTemp = Produto.getProdutoExemplo();
+    return [
+      ListaMercado.getListaMercadoExemplo([produtoTemp, produtoTemp]),
+      ListaMercado.getListaMercadoExemplo([produtoTemp, produtoTemp])
+    ];
+  }
+
+  List<Produto> popularListaProdutos() {
     if (!_isPopulated) {
       final nomesProdutos = [
         'Feijão Mulatinho',
