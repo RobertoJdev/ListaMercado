@@ -64,7 +64,7 @@ class ItemMarketDB {
             'custoTotal': 100.0,
             'data': '2023-01-02',
             'supermercado': 'Test Supermarket',
-            'finalizada': 0,
+            'finalizada': 1,
           },
         );
 
@@ -152,6 +152,7 @@ class ItemMarketDB {
     //print('------------------print todos os itens------------------');
     print(items);
     //print('------------------********************------------------');
+
     for (var item in items) {
       print('ID: ${item['id']}');
       print('User ID: ${item['userId']}');
@@ -180,12 +181,13 @@ class ItemMarketDB {
         print('Pendente: ${productInfo[0]['pendente']}');
         print('Preço Atual: ${productInfo[0]['precoAtual']}');
       }
-
-      print('------------------------------------------------------------');
     }
+    print('------------------------------------------------------------');
   }
 
   Future<bool> getUnfinishedLists() async {
+    await openDB(); // Certifique-se de que o banco de dados está aberto.
+
     List<Map<String, dynamic>> listasMercadoNaoFinalizadas =
         await _database.rawQuery('''
     SELECT *
@@ -206,10 +208,36 @@ class ItemMarketDB {
     print('Listas de Mercado não finalizadas:');
     print(listasMercadoNaoFinalizadas);
 
-    if (listasMercadoNaoFinalizadas.length == 0) {
+    if (listasMercadoNaoFinalizadas.length > 0) {
       return true;
     } else {
       return false;
     }
+  }
+
+  Future<List<ListaMercado>> getAllListasMercado() async {
+    await openDB(); // Certifique-se de que o banco de dados está aberto.
+
+    List<Map<String, dynamic>> listasMercado = await _database.rawQuery('''
+      SELECT *
+      FROM ListaMercado
+    ''');
+
+    List<ListaMercado> result = [];
+
+    for (var item in listasMercado) {
+      result.add(ListaMercado(
+        id: item['id'],
+        userId: item['userId'],
+        custoTotal: item['custoTotal'],
+        data: item['data'],
+        supermercado: item['supermercado'],
+        finalizada: item['finalizada'] == 1,
+        itens: [],
+      ));
+      print(item);
+    }
+
+    return result;
   }
 }

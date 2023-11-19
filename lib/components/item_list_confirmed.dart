@@ -22,7 +22,7 @@ class ItemListConfirmed extends StatelessWidget {
                         child: Container(
                             child: Text(item.quantidade.toString(),
                                 style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
+                                  fontWeight: FontWeight.w500,
                                   fontSize: 18,
                                 ))),
                       ))),
@@ -35,7 +35,7 @@ class ItemListConfirmed extends StatelessWidget {
                   child: Container(
                       child: Text(
                     item.descricao,
-                    style: const TextStyle(fontWeight: FontWeight.bold),
+                    style: const TextStyle(fontWeight: FontWeight.w500),
                   ))),
               Flexible(
                 fit: FlexFit.tight,

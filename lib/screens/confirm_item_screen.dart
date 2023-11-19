@@ -20,6 +20,7 @@ Future<double?> confirmItemScreen({BuildContext? context}) async {
         Padding(
           padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
           child: TextField(
+            autofocus: true,
             keyboardType: TextInputType.number,
             controller: _textEditingController,
             textAlign: TextAlign.center,
@@ -28,6 +29,11 @@ Future<double?> confirmItemScreen({BuildContext? context}) async {
         ),
         Row(mainAxisAlignment: MainAxisAlignment.center, children: [
           TextButton(
+            style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all(
+                Colors.deepPurple[100], // Substitua pelo nome da cor desejada
+              ),
+            ),
             onPressed: () {
               completer
                   .complete(null); // Completa o Future com null (cancelado)
@@ -36,6 +42,11 @@ Future<double?> confirmItemScreen({BuildContext? context}) async {
             child: const Text('Cancelar'),
           ),
           TextButton(
+            style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all(
+                Colors.deepPurple, // Substitua pelo nome da cor desejada
+              ),
+            ),
             onPressed: () {
               double? price = double.tryParse(_textEditingController.text);
               completer
@@ -43,7 +54,10 @@ Future<double?> confirmItemScreen({BuildContext? context}) async {
               _textEditingController.text = '';
               Navigator.of(context).pop();
             },
-            child: const Text('OK'),
+            child: const Text(
+              'OK',
+              style: TextStyle(color: Colors.white),
+            ),
           )
         ])
       ]);

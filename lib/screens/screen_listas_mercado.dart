@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lista_mercado/components/decoration_list_bar.dart';
+import 'package:lista_mercado/components/item_list_compra.dart';
 import 'package:lista_mercado/components/list_mercado.dart';
 import 'package:lista_mercado/components/populator_itens.dart';
 import 'package:lista_mercado/db/market_db.dart';
@@ -16,8 +17,8 @@ class ScreenListasMercado extends StatefulWidget {
 }
 
 class _listasMercadoState extends State<ScreenListasMercado> {
-  List<ListaMercado> listasMercado = PopuladorItens.popularListaMercado();
   late final Function(Produto) moveCallback;
+  List<ListaMercado> listasMercado = [];
 
   List<Produto> listItensPendent = [];
   List<Produto> listItensConfirmed = [];
@@ -33,29 +34,24 @@ class _listasMercadoState extends State<ScreenListasMercado> {
 
   Future<void> _initializeDB() async {
     await itemMarketDB.initDB();
-    _populateDB(listItensPendent);
-    itemMarketDB.printAllItems();
-    hasUnfinishedLists = await itemMarketDB.getUnfinishedLists();
-
-    if (!hasUnfinishedLists) {
-      _navigateToNextScreen();
-    }
+    itemMarketDB.openDB();
+    //_populateDB(listItensPendent);
+    //itemMarketDB.printAllItems();
+    //hasUnfinishedLists = await itemMarketDB.getUnfinishedLists();
+    listasMercado =
+        await itemMarketDB.getAllListasMercado() as List<ListaMercado>;
+    setState(() {});
   }
 
   ListaMercado lmercadot = ListaMercado.getListaMercadoExemplo(
     [Produto.getProdutoExemplo(), Produto.getProdutoExemplo()],
   );
 
-  void _navigateToNextScreen() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => ActiveList(lmercadot)),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     if (hasUnfinishedLists) {
+      return ActiveList(lmercadot);
+    } else {
       return Scaffold(
         appBar: AppBar(
           centerTitle: true,
@@ -77,7 +73,7 @@ class _listasMercadoState extends State<ScreenListasMercado> {
         ),
         body: Column(
           children: [
-            const DecorationListBar(),
+            const DecorationListBar(isListMercado: true),
             Expanded(
               child: PageView(
                 children: [
@@ -85,7 +81,7 @@ class _listasMercadoState extends State<ScreenListasMercado> {
                     padding: const EdgeInsets.all(15.0),
                     child: Column(
                       children: [
-                        const Text('Listas de compras'),
+                        const Text('Listas de compras finalizadas'),
                         Flexible(
                           child: Stack(
                             children: [
@@ -94,7 +90,7 @@ class _listasMercadoState extends State<ScreenListasMercado> {
                                 itemBuilder: (BuildContext context, int index) {
                                   return GestureDetector(
                                     onTap: () {},
-                                    child: ItemListMercado(
+                                    child: ItemListCompra(
                                       listaMercado: listasMercado[index],
                                     ),
                                   );
@@ -103,8 +99,8 @@ class _listasMercadoState extends State<ScreenListasMercado> {
                               Container(
                                 alignment: Alignment.bottomRight,
                                 child: Padding(
-                                  padding: const EdgeInsets.all(20.0),
-                                  child: FloatingActionButton(
+                                  padding: const EdgeInsets.all(15.0),
+                                  child: ElevatedButton(
                                     onPressed: () async {
                                       ListaMercado novaListaMercado =
                                           ListaMercado(
@@ -124,7 +120,25 @@ class _listasMercadoState extends State<ScreenListasMercado> {
                                         ),
                                       );
                                     },
-                                    child: const Icon(Icons.add),
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.deepPurple,
+                                      elevation:
+                                          5, // Ajuste conforme necessário
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(
+                                            15.0), // Ajuste conforme necessário
+                                      ),
+                                    ),
+                                    child: const Padding(
+                                      padding: EdgeInsets.all(15.0),
+                                      child: Text(
+                                        'Nova lista',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ),
@@ -140,10 +154,6 @@ class _listasMercadoState extends State<ScreenListasMercado> {
           ],
         ),
       );
-    } else {
-      //_navigateToNextScreen(); // Adicionando parênteses aqui
-      return ActiveList(
-          lmercadot); // ou qualquer outro widget desejado, dependendo do seu caso
     }
   }
 
@@ -151,5 +161,14 @@ class _listasMercadoState extends State<ScreenListasMercado> {
     for (var element in produtos) {
       var insertItem = itemMarketDB.insertItem(lmercadot, element);
     }
+  }
+
+  bool _retornaSeListaAtiva(List<ListaMercado> listasMercado) {
+    for (var i = 0; i < listasMercado.length; i++) {
+      if (!listasMercado[i].finalizada) {
+        return true;
+      }
+    }
+    return false;
   }
 }

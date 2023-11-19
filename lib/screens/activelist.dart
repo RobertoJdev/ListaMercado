@@ -92,6 +92,9 @@ class _ActiveListState extends State<ActiveList> {
                         child: Padding(
                             padding: const EdgeInsets.all(20.0),
                             child: FloatingActionButton(
+                              splashColor: Colors.deepPurple,
+                              foregroundColor: Colors.deepPurple,
+                              backgroundColor: Colors.deepPurple[100],
                               onPressed: () async {
                                 Produto? temp;
                                 temp = await newItemScreen(context);

@@ -24,7 +24,7 @@ class ItemListPendent extends StatelessWidget {
                         child: Container(
                             child: Text(item.quantidade.toString(),
                                 style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
+                                  fontWeight: FontWeight.w500,
                                   fontSize: 18,
                                 )))))),
             const SizedBox(
@@ -36,7 +36,7 @@ class ItemListPendent extends StatelessWidget {
                 child: Container(
                     child: Text(item.descricao,
                         style: const TextStyle(
-                          fontWeight: FontWeight.bold,
+                          fontWeight: FontWeight.w500,
                         )))),
             const Flexible(
               fit: FlexFit.tight,
