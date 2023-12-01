@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:lista_mercado/models/produto.dart';
 
 Future<Produto?> newItemScreen(BuildContext context) async {
@@ -9,6 +10,11 @@ Future<Produto?> newItemScreen(BuildContext context) async {
   TextEditingController _textEditingControllerNewItem = TextEditingController();
   TextEditingController _textEditingControllerNewItemQuant =
       TextEditingController();
+
+  bool isButtonDisabled() {
+    return _textEditingControllerNewItem.text.isEmpty &&
+        _textEditingControllerNewItemQuant.text.isEmpty;
+  }
 
   await showModalBottomSheet(
     isScrollControlled: true,
@@ -44,7 +50,10 @@ Future<Produto?> newItemScreen(BuildContext context) async {
               Padding(
                 padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
                 child: TextField(
-                  keyboardType: TextInputType.text,
+                  inputFormatters: <TextInputFormatter>[
+                    FilteringTextInputFormatter.digitsOnly
+                  ],
+                  keyboardType: TextInputType.number,
                   controller: _textEditingControllerNewItemQuant,
                   textAlign: TextAlign.center,
                   style: const TextStyle(fontSize: 20),
@@ -59,8 +68,8 @@ Future<Produto?> newItemScreen(BuildContext context) async {
                   TextButton(
                     style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.all(
-                        Colors
-                            .deepPurple[100], // Substitua pelo nome da cor desejada
+                        Colors.deepPurple[
+                            100], // Substitua pelo nome da cor desejada
                       ),
                     ),
                     onPressed: () {
@@ -68,17 +77,23 @@ Future<Produto?> newItemScreen(BuildContext context) async {
                     },
                     child: const Text('Cancelar'),
                   ),
-                  TextButton(
+                  ElevatedButton(
                     style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(
-                        Colors.deepPurple, // Substitua pelo nome da cor desejada
+                      backgroundColor:
+                          MaterialStateProperty.resolveWith<Color?>(
+                        (Set<MaterialState> states) {
+                          if (states.contains(MaterialState.disabled)) {
+                            return Colors
+                                .deepPurple[100]; // Cor quando desabilitado
+                          }
+                          return Colors.deepPurple; // Cor padrão
+                        },
                       ),
                     ),
-                    onPressed: () {
+                    onPressed: isButtonDisabled() ? null : () {
                       newItem = Produto.newItemList(
                         descricao: _textEditingControllerNewItem.text.toString(),
-                        quantidade:
-                            int.parse(_textEditingControllerNewItemQuant.text),
+                        quantidade: int.parse(_textEditingControllerNewItemQuant.text),
                       );
 
                       _textEditingControllerNewItem.text = '';
@@ -87,7 +102,7 @@ Future<Produto?> newItemScreen(BuildContext context) async {
                       Navigator.of(context).pop();
                     },
                     child: const Text(
-                      'OK',
+                      '     OK     ',
                       style: TextStyle(color: Colors.white),
                     ),
                   ),
@@ -104,3 +119,4 @@ Future<Produto?> newItemScreen(BuildContext context) async {
 
   return newItem;
 }
+

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'dart:async';
 import 'package:lista_mercado/models/produto.dart';
 
-Future<double?> confirmItemScreen({BuildContext? context}) async {
+Future<double?> confirmItemScreen({BuildContext? context}) async{
   TextEditingController _textEditingController = TextEditingController();
   Completer<double?> completer = Completer();
 
@@ -20,11 +21,14 @@ Future<double?> confirmItemScreen({BuildContext? context}) async {
         Padding(
           padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
           child: TextField(
+            inputFormatters: <TextInputFormatter>[
+              FilteringTextInputFormatter.digitsOnly
+            ],
             autofocus: true,
             keyboardType: TextInputType.number,
             controller: _textEditingController,
             textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 20),
+            style: const TextStyle(fontSize: 20),
           ),
         ),
         Row(mainAxisAlignment: MainAxisAlignment.center, children: [
@@ -41,21 +45,28 @@ Future<double?> confirmItemScreen({BuildContext? context}) async {
             },
             child: const Text('Cancelar'),
           ),
-          TextButton(
+          ElevatedButton(
             style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.all(
-                Colors.deepPurple, // Substitua pelo nome da cor desejada
+              backgroundColor: MaterialStateProperty.resolveWith<Color?>(
+                (Set<MaterialState> states) {
+                  if (states.contains(MaterialState.disabled)) {
+                    return Colors.deepPurple[100]; // Cor quando desabilitado
+                  }
+                  return Colors.deepPurple; // Cor padrão
+                },
               ),
             ),
-            onPressed: () {
-              double? price = double.tryParse(_textEditingController.text);
-              completer
-                  .complete(price); // Completa o Future com o preço inserido
-              _textEditingController.text = '';
-              Navigator.of(context).pop();
-            },
+            onPressed: _textEditingController.text.isEmpty
+                ? null
+                : () {
+                    double? price =
+                        double.tryParse(_textEditingController.text);
+                    completer.complete(price);
+                    _textEditingController.text = '';
+                    Navigator.of(context).pop();
+                  },
             child: const Text(
-              'OK',
+              '     OK     ',
               style: TextStyle(color: Colors.white),
             ),
           )

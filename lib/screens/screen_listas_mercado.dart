@@ -102,23 +102,7 @@ class _listasMercadoState extends State<ScreenListasMercado> {
                                   padding: const EdgeInsets.all(15.0),
                                   child: ElevatedButton(
                                     onPressed: () async {
-                                      ListaMercado novaListaMercado =
-                                          ListaMercado(
-                                        userId: 0,
-                                        custoTotal: 0,
-                                        data:
-                                            DataUtil.getCurrentFormattedDate(),
-                                        supermercado: '',
-                                        finalizada: false,
-                                        itens: [],
-                                      );
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              ActiveList(novaListaMercado),
-                                        ),
-                                      );
+                                      criarNovaListaMercado(context);
                                     },
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor: Colors.deepPurple,
@@ -170,5 +154,23 @@ class _listasMercadoState extends State<ScreenListasMercado> {
       }
     }
     return false;
+  }
+
+  void criarNovaListaMercado(BuildContext context) async {
+    ListaMercado novaListaMercado = ListaMercado(
+      userId: 0,
+      custoTotal: 0,
+      data: DataUtil.getCurrentFormattedDate(),
+      supermercado: '',
+      finalizada: false,
+      itens: [],
+    );
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ActiveList(novaListaMercado),
+      ),
+    );
   }
 }

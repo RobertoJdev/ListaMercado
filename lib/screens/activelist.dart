@@ -8,6 +8,7 @@ import 'package:lista_mercado/components/item_list_confirmed.dart';
 import 'package:lista_mercado/components/item_list_pendent.dart';
 import 'package:lista_mercado/screens/newItemScreen.dart';
 import 'package:lista_mercado/models/produto.dart';
+import 'package:lista_mercado/screens/screen_listas_mercado.dart';
 
 class ActiveList extends StatefulWidget {
   ActiveList(this.listaMercado, {super.key});
@@ -130,20 +131,37 @@ class _ActiveListState extends State<ActiveList> {
                 children: [
                   const Text('Itens adicionados ao carrinho'),
                   Flexible(
-                    fit: FlexFit.tight,
-                    flex: 20,
-                    child: ListView.builder(
-                      itemCount: listItensConfirmed.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return ItemListConfirmed(
-                            item: listItensConfirmed[index]);
-                      },
-                    ),
-                  ),
+                      fit: FlexFit.tight,
+                      flex: 20,
+                      child: ListView.builder(
+                          itemCount: listItensConfirmed.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return ItemListConfirmed(
+                                item: listItensConfirmed[index]);
+                          })),
                   Flexible(
                     child: Text(
                       'Valor total das compras R\$: $totalValue',
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  const Padding(padding: EdgeInsets.all(5.0)),
+                  ElevatedButton(
+                    onPressed: finalizarListCompras,
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.deepPurple,
+                        elevation: 5, // Ajuste conforme necessário
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15.0))),
+                    child: const Padding(
+                      padding: EdgeInsets.all(5.0),
+                      child: Text(
+                        'Finalizar lista',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
                   ),
                 ],
@@ -181,5 +199,14 @@ class _ActiveListState extends State<ActiveList> {
       totalList += item.precoAtual;
     }
     return totalList;
+  }
+
+  void finalizarListCompras() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ScreenListasMercado(),
+      ),
+    );
   }
 }

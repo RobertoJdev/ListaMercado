@@ -39,9 +39,9 @@ class ItemListConfirmed extends StatelessWidget {
                   ))),
               Flexible(
                 fit: FlexFit.tight,
-                flex: 4,
+                flex: 2,
                 child: Container(
-                    child: Text('Preço R\$: ${item.precoAtual.toString()}')),
+                    child: Text('R\$: ${item.precoAtual.toString()}')),
               ),
               const Padding(
                   padding: EdgeInsets.only(right: 15.0),
