@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:lista_mercado/components/populator_itens.dart';
 import 'package:lista_mercado/db/market_db.dart';
@@ -19,12 +21,13 @@ class ScreenActiveList extends StatefulWidget {
 }
 
 class _ActiveListState extends State<ScreenActiveList> {
-  TextEditingController _textEditingController = TextEditingController();
-  PopuladorItens _populator = PopuladorItens();
-
+  late TextEditingController _textEditingController = TextEditingController();
+  //PopuladorItens _populator = PopuladorItens();
   List<Produto> listItensPendent = [];
   List<Produto> listItensConfirmed = [];
   final ItemMarketDB itemMarketDB = ItemMarketDB();
+
+  late String totalValue;
 
   @override
   void initState() {
@@ -41,7 +44,6 @@ class _ActiveListState extends State<ScreenActiveList> {
   @override
   Widget build(BuildContext context) {
     //initializeDatabase();
-    String totalValue;
     totalValue = somarList(listItensConfirmed).toStringAsFixed(2);
 
     return Scaffold(
@@ -172,19 +174,19 @@ class _ActiveListState extends State<ScreenActiveList> {
   }
 
   void _populateItems() {
-    listItensPendent = _populator.popularListaProdutos();
+    listItensPendent = PopuladorItens().popularListaProdutos();
   }
 
   void _populateDB(List<Produto> produtos) {
     for (var element in produtos) {
-      var insertItem = itemMarketDB.insertItem(lmercadot, element);
+      itemMarketDB.insertItem(lmercadot, element);
     }
   }
 
   void moveItemToConfirmedList(Produto item) {
     //itemMarketDB.insertItem(item);
     itemMarketDB.printAllItems();
-    itemMarketDB.initDB();
+    //itemMarketDB.initDB();
     setState(() {
       print(item.getId().toString());
       listItensPendent.remove(item); // Remove o item da lista de pendentes
@@ -202,6 +204,8 @@ class _ActiveListState extends State<ScreenActiveList> {
   }
 
   void finalizarListCompras() {
+    widget.listaMercado.custoTotal = double.parse(totalValue);
+    itemMarketDB.novaListaMercado(widget.listaMercado);
     Navigator.push(
       context,
       MaterialPageRoute(

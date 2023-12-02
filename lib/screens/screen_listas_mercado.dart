@@ -53,91 +53,75 @@ class _listasMercadoState extends State<ScreenListasMercado> {
       return ScreenActiveList(lmercadot);
     } else {
       return Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          title: const Text(
-            'Lista de Mercado',
-            textAlign: TextAlign.center,
-            style: TextStyle(),
-          ),
-          actions: [
-            const Icon(Icons.bar_chart_outlined),
-            GestureDetector(
-              child: const Icon(Icons.share),
-              onTap: () {
-                //PopUpItemConfirm.showAlertDialog(context);
-              },
+          appBar: AppBar(
+            centerTitle: true,
+            title: const Text(
+              'Lista de Mercado',
+              textAlign: TextAlign.center,
+              style: TextStyle(),
             ),
-            const Padding(padding: EdgeInsets.only(right: 10))
-          ],
-        ),
-        body: Column(
-          children: [
+            actions: [
+              const Icon(Icons.bar_chart_outlined),
+              GestureDetector(
+                child: const Icon(Icons.share),
+                onTap: () {
+                  //PopUpItemConfirm.showAlertDialog(context);
+                },
+              ),
+              const Padding(padding: EdgeInsets.only(right: 10))
+            ],
+          ),
+          body: Column(children: [
             const DecorationListBar(isListMercado: true),
             Expanded(
-              child: PageView(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(15.0),
-                    child: Column(
-                      children: [
-                        const Text('Listas de compras finalizadas'),
-                        Flexible(
-                          child: Stack(
-                            children: [
-                              ListView.builder(
-                                itemCount: listasMercado.length,
-                                itemBuilder: (BuildContext context, int index) {
-                                  return GestureDetector(
-                                    onTap: () {},
-                                    child: ItemListCompra(
-                                      listaMercado: listasMercado[index],
-                                    ),
-                                  );
-                                },
-                              ),
-                              Container(
-                                alignment: Alignment.bottomRight,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(15.0),
-                                  child: ElevatedButton(
-                                    onPressed: () async {
-                                      criarNovaListaMercado(context);
-                                    },
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: Colors.deepPurple,
-                                      elevation:
-                                          5, // Ajuste conforme necessário
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(
-                                            15.0), // Ajuste conforme necessário
-                                      ),
-                                    ),
-                                    child: const Padding(
-                                      padding: EdgeInsets.all(15.0),
-                                      child: Text(
-                                        'Nova lista',
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
+                child: PageView(children: [
+              Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: Column(children: [
+                    const Text('Listas de compras finalizadas'),
+                    Flexible(
+                        child: Stack(children: [
+                      ListView.builder(
+                        itemCount: listasMercado.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return GestureDetector(
+                            onTap: () {
+                              abrirListaMercadoFinalizada(
+                                  context, listasMercado[index]);
+                            },
+                            child: ItemListCompra(
+                              listaMercado: listasMercado[index],
+                            ),
+                          );
+                        },
+                      ),
+                      Container(
+                          alignment: Alignment.bottomRight,
+                          child: Padding(
+                              padding: const EdgeInsets.all(15.0),
+                              child: ElevatedButton(
+                                  onPressed: () async {
+                                    criarNovaListaMercado(context);
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.deepPurple,
+                                    elevation: 5, // Ajuste conforme necessário
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(
+                                          15.0), // Ajuste conforme necessário
                                     ),
                                   ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      );
+                                  child: const Padding(
+                                      padding: EdgeInsets.all(15.0),
+                                      child: Text('Nova lista',
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                          ))))))
+                    ]))
+                  ]))
+            ]))
+          ]));
     }
   }
 
@@ -170,6 +154,16 @@ class _listasMercadoState extends State<ScreenListasMercado> {
       context,
       MaterialPageRoute(
         builder: (context) => ScreenActiveList(novaListaMercado),
+      ),
+    );
+  }
+
+  void abrirListaMercadoFinalizada(
+      BuildContext context, ListaMercado listasMercado) async {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ScreenActiveList(listasMercado),
       ),
     );
   }

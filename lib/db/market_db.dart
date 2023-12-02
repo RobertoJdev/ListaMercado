@@ -126,9 +126,34 @@ class ItemMarketDB {
       'finalizada': listaMercado.finalizada,
       // Adicione outros campos conforme necessário
     };
+
     // Use o método insert do SQLite para inserir a ListaMercado e obtenha o ID inserido
     int listaMercadoId =
         await _database.insert('ListaMercado', listaMercadoMap);
+
+    // Salva os produtos associados à ListaMercado
+    for (Produto produto in listaMercado.itens) {
+      // Cria um mapa com os valores do Produto
+      Map<String, dynamic> produtoMap = {
+        'descricao': produto.descricao,
+        'barras': produto.barras,
+        'quantidade': produto.quantidade,
+        'pendente': produto.pendente,
+        'precoAtual': produto.precoAtual,
+      };
+
+      // Insere o produto no banco de dados
+      int produtoId = await _database.insert('Produto', produtoMap);
+
+      // Associa o produto à ListaMercado
+      await _database.insert(
+        'ListaMercadoProduto',
+        {
+          'listaMercadoId': listaMercadoId,
+          'produtoId': produtoId,
+        },
+      );
+    }
 
     return listaMercadoId;
   }
