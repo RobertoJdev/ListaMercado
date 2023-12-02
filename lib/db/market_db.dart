@@ -115,8 +115,10 @@ class ItemMarketDB {
   }
 
   Future<int> novaListaMercado(ListaMercado listaMercado) async {
+    await initDB();
     await openDB(); // Garante que o banco de dados está aberto.
 
+    listaMercado.finalizada = true;
     // Cria um mapa com os valores da ListaMercado
     Map<String, dynamic> listaMercadoMap = {
       'userId': listaMercado.userId,
@@ -159,6 +161,7 @@ class ItemMarketDB {
   }
 
   Future<List<Map<String, dynamic>>> getAllItems() async {
+    await initDB();
     await openDB(); // Certifique-se de que o banco de dados está aberto.
     print('---------***---------Teste get AllItens--------***----------');
     return await _database.rawQuery('''
@@ -174,9 +177,7 @@ class ItemMarketDB {
     print(
         '********************------------------Teste chamada printAllItens------------------********************');
     final items = await getAllItems();
-    //print('------------------print todos os itens------------------');
     print(items);
-    //print('------------------********************------------------');
 
     for (var item in items) {
       print('ID: ${item['id']}');

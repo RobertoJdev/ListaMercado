@@ -1,5 +1,4 @@
 import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:lista_mercado/components/populator_itens.dart';
 import 'package:lista_mercado/db/market_db.dart';
@@ -32,14 +31,27 @@ class _ActiveListState extends State<ScreenActiveList> {
   @override
   void initState() {
     super.initState();
-    _populateItems();
     itemMarketDB.initDB();
-    _populateDB(listItensPendent);
-    itemMarketDB.printAllItems();
+    if (widget.listaMercado.finalizada) {
+      listItensPendent = [];
+      listItensConfirmed = [];
+      print(widget.listaMercado.supermercado);
+      print(widget.listaMercado.id);
+      print(widget.listaMercado.itens.length);
+      itemMarketDB.printAllItems();
+      //listItensPendent = widget.listaMercado.itens;
+      //listItensConfirmed = widget.listaMercado.itens;
+      for (var element in widget.listaMercado.itens) {
+        print(element.descricao);
+      }
+    } else {
+      _populateItems();
+      _populateDB(listItensPendent);
+    }
   }
 
-  ListaMercado lmercadot = ListaMercado.getListaMercadoExemplo(
-      [Produto.getProdutoExemplo(), Produto.getProdutoExemplo()]);
+  ListaMercado lmercadot = Populador.getListaMercadoExemplo(
+      [Populador.getProdutoExemplo(), Populador.getProdutoExemplo()]);
 
   @override
   Widget build(BuildContext context) {
@@ -112,9 +124,9 @@ class _ActiveListState extends State<ScreenActiveList> {
                                     temp.historicoPreco = [4, 5, 5, 5];
 
                                     ListaMercado lmt =
-                                        ListaMercado.getListaMercadoExemplo([
+                                        Populador.getListaMercadoExemplo([
                                       temp,
-                                      Produto.getProdutoExemplo()
+                                      Populador.getProdutoExemplo()
                                     ]);
 
                                     itemMarketDB.insertItem(lmt, temp);
@@ -174,7 +186,7 @@ class _ActiveListState extends State<ScreenActiveList> {
   }
 
   void _populateItems() {
-    listItensPendent = PopuladorItens().popularListaProdutos();
+    listItensPendent = Populador().popularListaProdutos();
   }
 
   void _populateDB(List<Produto> produtos) {

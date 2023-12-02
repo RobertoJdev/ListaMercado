@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lista_mercado/components/decoration_list_bar.dart';
 import 'package:lista_mercado/components/item_list_compra.dart';
-import 'package:lista_mercado/components/list_mercado.dart';
-import 'package:lista_mercado/components/populator_itens.dart';
+import 'package:lista_mercado/components/populator.dart';
 import 'package:lista_mercado/db/market_db.dart';
 import 'package:lista_mercado/models/data_util.dart';
 import 'package:lista_mercado/models/lista_mercado.dart';
@@ -32,19 +31,8 @@ class _listasMercadoState extends State<ScreenListasMercado> {
     _initializeDB();
   }
 
-  Future<void> _initializeDB() async {
-    await itemMarketDB.initDB();
-    itemMarketDB.openDB();
-    //_populateDB(listItensPendent);
-    //itemMarketDB.printAllItems();
-    //hasUnfinishedLists = await itemMarketDB.getUnfinishedLists();
-    listasMercado =
-        await itemMarketDB.getAllListasMercado() as List<ListaMercado>;
-    setState(() {});
-  }
-
-  ListaMercado lmercadot = ListaMercado.getListaMercadoExemplo(
-    [Produto.getProdutoExemplo(), Produto.getProdutoExemplo()],
+  ListaMercado lmercadot = Populador.getListaMercadoExemplo(
+    [Populador.getProdutoExemplo(), Populador.getProdutoExemplo()],
   );
 
   @override
@@ -125,9 +113,19 @@ class _listasMercadoState extends State<ScreenListasMercado> {
     }
   }
 
-  void _populateDB(List<Produto> produtos) {
-    for (var element in produtos) {
-      var insertItem = itemMarketDB.insertItem(lmercadot, element);
+  Future<void> _initializeDB() async {
+    await itemMarketDB.initDB();
+    itemMarketDB.openDB();
+
+    //_populateDB(listItensPendent);
+    //itemMarketDB.printAllItems();
+    //hasUnfinishedLists = await itemMarketDB.getUnfinishedLists();
+    listasMercado =
+        await itemMarketDB.getAllListasMercado() as List<ListaMercado>;
+    setState(() {});
+
+    if (listasMercado.length < 1) {
+      //popular base;
     }
   }
 
