@@ -7,7 +7,7 @@ import 'package:lista_mercado/db/market_db.dart';
 import 'package:lista_mercado/models/data_util.dart';
 import 'package:lista_mercado/models/lista_mercado.dart';
 import 'package:lista_mercado/models/produto.dart';
-import 'package:lista_mercado/screens/activelist.dart';
+import 'package:lista_mercado/screens/screen_active_list.dart';
 
 class ScreenListasMercado extends StatefulWidget {
   const ScreenListasMercado({Key? key}) : super(key: key);
@@ -50,7 +50,7 @@ class _listasMercadoState extends State<ScreenListasMercado> {
   @override
   Widget build(BuildContext context) {
     if (hasUnfinishedLists) {
-      return ActiveList(lmercadot);
+      return ScreenActiveList(lmercadot);
     } else {
       return Scaffold(
         appBar: AppBar(
@@ -169,7 +169,7 @@ class _listasMercadoState extends State<ScreenListasMercado> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => ActiveList(novaListaMercado),
+        builder: (context) => ScreenActiveList(novaListaMercado),
       ),
     );
   }

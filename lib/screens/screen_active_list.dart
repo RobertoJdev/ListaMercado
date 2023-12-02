@@ -2,23 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:lista_mercado/components/populator_itens.dart';
 import 'package:lista_mercado/db/market_db.dart';
 import 'package:lista_mercado/models/lista_mercado.dart';
-import 'package:lista_mercado/screens/confirm_item_screen.dart';
+import 'package:lista_mercado/screens/screen_confirm_item.dart';
 import 'package:lista_mercado/components/decoration_list_bar.dart';
 import 'package:lista_mercado/components/item_list_confirmed.dart';
 import 'package:lista_mercado/components/item_list_pendent.dart';
-import 'package:lista_mercado/screens/newItemScreen.dart';
+import 'package:lista_mercado/screens/screen_new_item.dart';
 import 'package:lista_mercado/models/produto.dart';
 import 'package:lista_mercado/screens/screen_listas_mercado.dart';
 
-class ActiveList extends StatefulWidget {
-  ActiveList(this.listaMercado, {super.key});
+class ScreenActiveList extends StatefulWidget {
+  ScreenActiveList(this.listaMercado, {super.key});
   ListaMercado listaMercado;
 
   @override
-  State<ActiveList> createState() => _ActiveListState();
+  State<ScreenActiveList> createState() => _ActiveListState();
 }
 
-class _ActiveListState extends State<ActiveList> {
+class _ActiveListState extends State<ScreenActiveList> {
   TextEditingController _textEditingController = TextEditingController();
   PopuladorItens _populator = PopuladorItens();
 

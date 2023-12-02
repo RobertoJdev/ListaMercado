@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lista_mercado/screens/confirm_item_screen.dart';
+import 'package:lista_mercado/screens/screen_confirm_item.dart';
 import 'package:lista_mercado/components/item_list_confirmed.dart';
 import 'package:lista_mercado/models/produto.dart';
 
