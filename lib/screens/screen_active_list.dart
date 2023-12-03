@@ -1,6 +1,6 @@
 import 'dart:ffi';
 import 'package:flutter/material.dart';
-import 'package:lista_mercado/components/populator_itens.dart';
+import 'package:lista_mercado/components/populator.dart';
 import 'package:lista_mercado/db/market_db.dart';
 import 'package:lista_mercado/models/lista_mercado.dart';
 import 'package:lista_mercado/screens/screen_confirm_item.dart';
@@ -50,8 +50,8 @@ class _ActiveListState extends State<ScreenActiveList> {
     }
   }
 
-  ListaMercado lmercadot = Populador.getListaMercadoExemplo(
-      [Populador.getProdutoExemplo(), Populador.getProdutoExemplo()]);
+  ListaMercado lmercadot = Populador.generateListaMercadoExemplo(
+      [Populador.generateProdutoExemplo(), Populador.generateProdutoExemplo()]);
 
   @override
   Widget build(BuildContext context) {
@@ -124,9 +124,9 @@ class _ActiveListState extends State<ScreenActiveList> {
                                     temp.historicoPreco = [4, 5, 5, 5];
 
                                     ListaMercado lmt =
-                                        Populador.getListaMercadoExemplo([
+                                        Populador.generateListaMercadoExemplo([
                                       temp,
-                                      Populador.getProdutoExemplo()
+                                      Populador.generateProdutoExemplo()
                                     ]);
 
                                     itemMarketDB.insertItem(lmt, temp);
@@ -186,7 +186,7 @@ class _ActiveListState extends State<ScreenActiveList> {
   }
 
   void _populateItems() {
-    listItensPendent = Populador().popularListaProdutos();
+    listItensPendent = Populador.generateMultProdutosExemplo();
   }
 
   void _populateDB(List<Produto> produtos) {

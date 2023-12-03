@@ -27,7 +27,7 @@ class Populador {
     return produtoExemplo;
   }
 
-  static generateListaProdutosExemplo(int quantidade) {
+  static generateMultProdutosExemplo() {
     List<Produto> listExemploProdutos = [];
     final nomesProdutos = [
       'Feijão Mulatinho',
@@ -66,7 +66,7 @@ class Populador {
     return listaMercadoTemp;
   }
 
-  static generateVariasListasMercadoExemplo(List<Produto> produto) {
+  static generatemMultListasMercadoExemplo(List<Produto> produto) {
     List<ListaMercado> variasListaMercadoTemp = [];
     ListaMercado listaMercadoTemp = ListaMercado(
       userId: 1,
@@ -77,14 +77,6 @@ class Populador {
       itens: produto,
     );
     return listaMercadoTemp;
-  }
-
-  static List<ListaMercado> popularListaMercado() {
-    Produto produtoTemp = Populador.generateProdutoExemplo();
-    return [
-      generateListaMercadoExemplo([produtoTemp, produtoTemp]),
-      generateListaMercadoExemplo([produtoTemp, produtoTemp])
-    ];
   }
 
   void _populateDB(List<Produto> produtos) {

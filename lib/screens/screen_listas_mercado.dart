@@ -31,8 +31,8 @@ class _listasMercadoState extends State<ScreenListasMercado> {
     _initializeDB();
   }
 
-  ListaMercado lmercadot = Populador.getListaMercadoExemplo(
-    [Populador.getProdutoExemplo(), Populador.getProdutoExemplo()],
+  ListaMercado lmercadot = Populador.generateListaMercadoExemplo(
+    [Populador.generateMultProdutosExemplo()],
   );
 
   @override
