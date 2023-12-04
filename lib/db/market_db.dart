@@ -3,7 +3,7 @@ import 'package:lista_mercado/models/produto.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
-class ItemMarketDB {
+class MarketDB {
   late Database _database;
 
   Future<void> openDB() async {
@@ -18,97 +18,101 @@ class ItemMarketDB {
       join(path, 'listMarket.db'),
       onCreate: (db, version) async {
         print('----------------Criação do banco de dados--------------');
-
-        await db.execute('''
-          CREATE TABLE ListaMercado (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            userId INTEGER,
-            custoTotal REAL NOT NULL,
-            data TEXT NOT NULL,
-            supermercado TEXT NOT NULL,
-            finalizada INTEGER NOT NULL
-          )
-        ''');
-        await db.execute('''
-          CREATE TABLE Produto (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            descricao TEXT NOT NULL,
-            barras TEXT NOT NULL,
-            quantidade INTEGER NOT NULL,
-            pendente INTEGER NOT NULL,
-            precoAtual REAL NOT NULL
-          )
-        ''');
-        await db.execute('''
-          CREATE TABLE ListaMercadoProduto (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            listaMercadoId INTEGER,
-            produtoId INTEGER,
-            FOREIGN KEY (listaMercadoId) REFERENCES ListaMercado(id),
-            FOREIGN KEY (produtoId) REFERENCES Produto(id)
-          )
-        ''');
-        await db.execute('''
-          CREATE TABLE HistoricoPreco (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            produtoId INTEGER,
-            valor REAL NOT NULL,
-            FOREIGN KEY (produtoId) REFERENCES Produto(id)
-          )
-        ''');
-        // Inserindo uma lista de mercado de teste associada ao usuário
-        final listaMercadoId = await db.insert(
-          'ListaMercado',
-          {
-            'userId': 1, // Substitua pelo ID do usuário real
-            'custoTotal': 100.0,
-            'data': '2023-01-02',
-            'supermercado': 'Test Supermarket',
-            'finalizada': 1,
-          },
-        );
-
-        for (var i = 0; i < 3; i++) {
-          await db.insert(
-            'ListaMercado',
-            {
-              'userId': 1, // Substitua pelo ID do usuário real
-              'custoTotal': 200.0,
-              'data': '2024-01-01',
-              'supermercado': 'Test Supermarket $i',
-              'finalizada': 1,
-            },
-          );
-        }
-
-        // Inserindo um produto de teste associado à lista de mercado
-        final produtoId = await db.insert(
-          'Produto',
-          {
-            'descricao': 'Test Product',
-            'barras': '123456789',
-            'quantidade': 5,
-            'pendente': 1,
-            'precoAtual': 20.0,
-          },
-        );
-        // Associando o produto à lista de mercado
-        await db.insert(
-          'ListaMercadoProduto',
-          {
-            'listaMercadoId': listaMercadoId,
-            'produtoId': produtoId,
-          },
-        );
+        await _createTables(db);
+        await _insertTestMarketData(db);
       },
       version: 1,
     );
 
-    await openDB(); // Chama openDB após a inicialização do banco de dados.
+    await openDB();
+  }
+
+  Future<void> _createTables(Database db) async {
+    await db.execute('''
+      CREATE TABLE ListaMercado (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        userId INTEGER,
+        custoTotal REAL NOT NULL,
+        data TEXT NOT NULL,
+        supermercado TEXT NOT NULL,
+        finalizada INTEGER NOT NULL
+      )
+    ''');
+
+    await db.execute('''
+      CREATE TABLE Produto (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        descricao TEXT NOT NULL,
+        barras TEXT NOT NULL,
+        quantidade INTEGER NOT NULL,
+        pendente INTEGER NOT NULL,
+        precoAtual REAL NOT NULL
+      )
+    ''');
+
+    await db.execute('''
+      CREATE TABLE ListaMercadoProduto (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        listaMercadoId INTEGER,
+        produtoId INTEGER,
+        FOREIGN KEY (listaMercadoId) REFERENCES ListaMercado(id),
+        FOREIGN KEY (produtoId) REFERENCES Produto(id)
+      )
+    ''');
+  }
+
+  Future<void> _insertTestMarketData(Database db) async {
+    final userId = 1;
+
+    // Inserindo uma lista de mercado de teste associada ao usuário
+    final listaMercadoId = await db.insert(
+      'ListaMercado',
+      {
+        'userId': userId,
+        'custoTotal': 100.0,
+        'data': '2023-01-02',
+        'supermercado': 'Supermarket',
+        'finalizada': 1,
+      },
+    );
+
+    for (var i = 0; i < 3; i++) {
+      await db.insert(
+        'ListaMercado',
+        {
+          'userId': userId,
+          'custoTotal': 200.0,
+          'data': '2024-01-01',
+          'supermercado': 'Supermarket $i',
+          'finalizada': 1,
+        },
+      );
+    }
+
+    // Inserindo um produto de teste associado à lista de mercado
+    final produtoId = await db.insert(
+      'Produto',
+      {
+        'descricao': 'Test Product',
+        'barras': '123456789',
+        'quantidade': 5,
+        'pendente': 1,
+        'precoAtual': 20.0,
+      },
+    );
+
+    // Associando o produto à lista de mercado
+    await db.insert(
+      'ListaMercadoProduto',
+      {
+        'listaMercadoId': listaMercadoId,
+        'produtoId': produtoId,
+      },
+    );
   }
 
   Future<void> insertItem(ListaMercado listaMercado, Produto produto) async {
-    await openDB(); // Garante que o banco de dados está aberto.
+    await openDB();
     await _database.transaction((txn) async {
       // ... (o restante do seu código de inserção de itens)
     });
@@ -116,27 +120,26 @@ class ItemMarketDB {
 
   Future<int> novaListaMercado(ListaMercado listaMercado) async {
     await initDB();
-    await openDB(); // Garante que o banco de dados está aberto.
+    await openDB();
 
     listaMercado.finalizada = true;
+
     // Cria um mapa com os valores da ListaMercado
-    Map<String, dynamic> listaMercadoMap = {
+    final listaMercadoMap = {
       'userId': listaMercado.userId,
       'custoTotal': listaMercado.custoTotal,
       'data': listaMercado.data,
       'supermercado': listaMercado.supermercado,
       'finalizada': listaMercado.finalizada,
-      // Adicione outros campos conforme necessário
     };
 
-    // Use o método insert do SQLite para inserir a ListaMercado e obtenha o ID inserido
     int listaMercadoId =
         await _database.insert('ListaMercado', listaMercadoMap);
 
     // Salva os produtos associados à ListaMercado
     for (Produto produto in listaMercado.itens) {
       // Cria um mapa com os valores do Produto
-      Map<String, dynamic> produtoMap = {
+      final produtoMap = {
         'descricao': produto.descricao,
         'barras': produto.barras,
         'quantidade': produto.quantidade,
@@ -162,14 +165,13 @@ class ItemMarketDB {
 
   Future<List<Map<String, dynamic>>> getAllItems() async {
     await initDB();
-    await openDB(); // Certifique-se de que o banco de dados está aberto.
+    await openDB();
     print('---------***---------Teste get AllItens--------***----------');
     return await _database.rawQuery('''
       SELECT *
       FROM Produto
       INNER JOIN ListaMercadoProduto ON Produto.id = ListaMercadoProduto.produtoId
       INNER JOIN ListaMercado ON ListaMercadoProduto.listaMercadoId = ListaMercado.id
-      INNER JOIN HistoricoPreco ON HistoricoPreco.produtoId = Produto.id
     ''');
   }
 
@@ -212,8 +214,7 @@ class ItemMarketDB {
   }
 
   Future<bool> getUnfinishedLists() async {
-    await openDB(); // Certifique-se de que o banco de dados está aberto.
-
+    await openDB();
     List<Map<String, dynamic>> listasMercadoNaoFinalizadas =
         await _database.rawQuery('''
     SELECT *
@@ -227,42 +228,62 @@ class ItemMarketDB {
   ''');
 
     print('Todas as listas de Mercado:');
-    for (var i = 0; i < todasListas.length; i++) {
-      print(todasListas[i]);
-    }
+    todasListas.forEach((item) => print(item));
 
     print('Listas de Mercado não finalizadas:');
     print(listasMercadoNaoFinalizadas);
 
-    if (listasMercadoNaoFinalizadas.length > 0) {
-      return true;
-    } else {
-      return false;
-    }
+    return listasMercadoNaoFinalizadas.isNotEmpty;
   }
 
   Future<List<ListaMercado>> getAllListasMercado() async {
-    await openDB(); // Certifique-se de que o banco de dados está aberto.
-
+    await openDB();
     List<Map<String, dynamic>> listasMercado = await _database.rawQuery('''
-      SELECT *
-      FROM ListaMercado
-    ''');
+    SELECT ListaMercado.*, 
+           Produto.id as produtoId,
+           Produto.descricao as produtoDescricao,
+           Produto.barras as produtoBarras,
+           Produto.quantidade as produtoQuantidade,
+           Produto.pendente as produtoPendente,
+           Produto.precoAtual as produtoPrecoAtual
+    FROM ListaMercado
+    LEFT JOIN ListaMercadoProduto ON ListaMercado.id = ListaMercadoProduto.listaMercadoId
+    LEFT JOIN Produto ON ListaMercadoProduto.produtoId = Produto.id
+  ''');
 
     List<ListaMercado> result = [];
 
+    int currentListaId = -1; // Para rastrear a mudança de lista
+    ListaMercado? currentLista;
+
     for (var item in listasMercado) {
-      result.add(ListaMercado(
-        id: item['id'],
-        userId: item['userId'],
-        custoTotal: item['custoTotal'],
-        data: item['data'],
-        supermercado: item['supermercado'],
-        finalizada: item['finalizada'] == 1,
-        itens: [],
-      ));
-      print(item);
+      if (item['id'] != currentListaId) {
+        currentListaId = item['id'];
+        currentLista = ListaMercado(
+          id: item['id'],
+          userId: item['userId'],
+          custoTotal: item['custoTotal'],
+          data: item['data'],
+          supermercado: item['supermercado'],
+          finalizada: item['finalizada'] == 1,
+          itens: [],
+        );
+        result.add(currentLista);
+      }
+      if (item['produtoId'] != null) {
+        Produto produto = Produto(
+          descricao: item['produtoDescricao'],
+          barras: item['produtoBarras'],
+          quantidade: item['produtoQuantidade'],
+          pendente: item['produtoPendente'] == 1,
+          precoAtual: item['produtoPrecoAtual'],
+          historicoPreco: [], // Não há mais a tabela HistoricoPreco
+        );
+        currentLista!.itens.add(produto);
+      }
     }
+
+    print('-----------------------Teste de retorno de itens da lista');
 
     return result;
   }

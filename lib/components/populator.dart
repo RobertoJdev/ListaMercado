@@ -4,7 +4,7 @@ import 'package:lista_mercado/models/lista_mercado.dart';
 import 'package:lista_mercado/models/produto.dart';
 
 class Populador {
-  List<Produto> itens = [];
+  //List<Produto> produtos = [];
   bool _isPopulated = false;
 
   // Singleton instance
@@ -18,16 +18,17 @@ class Populador {
 
   static generateProdutoExemplo() {
     Produto produtoExemplo = Produto(
-        descricao: 'Arroz',
-        barras: 0123456789.toString(),
-        quantidade: 10,
-        pendente: true,
-        precoAtual: 5,
-        historicoPreco: [7, 9, 5]);
+      descricao: 'Arroz',
+      barras: '0123456789', // Adicione aspas para tratar como string
+      quantidade: 10,
+      pendente: true,
+      precoAtual: 5,
+      historicoPreco: [7, 9, 5],
+    );
     return produtoExemplo;
   }
 
-  static generateMultProdutosExemplo() {
+  static generateMultiProdutosExemplo() {
     List<Produto> listExemploProdutos = [];
     final nomesProdutos = [
       'Feijão Mulatinho',
@@ -41,49 +42,49 @@ class Populador {
     ];
 
     for (var element in nomesProdutos) {
-      Produto produtoExemplo = Produto(
+      Produto produtoTemp = Produto(
           descricao: element,
-          barras: 0123456789.toString(),
+          barras: '0123456789',
           quantidade: Random().nextInt(10) + 1,
           pendente: true,
           precoAtual: 5,
           historicoPreco: [7, 9, 5]);
-      listExemploProdutos.add(produtoExemplo);
+      listExemploProdutos.add(produtoTemp);
     }
 
     return listExemploProdutos;
   }
 
-  static generateListaMercadoExemplo(List<Produto> produto) {
+  static generateListaMercadoExemplo(List<Produto> produtos) {
     ListaMercado listaMercadoTemp = ListaMercado(
       userId: 1,
       custoTotal: 100.0,
       data: '2023-01-01',
-      supermercado: 'Test Supermarket',
+      supermercado: 'Supermarket',
       finalizada: false,
-      itens: produto,
+      itens: produtos,
     );
     return listaMercadoTemp;
   }
 
-  static generatemMultListasMercadoExemplo(List<Produto> produto) {
-    List<ListaMercado> variasListaMercadoTemp = [];
-    ListaMercado listaMercadoTemp = ListaMercado(
-      userId: 1,
-      custoTotal: 100.0,
-      data: '2023-01-01',
-      supermercado: 'Test Supermarket',
-      finalizada: false,
-      itens: produto,
-    );
-    return listaMercadoTemp;
-  }
+  static generateMultiListasMercadoExemplo(List<Produto> produtos) {
+    List<ListaMercado> multiListaMercadoTemp = [];
 
-  void _populateDB(List<Produto> produtos) {
-    for (var element in produtos) {
-      var itemMarketDB;
-      var lmercadot;
-      itemMarketDB.insertItem(lmercadot, element);
+    for (var i = 0; i < 5; i++) {
+      multiListaMercadoTemp.add(ListaMercado(
+        userId: 1,
+        custoTotal: 100.0,
+        data: '2023-01-01',
+        supermercado: 'Supermarket',
+        finalizada: false,
+        itens: produtos,
+      ));
     }
+    return multiListaMercadoTemp;
+  }
+
+  static void populateDB(ListaMercado listaMercado) {
+    MarketDB itemMarketDB = MarketDB();
+    itemMarketDB.novaListaMercado(listaMercado);
   }
 }

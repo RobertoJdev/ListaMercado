@@ -1,14 +1,13 @@
 import 'package:uuid/uuid.dart';
 
 class Produto {
-  String? _id; // Identificador único (UUID) para cada ItemMarket
+  String? _id;
   late String descricao;
   late String barras;
   late int quantidade;
   late bool pendente;
   late double precoAtual;
   late List<double> historicoPreco;
-  late List<int> historicoPrecoIds;
 
   Produto({
     required this.descricao,
@@ -20,34 +19,28 @@ class Produto {
   }) {
     gerarId();
   }
+
   Produto.newItemList({
     required this.descricao,
     required this.quantidade,
     this.pendente = true,
-  }) {
+  })  : precoAtual = 0,
+        historicoPreco = [] {
     gerarId();
   }
 
-  get uuid => null;
+  String? getId() => _id;
 
-  String? getId() {
-    return _id;
+  void gerarId() {
+    _id = const Uuid().v4();
   }
 
-  String? gerarId() {
-    var uuid = const Uuid();
-    _id = uuid.v4();
-    return _id;
-  }
-
-  static getProdutoExemplo() {
-    Produto produtoExemplo = Produto(
+  static Produto getProdutoExemplo() => Produto(
         descricao: 'Arroz',
-        barras: 0123456789.toString(),
+        barras: '0123456789',
         quantidade: 10,
         pendente: true,
         precoAtual: 5,
-        historicoPreco: [7, 9, 5]);
-    return produtoExemplo;
-  }
+        historicoPreco: [7, 9, 5],
+      );
 }

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:lista_mercado/components/populator.dart';
 import 'package:lista_mercado/db/market_db.dart';
 import 'package:lista_mercado/models/lista_mercado.dart';
-import 'package:lista_mercado/screens/screen_confirm_item.dart';
 import 'package:lista_mercado/components/decoration_list_bar.dart';
 import 'package:lista_mercado/components/item_list_confirmed.dart';
 import 'package:lista_mercado/components/item_list_pendent.dart';
@@ -24,7 +23,7 @@ class _ActiveListState extends State<ScreenActiveList> {
   //PopuladorItens _populator = PopuladorItens();
   List<Produto> listItensPendent = [];
   List<Produto> listItensConfirmed = [];
-  final ItemMarketDB itemMarketDB = ItemMarketDB();
+  final MarketDB itemMarketDB = MarketDB();
 
   late String totalValue;
 
@@ -32,26 +31,11 @@ class _ActiveListState extends State<ScreenActiveList> {
   void initState() {
     super.initState();
     itemMarketDB.initDB();
-    if (widget.listaMercado.finalizada) {
-      listItensPendent = [];
-      listItensConfirmed = [];
-      print(widget.listaMercado.supermercado);
-      print(widget.listaMercado.id);
-      print(widget.listaMercado.itens.length);
-      itemMarketDB.printAllItems();
-      //listItensPendent = widget.listaMercado.itens;
-      //listItensConfirmed = widget.listaMercado.itens;
-      for (var element in widget.listaMercado.itens) {
-        print(element.descricao);
-      }
-    } else {
-      _populateItems();
-      _populateDB(listItensPendent);
-    }
+    abrirListaMercado(widget.listaMercado);
   }
 
   ListaMercado lmercadot = Populador.generateListaMercadoExemplo(
-      [Populador.generateProdutoExemplo(), Populador.generateProdutoExemplo()]);
+      Populador.generateMultiProdutosExemplo());
 
   @override
   Widget build(BuildContext context) {
@@ -91,7 +75,6 @@ class _ActiveListState extends State<ScreenActiveList> {
                       itemCount: listItensPendent.length,
                       itemBuilder: (BuildContext context, int index) {
                         return GestureDetector(
-                          // Adicionando onTap para mover o item para a lista de confirmados
                           onTap: () {
                             moveItemToConfirmedList(listItensPendent[index]);
                           },
@@ -114,24 +97,7 @@ class _ActiveListState extends State<ScreenActiveList> {
                                 Produto? temp;
                                 temp = await newItemScreen(context);
                                 setState(() {
-                                  if (temp != null) {
-                                    print(
-                                        'retorno do novo objeto ${temp.descricao}');
-                                    listItensPendent.add(temp);
-
-                                    temp.barras = 12345678.toString();
-                                    temp.precoAtual = 5.0;
-                                    temp.historicoPreco = [4, 5, 5, 5];
-
-                                    ListaMercado lmt =
-                                        Populador.generateListaMercadoExemplo([
-                                      temp,
-                                      Populador.generateProdutoExemplo()
-                                    ]);
-
-                                    itemMarketDB.insertItem(lmt, temp);
-                                    itemMarketDB.printAllItems();
-                                  }
+                                  listItensPendent.add(temp!);
                                 });
                               },
                               child: const Icon(Icons.add),
@@ -185,31 +151,18 @@ class _ActiveListState extends State<ScreenActiveList> {
         ]));
   }
 
-  void _populateItems() {
-    listItensPendent = Populador.generateMultProdutosExemplo();
-  }
-
-  void _populateDB(List<Produto> produtos) {
-    for (var element in produtos) {
-      itemMarketDB.insertItem(lmercadot, element);
-    }
-  }
-
   void moveItemToConfirmedList(Produto item) {
-    //itemMarketDB.insertItem(item);
     itemMarketDB.printAllItems();
-    //itemMarketDB.initDB();
     setState(() {
-      print(item.getId().toString());
-      listItensPendent.remove(item); // Remove o item da lista de pendentes
+      item.pendente = false;
+      listItensPendent.remove(item);
       listItensConfirmed.add(item);
-      // Adiciona o item na lista de confirmados
     });
   }
 
-  double somarList(List<Produto> list) {
+  double somarList(List<Produto> produtos) {
     double totalList = 0;
-    for (var item in list) {
+    for (var item in produtos) {
       totalList += item.precoAtual;
     }
     return totalList;
@@ -217,6 +170,7 @@ class _ActiveListState extends State<ScreenActiveList> {
 
   void finalizarListCompras() {
     widget.listaMercado.custoTotal = double.parse(totalValue);
+    widget.listaMercado.itens = listItensPendent + listItensConfirmed;
     itemMarketDB.novaListaMercado(widget.listaMercado);
     Navigator.push(
       context,
@@ -224,5 +178,21 @@ class _ActiveListState extends State<ScreenActiveList> {
         builder: (context) => ScreenListasMercado(),
       ),
     );
+  }
+
+  void abrirListaMercado(ListaMercado lista) {
+    if (widget.listaMercado.finalizada) {
+      for (Produto element in lista.itens) {
+        print(element.descricao + '-----' + element.pendente.toString());
+        if (element.pendente) {
+          listItensPendent.add(element);
+        } else {
+          listItensConfirmed.add(element);
+        }
+      }
+    } else {
+      widget.listaMercado.itens =
+          listItensPendent = Populador.generateMultiProdutosExemplo();
+    }
   }
 }

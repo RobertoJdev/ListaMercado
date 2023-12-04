@@ -90,17 +90,21 @@ Future<Produto?> newItemScreen(BuildContext context) async {
                         },
                       ),
                     ),
-                    onPressed: isButtonDisabled() ? null : () {
-                      newItem = Produto.newItemList(
-                        descricao: _textEditingControllerNewItem.text.toString(),
-                        quantidade: int.parse(_textEditingControllerNewItemQuant.text),
-                      );
+                    onPressed: isButtonDisabled()
+                        ? null
+                        : () {
+                            newItem = Produto.newItemList(
+                              descricao:
+                                  _textEditingControllerNewItem.text.toString(),
+                              quantidade: int.parse(
+                                  _textEditingControllerNewItemQuant.text),
+                            );
 
-                      _textEditingControllerNewItem.text = '';
-                      _textEditingControllerNewItemQuant.text = '';
+                            _textEditingControllerNewItem.text = '';
+                            _textEditingControllerNewItemQuant.text = '';
 
-                      Navigator.of(context).pop();
-                    },
+                            Navigator.of(context).pop();
+                          },
                     child: const Text(
                       '     OK     ',
                       style: TextStyle(color: Colors.white),
@@ -115,8 +119,9 @@ Future<Produto?> newItemScreen(BuildContext context) async {
     },
   );
 
-  print(newItem?.descricao);
+  newItem?.barras = 12345678.toString();
+  newItem?.precoAtual = 5.0;
+  newItem?.historicoPreco = [4, 5, 5, 5];
 
   return newItem;
 }
-
