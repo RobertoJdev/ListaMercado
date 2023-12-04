@@ -237,6 +237,7 @@ class MarketDB {
   }
 
   Future<List<ListaMercado>> getAllListasMercado() async {
+    List<ListaMercado> result = [];
     await openDB();
     List<Map<String, dynamic>> listasMercado = await _database.rawQuery('''
     SELECT ListaMercado.*, 
@@ -250,8 +251,6 @@ class MarketDB {
     LEFT JOIN ListaMercadoProduto ON ListaMercado.id = ListaMercadoProduto.listaMercadoId
     LEFT JOIN Produto ON ListaMercadoProduto.produtoId = Produto.id
   ''');
-
-    List<ListaMercado> result = [];
 
     int currentListaId = -1; // Para rastrear a mudança de lista
     ListaMercado? currentLista;
@@ -277,14 +276,11 @@ class MarketDB {
           quantidade: item['produtoQuantidade'],
           pendente: item['produtoPendente'] == 1,
           precoAtual: item['produtoPrecoAtual'],
-          historicoPreco: [], // Não há mais a tabela HistoricoPreco
+          historicoPreco: [],
         );
         currentLista!.itens.add(produto);
       }
     }
-
-    print('-----------------------Teste de retorno de itens da lista');
-
     return result;
   }
 }

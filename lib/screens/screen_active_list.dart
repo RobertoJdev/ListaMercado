@@ -51,14 +51,14 @@ class _ActiveListState extends State<ScreenActiveList> {
             style: TextStyle(),
           ),
           actions: [
-            Icon(Icons.bar_chart_outlined),
+            const Icon(Icons.bar_chart_outlined),
             GestureDetector(
-              child: Icon(Icons.share),
+              child: const Icon(Icons.share),
               onTap: () {
                 //PopUpItemConfirm.showAlertDialog(context);
               },
             ),
-            Padding(padding: EdgeInsets.only(right: 10))
+            const Padding(padding: EdgeInsets.only(right: 10))
           ],
         ),
         body: Column(children: [
@@ -172,16 +172,16 @@ class _ActiveListState extends State<ScreenActiveList> {
     widget.listaMercado.custoTotal = double.parse(totalValue);
     widget.listaMercado.itens = listItensPendent + listItensConfirmed;
     itemMarketDB.novaListaMercado(widget.listaMercado);
-    Navigator.push(
+
+    Navigator.pushAndRemoveUntil(
       context,
-      MaterialPageRoute(
-        builder: (context) => ScreenListasMercado(),
-      ),
+      MaterialPageRoute(builder: (context) => const ScreenListasMercado()),
+      (route) => false, // Remove todas as telas do histórico
     );
   }
 
   void abrirListaMercado(ListaMercado lista) {
-    if (widget.listaMercado.finalizada) {
+    if (lista.finalizada) {
       for (Produto element in lista.itens) {
         print(element.descricao + '-----' + element.pendente.toString());
         if (element.pendente) {

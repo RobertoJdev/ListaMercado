@@ -90,7 +90,7 @@ class _listasMercadoState extends State<ScreenListasMercado> {
                                   ),
                                 ),
                                 child: const Padding(
-                                    padding: EdgeInsets.all(15.0),
+                                    padding: EdgeInsets.all(10.0),
                                     child: Text('Nova lista',
                                         style: TextStyle(
                                           color: Colors.white,
@@ -104,7 +104,7 @@ class _listasMercadoState extends State<ScreenListasMercado> {
 
   Future<void> _initializeDB() async {
     await itemMarketDB.initDB();
-    itemMarketDB.openDB();
+    await itemMarketDB.openDB();
     listasMercado = await itemMarketDB.getAllListasMercado();
     setState(() {});
   }
