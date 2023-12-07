@@ -57,7 +57,7 @@ class _listasMercadoState extends State<ScreenListasMercado> {
                 padding: const EdgeInsets.all(15.0),
                 child: Column(children: [
                   const Text('Listas de compras finalizadas'),
-                  Flexible(
+                  Expanded(
                       child: Stack(children: [
                     ListView.builder(
                       itemCount: listasMercado.length,

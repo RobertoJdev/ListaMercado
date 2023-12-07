@@ -14,58 +14,47 @@ class ItemListCompra extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(children: [
-      Container(
-          color: Colors.grey[200],
-          child: Row(children: [
-            Container(
-                color: Colors.deepPurple[100],
-                child: Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Flexible(
-                        fit: FlexFit.tight,
-                        flex: 1,
-                        child: Text(
-                            DataUtil.returnDataFormatted(listaMercado.data),
-                            style: const TextStyle(
-                              fontWeight: FontWeight.normal,
-                              //fontSize: 18,
-                            ))))),
-            const SizedBox(
-              width: 10,
+    return Container(
+      margin: EdgeInsets.only(bottom: 5),
+      color: Colors.grey[200],
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(10.0),
+            color: Colors.deepPurple[100],
+            child: Text(
+              DataUtil.returnDataFormatted(listaMercado.data),
+              style: const TextStyle(
+                fontWeight: FontWeight.normal,
+              ),
             ),
-            Flexible(
-              fit: FlexFit.tight,
-              flex: 5,
-              child: Container(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      listaMercado.supermercado,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    Text(
-                      'R\$ ${listaMercado.custoTotal.toString()}',
-                      style: const TextStyle(
-                        fontWeight: FontWeight.normal,
-                      ),
-                    ),
-                  ],
+          ),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.only(right: 10, left: 10),
+              child: Text(
+                listaMercado.supermercado,
+                style: const TextStyle(
+                  fontWeight: FontWeight.w500,
                 ),
               ),
             ),
-            const Flexible(
-              fit: FlexFit.tight,
-              flex: 1,
-              child: Icon(Icons.query_stats_outlined),
+          ),
+          Text(
+            'R\$ ${listaMercado.custoTotal.toString()}',
+            style: const TextStyle(
+              fontWeight: FontWeight.normal,
             ),
-          ])),
-      const SizedBox(
-        height: 5,
+          ),
+          const Padding(
+            padding: EdgeInsets.only(right: 10, left: 10),
+            child: Icon(
+              Icons.query_stats_outlined,
+            ),
+          ),
+        ],
       ),
-    ]);
+    );
   }
 }

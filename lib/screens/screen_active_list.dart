@@ -69,7 +69,7 @@ class _ActiveListState extends State<ScreenActiveList> {
                 padding: const EdgeInsets.all(15.0),
                 child: Column(children: [
                   const Text('Itens que faltam'),
-                  Flexible(
+                  Expanded(
                       child: Stack(children: [
                     ListView.builder(
                       itemCount: listItensPendent.length,
@@ -110,8 +110,7 @@ class _ActiveListState extends State<ScreenActiveList> {
               child: Column(
                 children: [
                   const Text('Itens adicionados ao carrinho'),
-                  Flexible(
-                      fit: FlexFit.tight,
+                  Expanded(
                       flex: 20,
                       child: ListView.builder(
                           itemCount: listItensConfirmed.length,
@@ -119,7 +118,7 @@ class _ActiveListState extends State<ScreenActiveList> {
                             return ItemListConfirmed(
                                 item: listItensConfirmed[index]);
                           })),
-                  Flexible(
+                  Expanded(
                     child: Text(
                       'Valor total das compras R\$: $totalValue',
                       style: const TextStyle(fontWeight: FontWeight.bold),

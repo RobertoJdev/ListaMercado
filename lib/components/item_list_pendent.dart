@@ -10,61 +10,50 @@ class ItemListPendent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(children: [
-      Container(
-          color: Colors.grey[200],
-          child: Row(children: [
+    return GestureDetector(
+      onTap: () async {
+        double? confirmedPrice = await confirmItemScreen(context: context);
+        if (confirmedPrice != null) {
+          item.precoAtual = confirmedPrice;
+          moveCallback(item);
+        } else {}
+      },
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 5),
+        color: Colors.amber[50],
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
             Container(
-                color: Colors.amber,
-                child: Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Flexible(
-                        fit: FlexFit.tight,
-                        flex: 1,
-                        child: Container(
-                            child: Text(item.quantidade.toString(),
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 18,
-                                )))))),
-            const SizedBox(
-              width: 10,
+              color: Colors.amber,
+              child: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Text(
+                  item.quantidade.toString(),
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 18,
+                  ),
+                ),
+              ),
             ),
-            Flexible(
-                fit: FlexFit.tight,
-                flex: 5,
-                child: Container(
-                    child: Text(item.descricao,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.w500,
-                        )))),
-            const Flexible(
-              fit: FlexFit.tight,
-              flex: 1,
-              child: Icon(Icons.query_stats_outlined),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.only(left: 10, right: 10),
+                child: Text(
+                  item.descricao,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(right: 15.0),
-              child: GestureDetector(
-                  child: const Icon(Icons.check_box_outline_blank),
-                  onTap: () async {
-                    double? confirmedPrice =
-                        await confirmItemScreen(context: context);
-                    if (confirmedPrice != null) {
-                      item.precoAtual = confirmedPrice;
-                      //print('Preço confirmado: $confirmedPrice');
-                      //print('chamada de função confirmar item');
-                      moveCallback(item);
-                      //print(item.getId());
-                    } else {
-                      //print('Operação cancelada');
-                    }
-                  }),
-            ),
-          ])),
-      const SizedBox(
-        height: 5,
+            const Padding(
+                padding: EdgeInsets.only(right: 10.0, left: 10),
+                child: Icon(Icons.query_stats_outlined)),
+          ],
+        ),
       ),
-    ]);
+    );
   }
 }
