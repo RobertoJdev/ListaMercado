@@ -6,6 +6,7 @@ import 'package:lista_mercado/models/lista_mercado.dart';
 import 'package:lista_mercado/components/decoration_list_bar.dart';
 import 'package:lista_mercado/components/item_list_confirmed.dart';
 import 'package:lista_mercado/components/item_list_pendent.dart';
+import 'package:lista_mercado/screens/screen_confirm_mercado.dart';
 import 'package:lista_mercado/screens/screen_new_item.dart';
 import 'package:lista_mercado/models/produto.dart';
 import 'package:lista_mercado/screens/screen_listas_mercado.dart';
@@ -167,16 +168,22 @@ class _ActiveListState extends State<ScreenActiveList> {
     return totalList;
   }
 
-  void finalizarListCompras() {
-    widget.listaMercado.custoTotal = double.parse(totalValue);
-    widget.listaMercado.itens = listItensPendent + listItensConfirmed;
-    itemMarketDB.novaListaMercado(widget.listaMercado);
+  void finalizarListCompras() async {
+    String? nomeMercado = await confirmMercadoScreen(context: context);
 
-    Navigator.pushAndRemoveUntil(
-      context,
-      MaterialPageRoute(builder: (context) => const ScreenListasMercado()),
-      (route) => false, // Remove todas as telas do histórico
-    );
+    if (nomeMercado != null) {
+      widget.listaMercado.custoTotal = double.parse(totalValue);
+      widget.listaMercado.itens = listItensPendent + listItensConfirmed;
+      widget.listaMercado.supermercado =
+          nomeMercado; // Defina o nome do mercado
+      itemMarketDB.novaListaMercado(widget.listaMercado);
+
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => const ScreenListasMercado()),
+        (route) => false, // Remove todas as telas do histórico
+      );
+    }
   }
 
   void abrirListaMercado(ListaMercado lista) {
