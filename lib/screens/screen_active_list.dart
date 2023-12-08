@@ -6,8 +6,8 @@ import 'package:lista_mercado/models/lista_mercado.dart';
 import 'package:lista_mercado/components/decoration_list_bar.dart';
 import 'package:lista_mercado/components/item_list_confirmed.dart';
 import 'package:lista_mercado/components/item_list_pendent.dart';
-import 'package:lista_mercado/screens/screen_confirm_mercado.dart';
-import 'package:lista_mercado/screens/screen_new_item.dart';
+import 'package:lista_mercado/screens/modal_screen_confirm_mercado.dart';
+import 'package:lista_mercado/screens/modal_screen_new_item.dart';
 import 'package:lista_mercado/models/produto.dart';
 import 'package:lista_mercado/screens/screen_listas_mercado.dart';
 
@@ -86,14 +86,14 @@ class _ActiveListState extends State<ScreenActiveList> {
                         );
                       },
                     ),
-                    Container(
+                    Align(
                         alignment: Alignment.bottomRight,
                         child: Padding(
-                            padding: const EdgeInsets.all(20.0),
+                            padding: const EdgeInsets.all(10.0),
                             child: FloatingActionButton(
                               splashColor: Colors.deepPurple,
-                              foregroundColor: Colors.deepPurple,
-                              backgroundColor: Colors.deepPurple[100],
+                              foregroundColor: Colors.white,
+                              backgroundColor: Colors.deepPurple,
                               onPressed: () async {
                                 Produto? temp;
                                 temp = await newItemScreen(context);
@@ -163,7 +163,7 @@ class _ActiveListState extends State<ScreenActiveList> {
   double somarList(List<Produto> produtos) {
     double totalList = 0;
     for (var item in produtos) {
-      totalList += item.precoAtual;
+      totalList += item.quantidade * item.precoAtual;
     }
     return totalList;
   }

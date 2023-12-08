@@ -59,7 +59,7 @@ class Populador {
     ListaMercado listaMercadoTemp = ListaMercado(
       userId: 1,
       custoTotal: 100.0,
-      data: '2023-01-01',
+      data: '01-01-2023',
       supermercado: 'Supermarket',
       finalizada: false,
       itens: produtos,
@@ -74,7 +74,7 @@ class Populador {
       multiListaMercadoTemp.add(ListaMercado(
         userId: 1,
         custoTotal: 100.0,
-        data: '2023-01-01',
+        data: '01-01-2023',
         supermercado: 'Supermarket',
         finalizada: false,
         itens: produtos,

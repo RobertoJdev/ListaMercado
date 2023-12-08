@@ -70,7 +70,7 @@ class MarketDB {
       {
         'userId': userId,
         'custoTotal': 100.0,
-        'data': '2023-01-02',
+        'data': '01-02-2023',
         'supermercado': 'Supermarket',
         'finalizada': 1,
       },
@@ -82,7 +82,7 @@ class MarketDB {
         {
           'userId': userId,
           'custoTotal': 200.0,
-          'data': '2024-01-01',
+          'data': '01-02-2023',
           'supermercado': 'Supermarket $i',
           'finalizada': 1,
         },

@@ -6,6 +6,7 @@ import 'package:lista_mercado/db/market_db.dart';
 import 'package:lista_mercado/models/data_util.dart';
 import 'package:lista_mercado/models/lista_mercado.dart';
 import 'package:lista_mercado/models/produto.dart';
+import 'package:lista_mercado/screens/modal_screen_reabrir_lista.dart';
 import 'package:lista_mercado/screens/screen_active_list.dart';
 
 class ScreenListasMercado extends StatefulWidget {
@@ -129,11 +130,21 @@ class _listasMercadoState extends State<ScreenListasMercado> {
 
   void abrirListaMercadoFinalizada(
       BuildContext context, ListaMercado listasMercado) async {
+    bool? reabrirLista = await reabrirListaScreen(context: context);
+
+    if (reabrirLista!) {
+      for (var element in listasMercado.itens) {
+        element.pendente = true;
+      }
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => const ScreenListasMercado()),
+          (route) => false);
+    }
+
     Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => ScreenActiveList(listasMercado),
-      ),
-    );
+        context,
+        MaterialPageRoute(
+            builder: (context) => ScreenActiveList(listasMercado)));
   }
 }

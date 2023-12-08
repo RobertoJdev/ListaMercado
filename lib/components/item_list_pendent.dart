@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lista_mercado/screens/screen_confirm_item.dart';
+import 'package:lista_mercado/screens/modal_screen_confirm_item.dart';
 import 'package:lista_mercado/components/item_list_confirmed.dart';
 import 'package:lista_mercado/models/produto.dart';
 
@@ -32,7 +32,7 @@ class ItemListPendent extends StatelessWidget {
                   item.quantidade.toString(),
                   style: const TextStyle(
                     fontWeight: FontWeight.w500,
-                    fontSize: 18,
+                    //fontSize: 18,
                   ),
                 ),
               ),

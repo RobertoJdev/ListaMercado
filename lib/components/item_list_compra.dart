@@ -24,7 +24,7 @@ class ItemListCompra extends StatelessWidget {
             padding: const EdgeInsets.all(10.0),
             color: Colors.deepPurple[100],
             child: Text(
-              DataUtil.returnDataFormatted(listaMercado.data),
+              listaMercado.data,
               style: const TextStyle(
                 fontWeight: FontWeight.normal,
               ),
