@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lista_mercado/screens/screen_listas_mercado.dart';
+import 'package:lista_mercado/screens/splash_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -22,7 +23,7 @@ class _MyAppState extends State<MyApp> {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const ScreenListasMercado(),
+      home: SplashScreen(),
     );
   }
 }

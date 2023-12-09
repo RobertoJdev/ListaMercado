@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 
-Future<bool?> reabrirListaScreen({BuildContext? context}) async {
+Future<bool?> showDeleteConfirmationDialog(BuildContext context) async {
   Completer<bool?> completer = Completer();
 
   showModalBottomSheet(
@@ -10,11 +10,12 @@ Future<bool?> reabrirListaScreen({BuildContext? context}) async {
       return StatefulBuilder(
         builder: (BuildContext context, StateSetter setState) {
           return Column(
+            //mainAxisSize: MainAxisSize.min,
             children: [
               const Padding(
                 padding: EdgeInsets.fromLTRB(0, 30, 0, 20),
                 child: Text(
-                  'Reutilizar ou Abrir a lista?',
+                  'Confirma exclusão da lista?',
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
               ),
@@ -22,6 +23,10 @@ Future<bool?> reabrirListaScreen({BuildContext? context}) async {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   TextButton(
+                    onPressed: () {
+                      completer.complete(false);
+                      Navigator.of(context).pop();
+                    },
                     style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.all(
                         Colors.deepPurple,
@@ -30,16 +35,16 @@ Future<bool?> reabrirListaScreen({BuildContext? context}) async {
                         Colors.white,
                       ),
                     ),
+                    child: const Padding(
+                      padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                      child: Text('Cancelar'),
+                    ),
+                  ),
+                  TextButton(
                     onPressed: () {
                       completer.complete(true);
                       Navigator.of(context).pop();
                     },
-                    child: const Padding(
-                      padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                      child: Text('Reutilizar'),
-                    ),
-                  ),
-                  TextButton(
                     style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.all(
                         Colors.deepPurple[100],
@@ -48,13 +53,9 @@ Future<bool?> reabrirListaScreen({BuildContext? context}) async {
                         Colors.deepPurple,
                       ),
                     ),
-                    onPressed: () {
-                      completer.complete(false);
-                      Navigator.of(context).pop();
-                    },
                     child: const Padding(
                       padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                      child: Text('    Abrir    '),
+                      child: Text(' Excluir '),
                     ),
                   )
                 ],

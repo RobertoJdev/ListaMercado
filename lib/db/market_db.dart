@@ -17,7 +17,6 @@ class MarketDB {
     _database = await openDatabase(
       join(path, 'listMarket.db'),
       onCreate: (db, version) async {
-        print('----------------Criação do banco de dados--------------');
         await _createTables(db);
         await _insertTestMarketData(db);
       },
@@ -62,6 +61,8 @@ class MarketDB {
   }
 
   Future<void> _insertTestMarketData(Database db) async {
+    List<Produto> itensMercado = Produto.generateMultiProdutosExemplo();
+    ListaMercado lista = ListaMercado.generateListaMercadoExemplo(itensMercado);
     final userId = 1;
 
     // Inserindo uma lista de mercado de teste associada ao usuário
@@ -69,46 +70,35 @@ class MarketDB {
       'ListaMercado',
       {
         'userId': userId,
-        'custoTotal': 100.0,
-        'data': '01-02-2023',
-        'supermercado': 'Supermarket',
+        'custoTotal': lista.custoTotal,
+        'data': lista.data,
+        'supermercado': lista.supermercado,
         'finalizada': 1,
       },
     );
 
-    for (var i = 0; i < 3; i++) {
-      await db.insert(
-        'ListaMercado',
+    for (var element in itensMercado) {
+      // Inserindo um produto de teste associado à lista de mercado
+      final produtoId = await db.insert(
+        'Produto',
         {
-          'userId': userId,
-          'custoTotal': 200.0,
-          'data': '01-02-2023',
-          'supermercado': 'Supermarket $i',
-          'finalizada': 1,
+          'descricao': element.descricao,
+          'barras': element.barras,
+          'quantidade': element.quantidade,
+          'pendente': element.pendente,
+          'precoAtual': element.precoAtual,
+        },
+      );
+
+      // Associando o produto à lista de mercado
+      await db.insert(
+        'ListaMercadoProduto',
+        {
+          'listaMercadoId': listaMercadoId,
+          'produtoId': produtoId,
         },
       );
     }
-
-    // Inserindo um produto de teste associado à lista de mercado
-    final produtoId = await db.insert(
-      'Produto',
-      {
-        'descricao': 'Test Product',
-        'barras': '123456789',
-        'quantidade': 5,
-        'pendente': 1,
-        'precoAtual': 20.0,
-      },
-    );
-
-    // Associando o produto à lista de mercado
-    await db.insert(
-      'ListaMercadoProduto',
-      {
-        'listaMercadoId': listaMercadoId,
-        'produtoId': produtoId,
-      },
-    );
   }
 
   Future<void> insertItem(ListaMercado listaMercado, Produto produto) async {
@@ -166,7 +156,7 @@ class MarketDB {
   Future<List<Map<String, dynamic>>> getAllItems() async {
     await initDB();
     await openDB();
-    print('---------***---------Teste get AllItens--------***----------');
+    //print('---------***---------Teste get AllItens--------***----------');
     return await _database.rawQuery('''
       SELECT *
       FROM Produto
@@ -227,8 +217,8 @@ class MarketDB {
     FROM ListaMercado
   ''');
 
-    print('Todas as listas de Mercado:');
-    todasListas.forEach((item) => print(item));
+    //print('Todas as listas de Mercado:');
+    //todasListas.forEach((item) => print(item));
 
     print('Listas de Mercado não finalizadas:');
     print(listasMercadoNaoFinalizadas);
@@ -281,6 +271,58 @@ class MarketDB {
         currentLista!.itens.add(produto);
       }
     }
+    return result;
+  }
+
+  static void populateDB(ListaMercado listaMercado) {
+    MarketDB itemMarketDB = MarketDB();
+    itemMarketDB.novaListaMercado(listaMercado);
+  }
+
+  Future<ListaMercado?> searchListaMercadoById(int listaMercadoId) async {
+    await openDB();
+    List<Map<String, dynamic>> listasMercado = await _database.rawQuery('''
+    SELECT ListaMercado.*, 
+           Produto.id as produtoId,
+           Produto.descricao as produtoDescricao,
+           Produto.barras as produtoBarras,
+           Produto.quantidade as produtoQuantidade,
+           Produto.pendente as produtoPendente,
+           Produto.precoAtual as produtoPrecoAtual
+    FROM ListaMercado
+    LEFT JOIN ListaMercadoProduto ON ListaMercado.id = ListaMercadoProduto.listaMercadoId
+    LEFT JOIN Produto ON ListaMercadoProduto.produtoId = Produto.id
+    WHERE ListaMercado.id = ?
+  ''', [listaMercadoId]);
+
+    ListaMercado? result;
+
+    if (listasMercado.isNotEmpty) {
+      result = ListaMercado(
+        id: listasMercado[0]['id'],
+        userId: listasMercado[0]['userId'],
+        custoTotal: listasMercado[0]['custoTotal'],
+        data: listasMercado[0]['data'],
+        supermercado: listasMercado[0]['supermercado'],
+        finalizada: listasMercado[0]['finalizada'] == 1,
+        itens: [],
+      );
+
+      for (var item in listasMercado) {
+        if (item['produtoId'] != null) {
+          Produto produto = Produto(
+            descricao: item['produtoDescricao'],
+            barras: item['produtoBarras'],
+            quantidade: item['produtoQuantidade'],
+            pendente: item['produtoPendente'] == 1,
+            precoAtual: item['produtoPrecoAtual'],
+            historicoPreco: [],
+          );
+          result.itens.add(produto);
+        }
+      }
+    }
+
     return result;
   }
 }

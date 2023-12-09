@@ -40,7 +40,7 @@ Future<Produto?> newItemScreen(BuildContext context) async {
               child: Column(
                 children: [
                   const Padding(
-                    padding: EdgeInsets.fromLTRB(0, 15, 0, 0),
+                    padding: EdgeInsets.fromLTRB(0, 30, 0, 0),
                     child: Text(
                       'Informe o novo item',
                       style: TextStyle(fontWeight: FontWeight.bold),

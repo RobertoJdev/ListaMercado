@@ -18,4 +18,32 @@ class ListaMercado {
     required this.finalizada,
     required this.itens,
   });
+
+  static generateListaMercadoExemplo(List<Produto> produtos) {
+    ListaMercado listaMercadoTemp = ListaMercado(
+      userId: 1,
+      custoTotal: 100.0,
+      data: '01-01-2023',
+      supermercado: 'Supermarket Exemplo',
+      finalizada: false,
+      itens: produtos,
+    );
+    return listaMercadoTemp;
+  }
+
+  static generateMultiListasMercadoExemplo(List<Produto> produtos) {
+    List<ListaMercado> multiListaMercadoTemp = [];
+
+    for (var i = 0; i < 5; i++) {
+      multiListaMercadoTemp.add(ListaMercado(
+        userId: 1,
+        custoTotal: 100.0,
+        data: '01-01-2023',
+        supermercado: 'Supermarket Exemplo',
+        finalizada: false,
+        itens: produtos,
+      ));
+    }
+    return multiListaMercadoTemp;
+  }
 }

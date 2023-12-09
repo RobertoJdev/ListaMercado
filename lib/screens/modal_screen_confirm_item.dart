@@ -16,7 +16,7 @@ Future<double?> confirmItemScreen({BuildContext? context}) async {
           return Column(
             children: [
               const Padding(
-                padding: EdgeInsets.fromLTRB(0, 15, 0, 0),
+                padding: EdgeInsets.fromLTRB(0, 30, 0, 0),
                 child: Text(
                   'Qual o valor do item?',
                   style: TextStyle(fontWeight: FontWeight.bold),

@@ -35,8 +35,8 @@ class _ActiveListState extends State<ScreenActiveList> {
     abrirListaMercado(widget.listaMercado);
   }
 
-  ListaMercado lmercadot = Populador.generateListaMercadoExemplo(
-      Populador.generateMultiProdutosExemplo());
+  ListaMercado lmercadot = ListaMercado.generateListaMercadoExemplo(
+      Produto.generateMultiProdutosExemplo());
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +69,10 @@ class _ActiveListState extends State<ScreenActiveList> {
             Padding(
                 padding: const EdgeInsets.all(15.0),
                 child: Column(children: [
-                  const Text('Itens que faltam'),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
+                    child: const Text('Itens que faltam'),
+                  ),
                   Expanded(
                       child: Stack(children: [
                     ListView.builder(
@@ -110,7 +113,10 @@ class _ActiveListState extends State<ScreenActiveList> {
               padding: const EdgeInsets.all(15.0),
               child: Column(
                 children: [
-                  const Text('Itens adicionados ao carrinho'),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
+                    child: const Text('Itens adicionados ao carrinho'),
+                  ),
                   Expanded(
                       flex: 20,
                       child: ListView.builder(
@@ -178,6 +184,7 @@ class _ActiveListState extends State<ScreenActiveList> {
           nomeMercado; // Defina o nome do mercado
       itemMarketDB.novaListaMercado(widget.listaMercado);
 
+      // ignore: use_build_context_synchronously
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(builder: (context) => const ScreenListasMercado()),
@@ -189,7 +196,7 @@ class _ActiveListState extends State<ScreenActiveList> {
   void abrirListaMercado(ListaMercado lista) {
     if (lista.finalizada) {
       for (Produto element in lista.itens) {
-        print(element.descricao + '-----' + element.pendente.toString());
+        //print(element.descricao + '-----' + element.pendente.toString());
         if (element.pendente) {
           listItensPendent.add(element);
         } else {
@@ -198,7 +205,7 @@ class _ActiveListState extends State<ScreenActiveList> {
       }
     } else {
       widget.listaMercado.itens =
-          listItensPendent = Populador.generateMultiProdutosExemplo();
+          listItensPendent = Produto.generateMultiProdutosExemplo();
     }
   }
 }
