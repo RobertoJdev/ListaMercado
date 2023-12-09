@@ -49,8 +49,12 @@ class ItemListPendent extends StatelessWidget {
               ),
             ),
             const Padding(
-                padding: EdgeInsets.only(right: 10.0, left: 10),
-                child: Icon(Icons.query_stats_outlined)),
+              padding: EdgeInsets.only(right: 10.0, left: 10),
+              child: Icon(
+                Icons.query_stats_outlined,
+                color: Colors.grey,
+              ),
+            ),
           ],
         ),
       ),

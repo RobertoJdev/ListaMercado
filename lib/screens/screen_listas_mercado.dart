@@ -37,9 +37,15 @@ class _listasMercadoState extends State<ScreenListasMercado> {
           style: TextStyle(),
         ),
         actions: [
-          const Icon(Icons.bar_chart_outlined),
+          const Icon(
+            Icons.bar_chart_outlined,
+            color: Colors.grey,
+          ),
           GestureDetector(
-            child: const Icon(Icons.share),
+            child: const Icon(
+              Icons.share,
+              color: Colors.grey,
+            ),
             onTap: () {
               //PopUpItemConfirm.showAlertDialog(context);
             },
@@ -95,7 +101,7 @@ class _listasMercadoState extends State<ScreenListasMercado> {
                               listasMercado[index],
                             );
                           },
-                          child: ItemListCompra(
+                          child: ItemListCompras(
                             listaMercado: listasMercado[index],
                           ),
                         ),

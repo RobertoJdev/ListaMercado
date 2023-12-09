@@ -52,9 +52,15 @@ class _ActiveListState extends State<ScreenActiveList> {
             style: TextStyle(),
           ),
           actions: [
-            const Icon(Icons.bar_chart_outlined),
+            const Icon(
+              Icons.bar_chart_outlined,
+              color: Colors.grey,
+            ),
             GestureDetector(
-              child: const Icon(Icons.share),
+              child: const Icon(
+                Icons.share,
+                color: Colors.grey,
+              ),
               onTap: () {
                 //PopUpItemConfirm.showAlertDialog(context);
               },
@@ -69,9 +75,9 @@ class _ActiveListState extends State<ScreenActiveList> {
             Padding(
                 padding: const EdgeInsets.all(15.0),
                 child: Column(children: [
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
-                    child: const Text('Itens que faltam'),
+                  const Padding(
+                    padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
+                    child: Text('Itens que faltam'),
                   ),
                   Expanded(
                       child: Stack(children: [
@@ -113,9 +119,9 @@ class _ActiveListState extends State<ScreenActiveList> {
               padding: const EdgeInsets.all(15.0),
               child: Column(
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
-                    child: const Text('Itens adicionados ao carrinho'),
+                  const Padding(
+                    padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
+                    child: Text('Itens adicionados ao carrinho'),
                   ),
                   Expanded(
                       flex: 20,

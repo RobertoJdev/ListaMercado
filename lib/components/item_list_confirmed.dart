@@ -43,7 +43,10 @@ class ItemListConfirmed extends StatelessWidget {
           ),
           const Padding(
             padding: EdgeInsets.only(right: 10.0),
-            child: Icon(Icons.query_stats_outlined),
+            child: Icon(
+              Icons.query_stats_outlined,
+              color: Colors.grey,
+            ),
           ),
         ],
       ),

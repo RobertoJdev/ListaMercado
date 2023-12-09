@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:lista_mercado/models/data_util.dart';
 import 'package:lista_mercado/models/lista_mercado.dart';
-import 'package:lista_mercado/models/produto.dart';
 
-class ItemListCompra extends StatelessWidget {
-  ItemListCompra({
+class ItemListCompras extends StatelessWidget {
+  ItemListCompras({
     super.key,
     required this.listaMercado,
     //required this.moveCallback,
@@ -51,6 +49,7 @@ class ItemListCompra extends StatelessWidget {
             padding: EdgeInsets.only(right: 10, left: 10),
             child: Icon(
               Icons.query_stats_outlined,
+              color: Colors.grey,
             ),
           ),
         ],
