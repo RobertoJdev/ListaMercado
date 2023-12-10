@@ -23,7 +23,7 @@ class ListaMercado {
     ListaMercado listaMercadoTemp = ListaMercado(
       userId: 1,
       custoTotal: 100.0,
-      data: '01-01-2023',
+      data: '01-01-23',
       supermercado: 'Supermarket Exemplo',
       finalizada: false,
       itens: produtos,
@@ -38,7 +38,7 @@ class ListaMercado {
       multiListaMercadoTemp.add(ListaMercado(
         userId: 1,
         custoTotal: 100.0,
-        data: '01-01-2023',
+        data: '01-01-23',
         supermercado: 'Supermarket Exemplo',
         finalizada: false,
         itens: produtos,

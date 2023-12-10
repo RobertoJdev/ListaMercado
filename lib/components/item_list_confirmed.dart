@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:lista_mercado/models/produto.dart';
 
 class ItemListConfirmed extends StatelessWidget {
@@ -7,6 +8,14 @@ class ItemListConfirmed extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var precoController = MoneyMaskedTextController(
+      decimalSeparator: ',',
+      thousandSeparator: '.',
+      leftSymbol: 'R\$ ',
+    );
+
+    precoController.updateValue(item.precoAtual);
+
     return Container(
       margin: const EdgeInsets.only(bottom: 5),
       color: Colors.green[50],
@@ -16,12 +25,11 @@ class ItemListConfirmed extends StatelessWidget {
           Container(
             color: Colors.green,
             child: Padding(
-              padding: const EdgeInsets.all(10.0),
+              padding: const EdgeInsets.all(12.0),
               child: Text(
                 item.quantidade.toString(),
                 style: const TextStyle(
                   fontWeight: FontWeight.w500,
-                  //fontSize: 18,
                 ),
               ),
             ),
@@ -39,7 +47,7 @@ class ItemListConfirmed extends StatelessWidget {
           ),
           Padding(
             padding: const EdgeInsets.only(right: 10.0, left: 10),
-            child: Text('R\$: ${item.precoAtual.toString()}'),
+            child: Text(precoController.text),
           ),
           const Padding(
             padding: EdgeInsets.only(right: 10.0),

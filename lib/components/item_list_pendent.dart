@@ -27,7 +27,7 @@ class ItemListPendent extends StatelessWidget {
             Container(
               color: Colors.amber,
               child: Padding(
-                padding: const EdgeInsets.all(10.0),
+                padding: const EdgeInsets.all(12.0),
                 child: Text(
                   item.quantidade.toString(),
                   style: const TextStyle(

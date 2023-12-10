@@ -3,12 +3,19 @@ import 'package:lista_mercado/models/lista_mercado.dart';
 
 class ItemListCompras extends StatelessWidget {
   ItemListCompras({
-    super.key,
+    Key? key,
     required this.listaMercado,
-    //required this.moveCallback,
-  });
-  //final Function(Produto) moveCallback;
-  ListaMercado listaMercado;
+    // required this.moveCallback,
+  }) : super(key: key);
+
+  // final Function(Produto) moveCallback;
+  final ListaMercado listaMercado;
+
+  String formatCurrency(double value) {
+    // Substituí o ponto por vírgula e usei a função toStringAsFixed para
+    // garantir que sempre tenhamos duas casas decimais.
+    return 'R\$ ${value.toStringAsFixed(2).replaceAll('.', ',')}';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +26,7 @@ class ItemListCompras extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Container(
-            padding: const EdgeInsets.all(10.0),
+            padding: const EdgeInsets.all(12.0),
             color: Colors.deepPurple[100],
             child: Text(
               listaMercado.data,
@@ -40,7 +47,7 @@ class ItemListCompras extends StatelessWidget {
             ),
           ),
           Text(
-            'R\$ ${listaMercado.custoTotal.toString()}',
+            formatCurrency(listaMercado.custoTotal),
             style: const TextStyle(
               fontWeight: FontWeight.normal,
             ),

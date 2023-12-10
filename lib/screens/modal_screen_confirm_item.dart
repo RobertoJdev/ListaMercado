@@ -1,7 +1,6 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'dart:async';
-import 'package:lista_mercado/models/produto.dart';
 
 Future<double?> confirmItemScreen({BuildContext? context}) async {
   TextEditingController _textEditingController = TextEditingController();
@@ -25,8 +24,8 @@ Future<double?> confirmItemScreen({BuildContext? context}) async {
               Padding(
                 padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
                 child: TextField(
-                  inputFormatters: <TextInputFormatter>[
-                    FilteringTextInputFormatter.digitsOnly
+                  inputFormatters: [
+                    FilteringTextInputFormatter.allow(RegExp(r'[0-9\.,]')),
                   ],
                   autofocus: true,
                   keyboardType: TextInputType.number,
@@ -38,6 +37,14 @@ Future<double?> confirmItemScreen({BuildContext? context}) async {
                       isButtonEnabled = text.isNotEmpty;
                     });
                   },
+                  decoration: InputDecoration(
+                    prefixText: 'R\$ ',
+                    prefixStyle: const TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                    ),
+                  ),
                 ),
               ),
               Row(
@@ -67,8 +74,9 @@ Future<double?> confirmItemScreen({BuildContext? context}) async {
                     ),
                     onPressed: isButtonEnabled
                         ? () {
-                            double? price =
-                                double.tryParse(_textEditingController.text);
+                            double? price = double.tryParse(
+                              _textEditingController.text.replaceAll(',', '.'),
+                            );
                             completer.complete(price);
                             _textEditingController.text = '';
                             Navigator.of(context).pop();
