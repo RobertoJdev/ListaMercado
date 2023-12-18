@@ -37,9 +37,9 @@ Future<double?> confirmItemScreen({BuildContext? context}) async {
                       isButtonEnabled = text.isNotEmpty;
                     });
                   },
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     prefixText: 'R\$ ',
-                    prefixStyle: const TextStyle(
+                    prefixStyle: TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.bold,
                       fontSize: 20,

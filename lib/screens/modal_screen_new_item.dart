@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lista_mercado/models/produto.dart';
+import 'package:intl/intl.dart';
 
 Future<Produto?> newItemScreen(BuildContext context) async {
   Produto? newItem;
@@ -13,25 +14,14 @@ Future<Produto?> newItemScreen(BuildContext context) async {
 
   Completer<Produto?> completer = Completer();
 
+  bool isButtonEnabled = false;
+
   await showModalBottomSheet(
     isScrollControlled: true,
     context: context,
     builder: (BuildContext context) {
       return StatefulBuilder(
         builder: (BuildContext context, StateSetter setState) {
-          bool isButtonDisabled() {
-            return _textEditingControllerNewItem.text.isEmpty ||
-                _textEditingControllerNewItemQuant.text.isEmpty;
-          }
-
-          _textEditingControllerNewItem.addListener(() {
-            setState(() {});
-          });
-
-          _textEditingControllerNewItemQuant.addListener(() {
-            setState(() {});
-          });
-
           return SingleChildScrollView(
             child: Container(
               padding: EdgeInsets.only(
@@ -62,13 +52,18 @@ Future<Produto?> newItemScreen(BuildContext context) async {
                   Padding(
                     padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
                     child: TextField(
-                      inputFormatters: <TextInputFormatter>[
-                        FilteringTextInputFormatter.digitsOnly
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(RegExp(r'[0-9\.,]')),
                       ],
                       keyboardType: TextInputType.number,
                       controller: _textEditingControllerNewItemQuant,
                       textAlign: TextAlign.center,
                       style: const TextStyle(fontSize: 20),
+                      onChanged: (text) {
+                        setState(() {
+                          isButtonEnabled = text.isNotEmpty;
+                        });
+                      },
                       decoration: const InputDecoration(
                         labelText: 'Quantidade',
                       ),
@@ -91,36 +86,43 @@ Future<Produto?> newItemScreen(BuildContext context) async {
                       ),
                       ElevatedButton(
                         style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStateProperty.resolveWith<Color?>(
-                            (Set<MaterialState> states) {
-                              if (states.contains(MaterialState.disabled)) {
-                                return Colors
-                                    .deepPurple[100]; // Cor quando desabilitado
-                              }
-                              return Colors.deepPurple; // Cor padrão
-                            },
-                          ),
+                          backgroundColor: isButtonEnabled
+                              ? MaterialStateProperty.all(
+                                  Colors.deepPurple,
+                                )
+                              : MaterialStateProperty.all(
+                                  Colors.deepPurple[100],
+                                ),
                         ),
-                        onPressed: isButtonDisabled()
-                            ? null
-                            : () {
-                                setState(() {
+                        onPressed: isButtonEnabled
+                            ? () {
+                                String quantidadeText =
+                                    _textEditingControllerNewItemQuant.text;
+
+                                // Substituir ',' por '.' antes da conversão
+                                quantidadeText =
+                                    quantidadeText.replaceAll(',', '.');
+                                double? quantidade =
+                                    double.tryParse(quantidadeText);
+
+                                if (quantidade != null) {
                                   newItem = Produto.newItemList(
                                     descricao:
                                         _textEditingControllerNewItem.text,
-                                    quantidade: int.parse(
-                                        _textEditingControllerNewItemQuant
-                                            .text),
+                                    quantidade: quantidade,
                                   );
 
                                   _textEditingControllerNewItem.text = '';
                                   _textEditingControllerNewItemQuant.text = '';
-                                });
 
-                                completer.complete(newItem);
-                                Navigator.of(context).pop();
-                              },
+                                  completer.complete(newItem);
+                                  Navigator.of(context).pop();
+                                } else {
+                                  // Trate o caso em que a conversão falhou, por exemplo, exibindo uma mensagem de erro.
+                                  print("Quantidade inválida");
+                                }
+                              }
+                            : null,
                         child: const Text(
                           '  OK  ',
                           style: TextStyle(color: Colors.white),
