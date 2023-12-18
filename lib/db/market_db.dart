@@ -43,7 +43,7 @@ class MarketDB {
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         descricao TEXT NOT NULL,
         barras TEXT NOT NULL,
-        quantidade INTEGER NOT NULL,
+        quantidade REAL NOT NULL,
         pendente INTEGER NOT NULL,
         precoAtual REAL NOT NULL
       )
