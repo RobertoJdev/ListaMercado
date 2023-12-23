@@ -6,7 +6,7 @@ class Produto {
   String? _id;
   late String descricao;
   late String barras;
-  late int quantidade;
+  late double quantidade;
   late bool pendente;
   late double precoAtual;
   late List<double> historicoPreco;
