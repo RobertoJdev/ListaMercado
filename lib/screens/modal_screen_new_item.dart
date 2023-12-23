@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lista_mercado/models/produto.dart';
@@ -32,7 +31,7 @@ Future<Produto?> newItemScreen(BuildContext context) async {
                   const Padding(
                     padding: EdgeInsets.fromLTRB(0, 30, 0, 0),
                     child: Text(
-                      'Informe o novo item',
+                      'Informe o novo item.',
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                   ),
