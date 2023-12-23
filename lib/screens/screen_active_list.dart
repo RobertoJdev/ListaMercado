@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:lista_mercado/components/decoration_list_bar.dart';
 import 'package:lista_mercado/components/item_list_pendent.dart';
+import 'package:lista_mercado/components/item_list_confirmed.dart';
 import 'package:lista_mercado/db/market_db.dart';
 import 'package:lista_mercado/models/lista_mercado.dart';
 import 'package:lista_mercado/models/produto.dart';
-import 'package:lista_mercado/components/item_list_confirmed.dart';
 import 'package:lista_mercado/screens/modal_screen_confirm_mercado.dart';
 import 'package:lista_mercado/screens/modal_screen_new_item.dart';
 import 'package:lista_mercado/screens/screen_listas_mercado.dart';
@@ -19,19 +17,26 @@ class ScreenActiveList extends StatefulWidget {
   State<ScreenActiveList> createState() => _ActiveListState();
 }
 
-class _ActiveListState extends State<ScreenActiveList> {
+class _ActiveListState extends State<ScreenActiveList>
+    with TickerProviderStateMixin {
   late TextEditingController _textEditingController = TextEditingController();
   List<Produto> listItensPendent = [];
   List<Produto> listItensConfirmed = [];
   final MarketDB itemMarketDB = MarketDB();
 
   late String totalValue;
+  bool isContainerPressed = false;
+  late AnimationController _animationController;
 
   @override
   void initState() {
     super.initState();
     itemMarketDB.initDB();
     abrirListaMercado(widget.listaMercado);
+    _animationController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 100),
+    );
   }
 
   @override
@@ -83,36 +88,35 @@ class _ActiveListState extends State<ScreenActiveList> {
                             ListView.builder(
                               itemCount: listItensPendent.length,
                               itemBuilder: (BuildContext context, int index) {
-                                return GestureDetector(
-                                  onTap: () {
-                                    moveItemToConfirmedList(
-                                        listItensPendent[index]);
+                                return Dismissible(
+                                  key: UniqueKey(),
+                                  direction: DismissDirection.startToEnd,
+                                  onDismissed: (direction) {
+                                    setState(() {
+                                      listItensPendent.removeAt(index);
+                                    });
                                   },
-                                  child: ItemListPendent(
-                                    item: listItensPendent[index],
-                                    moveCallback: moveItemToConfirmedList,
+                                  background: Container(
+                                    color: Colors.red,
+                                    alignment: Alignment.centerLeft,
+                                    padding: const EdgeInsets.only(left: 10),
+                                    child: const Icon(
+                                      Icons.delete,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      moveItemToConfirmedList(
+                                          listItensPendent[index]);
+                                    },
+                                    child: ItemListPendent(
+                                      item: listItensPendent[index],
+                                      moveCallback: moveItemToConfirmedList,
+                                    ),
                                   ),
                                 );
                               },
-                            ),
-                            Align(
-                              alignment: Alignment.bottomRight,
-                              child: Padding(
-                                padding: const EdgeInsets.all(10.0),
-                                child: FloatingActionButton(
-                                  splashColor: Colors.deepPurple,
-                                  foregroundColor: Colors.white,
-                                  backgroundColor: Colors.deepPurple,
-                                  onPressed: () async {
-                                    Produto? temp;
-                                    temp = await newItemScreen(context);
-                                    setState(() {
-                                      listItensPendent.add(temp!);
-                                    });
-                                  },
-                                  child: const Icon(Icons.add),
-                                ),
-                              ),
                             ),
                           ],
                         ),
@@ -133,8 +137,28 @@ class _ActiveListState extends State<ScreenActiveList> {
                         child: ListView.builder(
                           itemCount: listItensConfirmed.length,
                           itemBuilder: (BuildContext context, int index) {
-                            return ItemListConfirmed(
-                              item: listItensConfirmed[index],
+                            return Dismissible(
+                              key: UniqueKey(),
+                              direction: DismissDirection.endToStart,
+                              onDismissed: (direction) {
+                                if (direction == DismissDirection.endToStart) {
+                                  setState(() {
+                                    listItensConfirmed.removeAt(index);
+                                  });
+                                }
+                              },
+                              background: Container(
+                                color: Colors.red,
+                                alignment: Alignment.centerRight,
+                                padding: const EdgeInsets.only(right: 10),
+                                child: const Icon(
+                                  Icons.delete,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              child: ItemListConfirmed(
+                                item: listItensConfirmed[index],
+                              ),
                             );
                           },
                         ),
@@ -142,58 +166,97 @@ class _ActiveListState extends State<ScreenActiveList> {
                       const Padding(
                         padding: EdgeInsets.all(5.0),
                       ),
-                      Align(
-                        alignment: Alignment.bottomRight,
-                        child: ElevatedButton(
-                          onPressed: finalizarListCompras,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.deepPurple,
-                            elevation: 5,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15.0),
-                            ),
-                          ),
-                          child: const Padding(
-                            padding: EdgeInsets.all(5.0),
-                            child: Text(
-                              'Finalizar lista',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
                     ],
                   ),
                 ),
               ],
             ),
           ),
-          Container(
-            alignment: Alignment.center,
-            padding: const EdgeInsets.all(15),
-            width: double.infinity,
-            color: Colors.deepPurple,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text(
-                  'Valor total das compras: ',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w400,
+          GestureDetector(
+            onTapDown: (_) {
+              _animationController.forward();
+              setState(() {
+                isContainerPressed = true;
+              });
+            },
+            onTapUp: (_) {
+              _animationController.reverse();
+              setState(() {
+                isContainerPressed = false;
+              });
+            },
+            onTapCancel: () {
+              _animationController.reverse();
+              setState(() {
+                isContainerPressed = false;
+              });
+            },
+            child: Container(
+              padding: const EdgeInsets.fromLTRB(30, 15, 30, 15),
+              decoration: BoxDecoration(
+                color: isContainerPressed
+                    ? Colors.deepPurple.withOpacity(0.5)
+                    : Colors.deepPurple,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.5),
+                    spreadRadius: 5,
+                    blurRadius: 7,
+                    offset: const Offset(0, 3),
                   ),
-                ),
-                Text(
-                  'R\$ $totalValue',
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
+                ],
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  GestureDetector(
+                    onTap: finalizarListCompras,
+                    child: Row(
+                      children: [
+                        const Text(
+                          'Valor total: ',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                        Text(
+                          'R\$ $totalValue',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                  GestureDetector(
+                    onTap: () async {
+                      Produto? temp;
+                      temp = await newItemScreen(context);
+                      setState(() {
+                        listItensPendent.add(temp!);
+                      });
+                    },
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.add,
+                          color: Colors.white,
+                        ),
+                        SizedBox(width: 5),
+                        Text(
+                          'Adicionar Item',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ],
