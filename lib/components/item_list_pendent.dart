@@ -3,24 +3,12 @@ import 'package:intl/intl.dart';
 import 'package:lista_mercado/screens/modal_screen_confirm_item.dart';
 import 'package:lista_mercado/components/item_list_confirmed.dart';
 import 'package:lista_mercado/models/produto.dart';
+import 'package:lista_mercado/util/formatValue.dart';
 
 class ItemListPendent extends StatelessWidget {
   ItemListPendent({super.key, required this.item, required this.moveCallback});
   final Produto item;
   final Function(Produto) moveCallback;
-
-  String formatDouble(double value) {
-    // Formatar o número com vírgula como separador decimal
-    final formatter = NumberFormat("#,##0.00", "pt_BR");
-
-    // Remover a parte decimal se não houver fração
-    String formattedValue = formatter.format(value);
-    if (formattedValue.endsWith(',00')) {
-      formattedValue = formattedValue.replaceAll(',00', '');
-    }
-
-    return formattedValue;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +31,7 @@ class ItemListPendent extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.all(12.0),
                 child: Text(
-                  formatDouble(item.quantidade),
+                  FortmatValue.formatDouble(item.quantidade),
                   style: const TextStyle(
                     fontWeight: FontWeight.w500,
                   ),

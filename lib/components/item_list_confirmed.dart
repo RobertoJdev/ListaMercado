@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
+import 'package:intl/intl.dart';
 import 'package:lista_mercado/models/produto.dart';
+import 'package:lista_mercado/util/formatValue.dart';
 
 class ItemListConfirmed extends StatelessWidget {
   ItemListConfirmed({super.key, required this.item});
@@ -27,7 +29,7 @@ class ItemListConfirmed extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.all(12.0),
               child: Text(
-                item.quantidade.toString(),
+                FortmatValue.formatDouble(item.quantidade),
                 style: const TextStyle(
                   fontWeight: FontWeight.w500,
                 ),
