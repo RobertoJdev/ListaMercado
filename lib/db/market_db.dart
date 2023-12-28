@@ -103,8 +103,28 @@ class MarketDB {
 
   Future<void> insertItem(ListaMercado listaMercado, Produto produto) async {
     await openDB();
+
     await _database.transaction((txn) async {
-      // ... (o restante do seu código de inserção de itens)
+      // Insere o produto no banco de dados
+      int produtoId = await txn.insert(
+        'Produto',
+        {
+          'descricao': produto.descricao,
+          'barras': produto.barras,
+          'quantidade': produto.quantidade,
+          'pendente': produto.pendente ? 1 : 0,
+          'precoAtual': produto.precoAtual,
+        },
+      );
+
+      // Associa o produto à ListaMercado
+      await txn.insert(
+        'ListaMercadoProduto',
+        {
+          'listaMercadoId': listaMercado.id,
+          'produtoId': produtoId,
+        },
+      );
     });
   }
 
@@ -324,5 +344,31 @@ class MarketDB {
     }
 
     return result;
+  }
+
+  Future<int> salvarListaMercadoVazia(int userId) async {
+    await openDB();
+
+    // Exclui todas as listas de mercado não finalizadas do usuário
+    await _database.delete(
+      'ListaMercado',
+      where: 'userId = ? AND finalizada = 0',
+      whereArgs: [userId],
+    );
+
+    // Cria um mapa com os valores da ListaMercado
+    final listaMercadoMap = {
+      'userId': userId,
+      'custoTotal': 0.0,
+      'data': '',
+      'supermercado': 'Lista Não Finalizada',
+      'finalizada': 0,
+    };
+
+    // Insere a lista de mercado vazia no banco de dados
+    int listaMercadoId =
+        await _database.insert('ListaMercado', listaMercadoMap);
+
+    return listaMercadoId;
   }
 }

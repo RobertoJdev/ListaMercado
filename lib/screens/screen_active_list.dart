@@ -22,7 +22,7 @@ class _ActiveListState extends State<ScreenActiveList>
   late TextEditingController _textEditingController = TextEditingController();
   List<Produto> listItensPendent = [];
   List<Produto> listItensConfirmed = [];
-  final MarketDB itemMarketDB = MarketDB();
+  final MarketDB db = MarketDB();
 
   late String totalValue;
   bool isContainerPressed = false;
@@ -31,7 +31,7 @@ class _ActiveListState extends State<ScreenActiveList>
   @override
   void initState() {
     super.initState();
-    itemMarketDB.initDB();
+    db.initDB();
     abrirListaMercado(widget.listaMercado);
     _animationController = AnimationController(
       vsync: this,
@@ -237,8 +237,9 @@ class _ActiveListState extends State<ScreenActiveList>
                       setState(() {
                         listItensPendent.add(temp!);
                       });
+                      db.insertItem(widget.listaMercado, temp!);
                     },
-                    child: Row(
+                    child: const Row(
                       children: [
                         Icon(
                           Icons.add,
@@ -265,7 +266,7 @@ class _ActiveListState extends State<ScreenActiveList>
   }
 
   void moveItemToConfirmedList(Produto item) {
-    itemMarketDB.printAllItems();
+    db.printAllItems();
     setState(() {
       item.pendente = false;
       listItensPendent.remove(item);
@@ -288,7 +289,7 @@ class _ActiveListState extends State<ScreenActiveList>
       widget.listaMercado.custoTotal = double.parse(totalValue);
       widget.listaMercado.itens = listItensPendent + listItensConfirmed;
       widget.listaMercado.supermercado = nomeMercado;
-      itemMarketDB.novaListaMercado(widget.listaMercado);
+      db.novaListaMercado(widget.listaMercado);
 
       Navigator.pushAndRemoveUntil(
         context,
@@ -308,8 +309,8 @@ class _ActiveListState extends State<ScreenActiveList>
         }
       }
     } else {
-      widget.listaMercado.itens =
-          listItensPendent = Produto.generateMultiProdutosExemplo();
+      //widget.listaMercado.itens =
+      //    listItensPendent = Produto.generateMultiProdutosExemplo();
     }
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lista_mercado/components/decoration_list_bar.dart';
 import 'package:lista_mercado/components/item_list_compra.dart';
+import 'package:lista_mercado/components/item_list_compra_nao_finalizada.dart';
 import 'package:lista_mercado/db/market_db.dart';
 import 'package:lista_mercado/util/data_util.dart';
 import 'package:lista_mercado/models/lista_mercado.dart';
@@ -18,7 +19,7 @@ class ScreenListasMercado extends StatefulWidget {
 
 class _listasMercadoState extends State<ScreenListasMercado> {
   List<ListaMercado> listasMercado = [];
-  final MarketDB itemMarketDB = MarketDB();
+  final MarketDB db = MarketDB();
 
   @override
   void initState() {
@@ -63,7 +64,7 @@ class _listasMercadoState extends State<ScreenListasMercado> {
                 const Padding(
                   padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
                   child: Text(
-                    'Listas de compras finalizadas',
+                    'Listas de compras',
                   ),
                 ),
                 Expanded(
@@ -95,16 +96,18 @@ class _listasMercadoState extends State<ScreenListasMercado> {
                           return await showDeleteConfirmationDialog(context);
                         },
                         child: GestureDetector(
-                          onTap: () {
-                            abrirListaMercadoFinalizada(
-                              context,
-                              listasMercado[index],
-                            );
-                          },
-                          child: ItemListCompras(
-                            listaMercado: listasMercado[index],
-                          ),
-                        ),
+                            onTap: () {
+                              abrirListaMercadoFinalizada(
+                                context,
+                                listasMercado[index],
+                              );
+                            },
+                            child: listasMercado[index].finalizada
+                                ? ItemListCompras(
+                                    listaMercado: listasMercado[index],
+                                  )
+                                : ItemListComprasNaoFinalizada(
+                                    listaMercado: listasMercado[index])),
                       );
                     },
                   ),
@@ -144,16 +147,19 @@ class _listasMercadoState extends State<ScreenListasMercado> {
   }
 
   Future<void> _initializeDB() async {
-    await itemMarketDB.initDB();
-    await itemMarketDB.openDB();
-    listasMercado = await itemMarketDB.getAllListasMercado();
+    await db.initDB();
+    await db.openDB();
+    listasMercado = await db.getAllListasMercado();
     setState(() {
       //itemMarketDB;
     });
   }
 
   void criarNovaListaMercado(BuildContext context) async {
+    int idNovaLista = await db.salvarListaMercadoVazia(0);
+
     ListaMercado novaListaMercado = ListaMercado(
+      id: idNovaLista,
       userId: 0,
       custoTotal: 0,
       data: DataUtil.getCurrentFormattedDate(),
@@ -161,6 +167,9 @@ class _listasMercadoState extends State<ScreenListasMercado> {
       finalizada: false,
       itens: [],
     );
+
+    print(novaListaMercado.id);
+    print(novaListaMercado.finalizada);
 
     Navigator.push(
       context,
@@ -174,7 +183,7 @@ class _listasMercadoState extends State<ScreenListasMercado> {
       BuildContext context, ListaMercado listaMercado) async {
     bool? reabrirLista = await reabrirListaScreen(context: context);
     int temp = listaMercado.id!;
-    ListaMercado? tempLista = await itemMarketDB.searchListaMercadoById(temp);
+    ListaMercado? tempLista = await db.searchListaMercadoById(temp);
 
     if (reabrirLista!) {
       if (tempLista != null) {
