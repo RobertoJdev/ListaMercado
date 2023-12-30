@@ -102,6 +102,7 @@ class MarketDB {
   }
 
   Future<void> insertItem(ListaMercado listaMercado, Produto produto) async {
+    await initDB();
     await openDB();
 
     await _database.transaction((txn) async {

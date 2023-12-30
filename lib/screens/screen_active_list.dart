@@ -8,6 +8,7 @@ import 'package:lista_mercado/models/produto.dart';
 import 'package:lista_mercado/screens/modal_screen_confirm_mercado.dart';
 import 'package:lista_mercado/screens/modal_screen_new_item.dart';
 import 'package:lista_mercado/screens/screen_listas_mercado.dart';
+import 'package:lista_mercado/util/data_util.dart';
 
 class ScreenActiveList extends StatefulWidget {
   ScreenActiveList(this.listaMercado, {Key? key}) : super(key: key);
@@ -37,6 +38,7 @@ class _ActiveListState extends State<ScreenActiveList>
       vsync: this,
       duration: Duration(milliseconds: 100),
     );
+    testeExibirListaItems();
   }
 
   @override
@@ -234,10 +236,12 @@ class _ActiveListState extends State<ScreenActiveList>
                     onTap: () async {
                       Produto? temp;
                       temp = await newItemScreen(context);
-                      setState(() {
-                        listItensPendent.add(temp!);
-                      });
-                      db.insertItem(widget.listaMercado, temp!);
+                      if (temp != null) {
+                        db.insertItem(widget.listaMercado, temp);
+                        setState(() {
+                          listItensPendent.add(temp!);
+                        });
+                      }
                     },
                     child: const Row(
                       children: [
@@ -289,6 +293,8 @@ class _ActiveListState extends State<ScreenActiveList>
       widget.listaMercado.custoTotal = double.parse(totalValue);
       widget.listaMercado.itens = listItensPendent + listItensConfirmed;
       widget.listaMercado.supermercado = nomeMercado;
+      widget.listaMercado.finalizada = true;
+      //widget.listaMercado.data = DataUtil().getCurrentFormattedDate();
       db.novaListaMercado(widget.listaMercado);
 
       Navigator.pushAndRemoveUntil(
@@ -300,17 +306,20 @@ class _ActiveListState extends State<ScreenActiveList>
   }
 
   void abrirListaMercado(ListaMercado lista) {
-    if (lista.finalizada) {
-      for (Produto element in lista.itens) {
-        if (element.pendente) {
-          listItensPendent.add(element);
-        } else {
-          listItensConfirmed.add(element);
-        }
+    for (Produto element in lista.itens) {
+      if (element.pendente) {
+        listItensPendent.add(element);
+      } else {
+        listItensConfirmed.add(element);
       }
-    } else {
-      //widget.listaMercado.itens =
-      //    listItensPendent = Produto.generateMultiProdutosExemplo();
+    }
+  }
+
+  void testeExibirListaItems() {
+    print(
+        '------------------Lista de produtos passados como parametro dentro da chamada. ------------------');
+    for (var element in widget.listaMercado.itens) {
+      print(element.descricao);
     }
   }
 }

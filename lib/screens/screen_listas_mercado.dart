@@ -3,6 +3,7 @@ import 'package:lista_mercado/components/decoration_list_bar.dart';
 import 'package:lista_mercado/components/item_list_compra.dart';
 import 'package:lista_mercado/components/item_list_compra_nao_finalizada.dart';
 import 'package:lista_mercado/db/market_db.dart';
+import 'package:lista_mercado/screens/modal_screen_lista_nao_finalizada.dart';
 import 'package:lista_mercado/util/data_util.dart';
 import 'package:lista_mercado/models/lista_mercado.dart';
 import 'package:lista_mercado/models/produto.dart';
@@ -19,6 +20,7 @@ class ScreenListasMercado extends StatefulWidget {
 
 class _listasMercadoState extends State<ScreenListasMercado> {
   List<ListaMercado> listasMercado = [];
+  ListaMercado? listaNaoFinaliza;
   final MarketDB db = MarketDB();
 
   @override
@@ -64,7 +66,7 @@ class _listasMercadoState extends State<ScreenListasMercado> {
                 const Padding(
                   padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
                   child: Text(
-                    'Listas de compras',
+                    'Listas de compras finalizadas',
                   ),
                 ),
                 Expanded(
@@ -96,18 +98,16 @@ class _listasMercadoState extends State<ScreenListasMercado> {
                           return await showDeleteConfirmationDialog(context);
                         },
                         child: GestureDetector(
-                            onTap: () {
-                              abrirListaMercadoFinalizada(
-                                context,
-                                listasMercado[index],
-                              );
-                            },
-                            child: listasMercado[index].finalizada
-                                ? ItemListCompras(
-                                    listaMercado: listasMercado[index],
-                                  )
-                                : ItemListComprasNaoFinalizada(
-                                    listaMercado: listasMercado[index])),
+                          onTap: () {
+                            abrirListaMercadoFinalizada(
+                              context,
+                              listasMercado[index],
+                            );
+                          },
+                          child: ItemListCompras(
+                            listaMercado: listasMercado[index],
+                          ),
+                        ),
                       );
                     },
                   ),
@@ -153,6 +153,31 @@ class _listasMercadoState extends State<ScreenListasMercado> {
     setState(() {
       //itemMarketDB;
     });
+
+    // Após inicializar o banco de dados, chama a função
+    _verificarListaNaoFinalizada();
+  }
+
+  Future<void> _verificarListaNaoFinalizada() async {
+    for (var i = 0; i < listasMercado.length; i++) {
+      if (!listasMercado[i].finalizada) {
+        listaNaoFinaliza = listasMercado[i];
+        listasMercado.removeAt(i);
+      }
+    }
+
+    if (listaNaoFinaliza != null) {
+      bool? resultado = await abrirListaNaoFinalizada(context);
+
+      // Use o resultado conforme necessário
+      if (resultado != null) {
+        if (resultado) {
+          // O usuário escolheu excluir
+        } else {
+          abrirListaMercadoNaoFinalizada(context, listaNaoFinaliza!);
+        }
+      }
+    }
   }
 
   void criarNovaListaMercado(BuildContext context) async {
@@ -167,10 +192,6 @@ class _listasMercadoState extends State<ScreenListasMercado> {
       finalizada: false,
       itens: [],
     );
-
-    print(novaListaMercado.id);
-    print(novaListaMercado.finalizada);
-
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -191,7 +212,6 @@ class _listasMercadoState extends State<ScreenListasMercado> {
           element.pendente = true;
         }
 
-        // ignore: use_build_context_synchronously
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -199,8 +219,6 @@ class _listasMercadoState extends State<ScreenListasMercado> {
           ),
         );
       } else {
-        // Trate o caso em que a lista de mercado não foi encontrada
-        // ignore: use_build_context_synchronously
         showDialog(
           context: context,
           builder: (context) => AlertDialog(
@@ -218,7 +236,6 @@ class _listasMercadoState extends State<ScreenListasMercado> {
         );
       }
     } else {
-      // ignore: use_build_context_synchronously
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -226,6 +243,16 @@ class _listasMercadoState extends State<ScreenListasMercado> {
         ),
       );
     }
+  }
+
+  void abrirListaMercadoNaoFinalizada(
+      BuildContext context, ListaMercado listaNaoFinaliza) async {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ScreenActiveList(listaNaoFinaliza),
+      ),
+    );
   }
 
   void excluirLista(ListaMercado lista) {
