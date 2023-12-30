@@ -372,4 +372,54 @@ class MarketDB {
 
     return listaMercadoId;
   }
+
+  Future<void> updateListaMercado(ListaMercado listaMercado) async {
+    await openDB();
+    await _database.transaction((txn) async {
+      // Atualiza os dados da ListaMercado
+      await txn.update(
+        'ListaMercado',
+        {
+          'userId': listaMercado.userId,
+          'custoTotal': listaMercado.custoTotal,
+          'data': listaMercado.data,
+          'supermercado': listaMercado.supermercado,
+          'finalizada': listaMercado.finalizada ? 1 : 0,
+        },
+        where: 'id = ?',
+        whereArgs: [listaMercado.id],
+      );
+
+      // Deleta os produtos associados à ListaMercado
+      await txn.delete(
+        'ListaMercadoProduto',
+        where: 'listaMercadoId = ?',
+        whereArgs: [listaMercado.id],
+      );
+
+      // Insere os produtos atualizados
+      for (Produto produto in listaMercado.itens) {
+        // Insere o produto no banco de dados
+        int produtoId = await txn.insert(
+          'Produto',
+          {
+            'descricao': produto.descricao,
+            'barras': produto.barras,
+            'quantidade': produto.quantidade,
+            'pendente': produto.pendente ? 1 : 0,
+            'precoAtual': produto.precoAtual,
+          },
+        );
+
+        // Associa o produto à ListaMercado
+        await txn.insert(
+          'ListaMercadoProduto',
+          {
+            'listaMercadoId': listaMercado.id,
+            'produtoId': produtoId,
+          },
+        );
+      }
+    });
+  }
 }

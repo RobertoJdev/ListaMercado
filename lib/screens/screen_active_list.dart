@@ -24,6 +24,7 @@ class _ActiveListState extends State<ScreenActiveList>
   List<Produto> listItensPendent = [];
   List<Produto> listItensConfirmed = [];
   final MarketDB db = MarketDB();
+  late bool listaAberta;
 
   late String totalValue;
   bool isContainerPressed = false;
@@ -289,12 +290,25 @@ class _ActiveListState extends State<ScreenActiveList>
   void finalizarListCompras() async {
     String? nomeMercado = await confirmMercadoScreen(context: context);
 
+    listaAberta = widget.listaMercado.finalizada;
+
     if (nomeMercado != null) {
       widget.listaMercado.custoTotal = double.parse(totalValue);
       widget.listaMercado.itens = listItensPendent + listItensConfirmed;
       widget.listaMercado.supermercado = nomeMercado;
       widget.listaMercado.finalizada = true;
-      //widget.listaMercado.data = DataUtil().getCurrentFormattedDate();
+      widget.listaMercado.data = DataUtil.getCurrentFormattedDate();
+
+      if (!listaAberta) {
+        db.updateListaMercado(widget.listaMercado);
+
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => const ScreenListasMercado()),
+          (route) => false,
+        );
+      } else {}
+
       db.novaListaMercado(widget.listaMercado);
 
       Navigator.pushAndRemoveUntil(
