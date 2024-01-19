@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:lista_mercado/models/categoria.dart';
 import 'package:lista_mercado/models/produto.dart';
 import 'package:intl/intl.dart';
+import 'package:path/path.dart';
 
 Future<Produto?> newItemScreen(BuildContext context) async {
   Produto? newItem;
@@ -17,6 +18,7 @@ Future<Produto?> newItemScreen(BuildContext context) async {
   Completer<Produto?> completer = Completer();
 
   bool isButtonEnabled = false;
+  String selectedCategory = Categorias.obterCategoriaAleatoria();
 
   await showModalBottomSheet(
     isScrollControlled: true,
@@ -95,6 +97,41 @@ Future<Produto?> newItemScreen(BuildContext context) async {
                       ],
                     ),
                   ),
+
+                  // Adicione esta parte para a lista suspensa de categorias
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 20, 20, 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          child: DropdownButton<String>(
+                            style: const TextStyle(
+                              fontSize: 20,
+                              color: Colors.black,
+                            ),
+                            value: selectedCategory,
+                            onChanged: (String? newValue) {
+                              setState(() {
+                                selectedCategory = newValue!;
+                              });
+                            },
+                            items: Categorias.obterTodasCategorias()
+                                .map<DropdownMenuItem<String>>(
+                                  (Categoria categoria) =>
+                                      DropdownMenuItem<String>(
+                                    alignment: Alignment.center,
+                                    value: categoria.nome,
+                                    child: Text(categoria.nome),
+                                  ),
+                                )
+                                .toList(),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -138,12 +175,12 @@ Future<Produto?> newItemScreen(BuildContext context) async {
 
                                 if (quantidade != null && valor != null) {
                                   newItem = Produto.newItemList(
-                                      descricao:
-                                          _textEditingControllerNewItem.text,
-                                      quantidade: quantidade,
-                                      precoAtual: valor,
-                                      categoria:
-                                          Categorias.obterCategoriaAleatoria());
+                                    descricao:
+                                        _textEditingControllerNewItem.text,
+                                    quantidade: quantidade,
+                                    precoAtual: valor,
+                                    categoria: selectedCategory,
+                                  );
 
                                   _textEditingControllerNewItem.text = '';
                                   _textEditingControllerNewItemQuant.text = '';

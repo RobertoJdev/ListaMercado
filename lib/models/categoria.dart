@@ -58,4 +58,46 @@ class Categorias {
 
     return todasCategorias[indiceAleatorio].nome.toString();
   }
+
+  static Color obterCorPorDescricao(String descricao) {
+    final Map<String, Categoria> mapaCategorias = {
+      'Frutas e Vegetais': frutas,
+      'Padaria': padaria,
+      'Laticínios': laticinios,
+      'Carnes': carnes,
+      'Congelados': congelados,
+      'Produtos de Limpeza': produtosLimpeza,
+      'Higiene Pessoal': higienePessoal,
+      'Bebidas': bebidas,
+      'Cereais e Grãos': cereais,
+      'Molhos e Condimentos': molhos,
+      'Snacks e Aperitivos': snacks,
+      'Produtos de Bebê': produtosBebe,
+      'Limpeza Doméstica': limpezaDomestica,
+    };
+
+    return mapaCategorias[descricao]?.cor ?? Colors.grey[50]!;
+  }
+
+
+static obterTodasCategorias() {
+    final List<Categoria> todasCategorias = [
+      frutas,
+      padaria,
+      laticinios,
+      carnes,
+      congelados,
+      produtosLimpeza,
+      higienePessoal,
+      bebidas,
+      cereais,
+      molhos,
+      snacks,
+      produtosBebe,
+      limpezaDomestica,
+    ];
+
+    return todasCategorias;
+  }
+
 }

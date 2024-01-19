@@ -24,13 +24,13 @@ class Produto {
     gerarId();
   }
 
-  Produto.newItemList({
-    required this.descricao,
-    required this.quantidade,
-    this.pendente = true,
-    this.precoAtual = 0,
-    required this.categoria
-  }) : historicoPreco = [] {
+  Produto.newItemList(
+      {required this.descricao,
+      required this.quantidade,
+      this.pendente = true,
+      this.precoAtual = 0,
+      required this.categoria})
+      : historicoPreco = [] {
     gerarId();
   }
 
@@ -80,5 +80,18 @@ class Produto {
     }
 
     return listExemploProdutos;
+  }
+
+  static List<Produto> ordenarItens(
+      List<Produto> listaProdutos) {
+    return listaProdutos
+      ..sort((a, b) {
+        final categoriaComparison =
+            a.categoria.toLowerCase().compareTo(b.categoria.toLowerCase());
+        if (categoriaComparison != 0) {
+          return categoriaComparison;
+        }
+        return a.descricao.toLowerCase().compareTo(b.descricao.toLowerCase());
+      });
   }
 }

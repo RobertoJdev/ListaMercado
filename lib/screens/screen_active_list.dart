@@ -244,8 +244,9 @@ class _ActiveListState extends State<ScreenActiveList>
                       temp = await newItemScreen(context);
                       if (temp != null) {
                         db.insertItem(widget.listaMercado, temp);
+                        listItensPendent.add(temp!);
                         setState(() {
-                          listItensPendent.add(temp!);
+                          listItensPendent = Produto.ordenarItens(listItensPendent);
                         });
                       }
                     },
@@ -325,6 +326,8 @@ class _ActiveListState extends State<ScreenActiveList>
   }
 
   void abrirListaMercado(ListaMercado lista) {
+    //List<Produto> listaProdutos = lista.itens;
+    lista.itens = Produto.ordenarItens(lista.itens);
     for (Produto element in lista.itens) {
       if (element.pendente) {
         listItensPendent.add(element);

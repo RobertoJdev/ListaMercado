@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:lista_mercado/models/categoria.dart';
 import 'package:lista_mercado/screens/modal_screen_confirm_item.dart';
 import 'package:lista_mercado/components/item_list_confirmed.dart';
 import 'package:lista_mercado/models/produto.dart';
@@ -22,7 +23,7 @@ class ItemListPendent extends StatelessWidget {
       },
       child: Container(
         margin: const EdgeInsets.only(bottom: 5),
-        color: Colors.amber[50],
+        color: Categorias.obterCorPorDescricao(item.categoria),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
