@@ -10,6 +10,8 @@ Future<Produto?> newItemScreen(BuildContext context) async {
   TextEditingController _textEditingControllerNewItem = TextEditingController();
   TextEditingController _textEditingControllerNewItemQuant =
       TextEditingController();
+  TextEditingController _textEditingControllerNewItemValor =
+      TextEditingController();
 
   Completer<Produto?> completer = Completer();
 
@@ -50,22 +52,46 @@ Future<Produto?> newItemScreen(BuildContext context) async {
                   ),
                   Padding(
                     padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-                    child: TextField(
-                      inputFormatters: [
-                        FilteringTextInputFormatter.allow(RegExp(r'[0-9\.,]')),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: TextField(
+                            inputFormatters: [
+                              FilteringTextInputFormatter.allow(
+                                  RegExp(r'[0-9\.,]')),
+                            ],
+                            keyboardType: TextInputType.number,
+                            controller: _textEditingControllerNewItemQuant,
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(fontSize: 20),
+                            onChanged: (text) {
+                              setState(() {
+                                isButtonEnabled = text.isNotEmpty;
+                              });
+                            },
+                            decoration: const InputDecoration(
+                              labelText: 'Quantidade',
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 10), // Espaço entre os campos
+                        Expanded(
+                          child: TextField(
+                            inputFormatters: [
+                              FilteringTextInputFormatter.allow(
+                                  RegExp(r'[0-9\.,]')),
+                            ],
+                            keyboardType: TextInputType.number,
+                            controller: _textEditingControllerNewItemValor,
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(fontSize: 20),
+                            decoration: const InputDecoration(
+                              labelText: 'Valor',
+                            ),
+                          ),
+                        ),
                       ],
-                      keyboardType: TextInputType.number,
-                      controller: _textEditingControllerNewItemQuant,
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(fontSize: 20),
-                      onChanged: (text) {
-                        setState(() {
-                          isButtonEnabled = text.isNotEmpty;
-                        });
-                      },
-                      decoration: const InputDecoration(
-                        labelText: 'Quantidade',
-                      ),
                     ),
                   ),
                   Row(
@@ -97,28 +123,35 @@ Future<Produto?> newItemScreen(BuildContext context) async {
                             ? () {
                                 String quantidadeText =
                                     _textEditingControllerNewItemQuant.text;
+                                String valorText =
+                                    _textEditingControllerNewItemValor.text;
 
                                 // Substituir ',' por '.' antes da conversão
                                 quantidadeText =
                                     quantidadeText.replaceAll(',', '.');
+                                valorText = valorText.replaceAll(',', '.');
+
                                 double? quantidade =
                                     double.tryParse(quantidadeText);
+                                double? valor = double.tryParse(valorText);
 
-                                if (quantidade != null) {
+                                if (quantidade != null && valor != null) {
                                   newItem = Produto.newItemList(
                                     descricao:
                                         _textEditingControllerNewItem.text,
                                     quantidade: quantidade,
+                                    precoAtual: valor,
                                   );
 
                                   _textEditingControllerNewItem.text = '';
                                   _textEditingControllerNewItemQuant.text = '';
+                                  _textEditingControllerNewItemValor.text = '';
 
                                   completer.complete(newItem);
                                   Navigator.of(context).pop();
                                 } else {
                                   // Trate o caso em que a conversão falhou, por exemplo, exibindo uma mensagem de erro.
-                                  print("Quantidade inválida");
+                                  print("Quantidade ou Valor inválidos");
                                 }
                               }
                             : null,

@@ -1,5 +1,5 @@
 import 'dart:math';
-
+import 'package:lista_mercado/models/categoria.dart';
 import 'package:uuid/uuid.dart';
 
 class Produto {
@@ -9,6 +9,7 @@ class Produto {
   late double quantidade;
   late bool pendente;
   late double precoAtual;
+  late String categoria;
   late List<double> historicoPreco;
 
   Produto({
@@ -17,6 +18,7 @@ class Produto {
     required this.quantidade,
     required this.pendente,
     required this.precoAtual,
+    required this.categoria,
     required this.historicoPreco,
   }) {
     gerarId();
@@ -26,8 +28,8 @@ class Produto {
     required this.descricao,
     required this.quantidade,
     this.pendente = true,
-  })  : precoAtual = 0,
-        historicoPreco = [] {
+    this.precoAtual = 0,
+  }) : historicoPreco = [] {
     gerarId();
   }
 
@@ -40,10 +42,11 @@ class Produto {
   static generateProdutoExemplo() {
     Produto produtoExemplo = Produto(
       descricao: 'Arroz',
-      barras: '0123456789', // Adicione aspas para tratar como string
+      barras: '0123456789',
       quantidade: 10,
       pendente: true,
       precoAtual: 5,
+      categoria: Categorias.obterCategoriaAleatoria().nome,
       historicoPreco: [7, 9, 5],
     );
     return produtoExemplo;
@@ -64,12 +67,14 @@ class Produto {
 
     for (var element in nomesProdutos) {
       Produto produtoTemp = Produto(
-          descricao: element,
-          barras: '0123456789',
-          quantidade: Random().nextInt(10) + 1,
-          pendente: true,
-          precoAtual: 5,
-          historicoPreco: [7, 9, 5]);
+        descricao: element,
+        barras: '0123456789',
+        quantidade: Random().nextInt(10) + 1,
+        pendente: true,
+        precoAtual: 5,
+        categoria: Categorias.obterCategoriaAleatoria().nome,
+        historicoPreco: [7, 9, 5],
+      );
       listExemploProdutos.add(produtoTemp);
     }
 

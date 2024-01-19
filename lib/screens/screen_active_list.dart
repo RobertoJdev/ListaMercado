@@ -216,6 +216,11 @@ class _ActiveListState extends State<ScreenActiveList>
                     onTap: finalizarListCompras,
                     child: Row(
                       children: [
+                        const Icon(
+                          Icons.check,
+                          color: Colors.white,
+                        ),
+                        const SizedBox(width: 5),
                         const Text(
                           'Valor total: ',
                           style: TextStyle(

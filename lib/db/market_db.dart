@@ -1,3 +1,4 @@
+// market_db.dart
 import 'package:lista_mercado/models/lista_mercado.dart';
 import 'package:lista_mercado/models/produto.dart';
 import 'package:sqflite/sqflite.dart';
@@ -177,7 +178,6 @@ class MarketDB {
   Future<List<Map<String, dynamic>>> getAllItems() async {
     await initDB();
     await openDB();
-    //print('---------***---------Teste get AllItens--------***----------');
     return await _database.rawQuery('''
       SELECT *
       FROM Produto
@@ -238,9 +238,6 @@ class MarketDB {
     FROM ListaMercado
   ''');
 
-    //print('Todas as listas de Mercado:');
-    //todasListas.forEach((item) => print(item));
-
     print('Listas de Mercado não finalizadas:');
     print(listasMercadoNaoFinalizadas);
 
@@ -280,6 +277,7 @@ class MarketDB {
         );
         result.add(currentLista);
       }
+
       if (item['produtoId'] != null) {
         Produto produto = Produto(
           descricao: item['produtoDescricao'],
