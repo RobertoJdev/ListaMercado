@@ -36,7 +36,7 @@ class Categorias {
   static final Categoria limpezaDomestica =
       Categoria(nome: 'Limpeza Doméstica', cor: Colors.indigo[50]!);
 
-  static Categoria obterCategoriaAleatoria() {
+  static obterCategoriaAleatoria() {
     final List<Categoria> todasCategorias = [
       frutas,
       padaria,
@@ -56,6 +56,6 @@ class Categorias {
     final Random random = Random();
     final int indiceAleatorio = random.nextInt(todasCategorias.length);
 
-    return todasCategorias[indiceAleatorio];
+    return todasCategorias[indiceAleatorio].nome.toString();
   }
 }

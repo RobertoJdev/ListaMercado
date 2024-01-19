@@ -46,7 +46,8 @@ class MarketDB {
         barras TEXT NOT NULL,
         quantidade REAL NOT NULL,
         pendente INTEGER NOT NULL,
-        precoAtual REAL NOT NULL
+        precoAtual REAL NOT NULL,
+        categoria TEXT NOT NULL
       )
     ''');
 
@@ -88,6 +89,7 @@ class MarketDB {
           'quantidade': element.quantidade,
           'pendente': element.pendente,
           'precoAtual': element.precoAtual,
+          'categoria': element.categoria,
         },
       );
 
@@ -116,6 +118,7 @@ class MarketDB {
           'quantidade': produto.quantidade,
           'pendente': produto.pendente ? 1 : 0,
           'precoAtual': produto.precoAtual,
+          'categoria': produto.categoria
         },
       );
 
@@ -157,6 +160,7 @@ class MarketDB {
         'quantidade': produto.quantidade,
         'pendente': produto.pendente,
         'precoAtual': produto.precoAtual,
+        'categoria': produto.categoria,
       };
 
       // Insere o produto no banco de dados
@@ -254,7 +258,8 @@ class MarketDB {
            Produto.barras as produtoBarras,
            Produto.quantidade as produtoQuantidade,
            Produto.pendente as produtoPendente,
-           Produto.precoAtual as produtoPrecoAtual
+           Produto.precoAtual as produtoPrecoAtual,
+           Produto.categoria as produtoCategoria
     FROM ListaMercado
     LEFT JOIN ListaMercadoProduto ON ListaMercado.id = ListaMercadoProduto.listaMercadoId
     LEFT JOIN Produto ON ListaMercadoProduto.produtoId = Produto.id
@@ -285,6 +290,7 @@ class MarketDB {
           quantidade: item['produtoQuantidade'],
           pendente: item['produtoPendente'] == 1,
           precoAtual: item['produtoPrecoAtual'],
+          categoria: item['produtoCategoria'],
           historicoPreco: [],
         );
         currentLista!.itens.add(produto);
@@ -307,7 +313,8 @@ class MarketDB {
            Produto.barras as produtoBarras,
            Produto.quantidade as produtoQuantidade,
            Produto.pendente as produtoPendente,
-           Produto.precoAtual as produtoPrecoAtual
+           Produto.precoAtual as produtoPrecoAtual,
+           Produto.categoria as produtoCategoria
     FROM ListaMercado
     LEFT JOIN ListaMercadoProduto ON ListaMercado.id = ListaMercadoProduto.listaMercadoId
     LEFT JOIN Produto ON ListaMercadoProduto.produtoId = Produto.id
@@ -335,6 +342,7 @@ class MarketDB {
             quantidade: item['produtoQuantidade'],
             pendente: item['produtoPendente'] == 1,
             precoAtual: item['produtoPrecoAtual'],
+            categoria: item['produtoCategoria'],
             historicoPreco: [],
           );
           result.itens.add(produto);
@@ -406,6 +414,7 @@ class MarketDB {
             'quantidade': produto.quantidade,
             'pendente': produto.pendente ? 1 : 0,
             'precoAtual': produto.precoAtual,
+            'categoria': produto.categoria,
           },
         );
 

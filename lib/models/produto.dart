@@ -29,6 +29,7 @@ class Produto {
     required this.quantidade,
     this.pendente = true,
     this.precoAtual = 0,
+    required this.categoria
   }) : historicoPreco = [] {
     gerarId();
   }
@@ -46,7 +47,7 @@ class Produto {
       quantidade: 10,
       pendente: true,
       precoAtual: 5,
-      categoria: Categorias.obterCategoriaAleatoria().nome,
+      categoria: Categorias.obterCategoriaAleatoria(),
       historicoPreco: [7, 9, 5],
     );
     return produtoExemplo;
@@ -72,7 +73,7 @@ class Produto {
         quantidade: Random().nextInt(10) + 1,
         pendente: true,
         precoAtual: 5,
-        categoria: Categorias.obterCategoriaAleatoria().nome,
+        categoria: Categorias.obterCategoriaAleatoria(),
         historicoPreco: [7, 9, 5],
       );
       listExemploProdutos.add(produtoTemp);

@@ -23,7 +23,7 @@ class _ActiveListState extends State<ScreenActiveList>
   late TextEditingController _textEditingController = TextEditingController();
   List<Produto> listItensPendent = [];
   List<Produto> listItensConfirmed = [];
-  final MarketDB db = MarketDB();
+  final MarketDB db = MarketDB();  
   late bool listaAberta;
 
   late String totalValue;

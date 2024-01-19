@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:lista_mercado/models/categoria.dart';
 import 'package:lista_mercado/models/produto.dart';
 import 'package:intl/intl.dart';
 
@@ -75,7 +76,7 @@ Future<Produto?> newItemScreen(BuildContext context) async {
                             ),
                           ),
                         ),
-                        SizedBox(width: 10), // Espaço entre os campos
+                        const SizedBox(width: 10), // Espaço entre os campos
                         Expanded(
                           child: TextField(
                             inputFormatters: [
@@ -137,11 +138,12 @@ Future<Produto?> newItemScreen(BuildContext context) async {
 
                                 if (quantidade != null && valor != null) {
                                   newItem = Produto.newItemList(
-                                    descricao:
-                                        _textEditingControllerNewItem.text,
-                                    quantidade: quantidade,
-                                    precoAtual: valor,
-                                  );
+                                      descricao:
+                                          _textEditingControllerNewItem.text,
+                                      quantidade: quantidade,
+                                      precoAtual: valor,
+                                      categoria:
+                                          Categorias.obterCategoriaAleatoria());
 
                                   _textEditingControllerNewItem.text = '';
                                   _textEditingControllerNewItemQuant.text = '';
