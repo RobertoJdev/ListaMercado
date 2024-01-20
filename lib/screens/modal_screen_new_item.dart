@@ -51,6 +51,14 @@ Future<Produto?> newItemScreen(BuildContext context) async {
                       decoration: const InputDecoration(
                         labelText: 'Produto',
                       ),
+                      onChanged: (text) {
+                        setState(() {
+                          isButtonEnabled =
+                              _textEditingControllerNewItem.text.isNotEmpty &&
+                                  _textEditingControllerNewItemQuant
+                                      .text.isNotEmpty;
+                        });
+                      },
                     ),
                   ),
                   Padding(
@@ -70,7 +78,10 @@ Future<Produto?> newItemScreen(BuildContext context) async {
                             style: const TextStyle(fontSize: 20),
                             onChanged: (text) {
                               setState(() {
-                                isButtonEnabled = text.isNotEmpty;
+                                isButtonEnabled = _textEditingControllerNewItem
+                                        .text.isNotEmpty &&
+                                    _textEditingControllerNewItemQuant
+                                        .text.isNotEmpty;
                               });
                             },
                             decoration: const InputDecoration(
@@ -149,16 +160,21 @@ Future<Produto?> newItemScreen(BuildContext context) async {
                       ),
                       ElevatedButton(
                         style: ButtonStyle(
-                          backgroundColor: isButtonEnabled
-                              ? MaterialStateProperty.all(
-                                  Colors.deepPurple,
-                                )
-                              : MaterialStateProperty.all(
-                                  Colors.deepPurple[100],
-                                ),
+                          backgroundColor:
+                              _textEditingControllerNewItem.text.isNotEmpty &&
+                                      _textEditingControllerNewItemQuant
+                                          .text.isNotEmpty
+                                  ? MaterialStateProperty.all(Colors.deepPurple)
+                                  : MaterialStateProperty.all(
+                                      Colors.deepPurple[100]),
                         ),
-                        onPressed: isButtonEnabled
+                        onPressed: _textEditingControllerNewItem
+                                    .text.isNotEmpty &&
+                                _textEditingControllerNewItemQuant
+                                    .text.isNotEmpty
                             ? () {
+                                String descricao =
+                                    _textEditingControllerNewItem.text;
                                 String quantidadeText =
                                     _textEditingControllerNewItemQuant.text;
                                 String valorText =
@@ -173,12 +189,11 @@ Future<Produto?> newItemScreen(BuildContext context) async {
                                     double.tryParse(quantidadeText);
                                 double? valor = double.tryParse(valorText);
 
-                                if (quantidade != null && valor != null) {
+                                if (quantidade != null) {
                                   newItem = Produto.newItemList(
-                                    descricao:
-                                        _textEditingControllerNewItem.text,
+                                    descricao: descricao,
                                     quantidade: quantidade,
-                                    precoAtual: valor,
+                                    precoAtual: valor ?? 0.0,
                                     categoria: selectedCategory,
                                   );
 
@@ -189,8 +204,8 @@ Future<Produto?> newItemScreen(BuildContext context) async {
                                   completer.complete(newItem);
                                   Navigator.of(context).pop();
                                 } else {
-                                  // Trate o caso em que a conversão falhou, por exemplo, exibindo uma mensagem de erro.
-                                  print("Quantidade ou Valor inválidos");
+                                  // Trate o caso em que a conversão falhou.
+                                  print("Quantidade inválida");
                                 }
                               }
                             : null,
