@@ -20,6 +20,16 @@ class DecorationListBar extends StatelessWidget {
           Row(
             children: [
               Container(
+                color: Colors.deepPurple,
+                height: 2,
+                width: MediaQuery.of(context).size.width,
+              )
+            ],
+          ),
+/*
+          Row(
+            children: [
+              Container(
                 color: Colors.amber,
                 height: 2,
                 width: MediaQuery.of(context).size.width / 2,
@@ -31,6 +41,7 @@ class DecorationListBar extends StatelessWidget {
               ),
             ],
           )
+*/
       ],
     );
   }

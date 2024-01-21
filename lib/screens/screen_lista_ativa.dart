@@ -48,6 +48,13 @@ class _ActiveListState extends State<ScreenActiveList>
 
     return Scaffold(
       appBar: AppBar(
+        bottom: const PreferredSize(
+          preferredSize: Size.fromHeight(1.0),
+          child: Divider(
+            color: Colors.deepPurple,
+            height: 1.0,
+          ),
+        ),
         centerTitle: true,
         title: const Text(
           'Lista de Mercado',
@@ -68,134 +75,100 @@ class _ActiveListState extends State<ScreenActiveList>
               //PopUpItemConfirm.showAlertDialog(context);
             },
           ),
-          const Padding(padding: EdgeInsets.only(right: 10))
+          const Padding(
+            padding: EdgeInsets.only(right: 10),
+          ),
         ],
       ),
-      body: Column(
+      body: Stack(
         children: [
-          const DecorationListBar(),
-          Expanded(
-            child: PageView(
+          //const DecorationListBar(),
+          SingleChildScrollView(
+            child: Column(
               children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(15, 10, 15, 0),
-                  child: Column(
-                    children: [
-                      const Padding(
-                        padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
-                        child: Text('Itens que faltam'),
-                      ),
-                      Expanded(
-                        child: Stack(
-                          children: [
-                            ListView.builder(
-                              itemCount: listItensPendent.length,
-                              itemBuilder: (BuildContext context, int index) {
-                                return Dismissible(
-                                  key: UniqueKey(),
-                                  direction: DismissDirection.startToEnd,
-                                  onDismissed: (direction) {
-                                    setState(() {
-                                      listItensPendent.removeAt(index);
-                                    });
-                                  },
-                                  background: Container(
-                                    color: Colors.red,
-                                    alignment: Alignment.centerLeft,
-                                    padding: const EdgeInsets.only(left: 10),
-                                    child: const Icon(
-                                      Icons.delete,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      moveItemToConfirmedList(
-                                          listItensPendent[index]);
-                                    },
-                                    child: ItemListPendent(
-                                      item: listItensPendent[index],
-                                      moveCallback: moveItemToConfirmedList,
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                
-                
-                Padding(
-                  padding: const EdgeInsets.all(15.0),
-                  child: Column(
-                    children: [
-                      const Padding(
-                        padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
-                        child: Text('Itens adicionados ao carrinho'),
-                      ),
-                      Expanded(
-                        flex: 20,
-                        child: ListView.builder(
-                          itemCount: listItensConfirmed.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            return Dismissible(
-                              key: UniqueKey(),
-                              direction: DismissDirection.endToStart,
-                              onDismissed: (direction) {
-                                if (direction == DismissDirection.endToStart) {
-                                  setState(() {
-                                    listItensConfirmed.removeAt(index);
-                                  });
-                                }
-                              },
-                              background: Container(
-                                color: Colors.red,
-                                alignment: Alignment.centerRight,
-                                padding: const EdgeInsets.only(right: 10),
-                                child: const Icon(
-                                  Icons.delete,
-                                  color: Colors.white,
-                                ),
-                              ),
-                              child: ItemListConfirmed(
-                                item: listItensConfirmed[index],
-                              ),
-                            );
+                ExpansionTile(
+                  leading: const Icon(Icons.format_line_spacing_sharp),
+                  initiallyExpanded: true,
+                  title: const Text('Itens que faltam'),
+                  children: [
+                    ListView.builder(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                      itemCount: listItensPendent.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return Dismissible(
+                          key: UniqueKey(),
+                          direction: DismissDirection.startToEnd,
+                          onDismissed: (direction) {
+                            setState(() {
+                              listItensPendent.removeAt(index);
+                            });
                           },
-                        ),
-                      ),
-                      const Padding(
-                        padding: EdgeInsets.all(5.0),
-                      ),
-                    ],
-                  ),
+                          background: Container(
+                            color: Colors.red,
+                            alignment: Alignment.centerLeft,
+                            padding: const EdgeInsets.only(left: 10),
+                            child: const Icon(
+                              Icons.delete,
+                              color: Colors.white,
+                            ),
+                          ),
+                          child: GestureDetector(
+                            onTap: () {
+                              moveItemToConfirmedList(listItensPendent[index]);
+                            },
+                            child: ItemListPendent(
+                              item: listItensPendent[index],
+                              moveCallback: moveItemToConfirmedList,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ],
+                ),
+                ExpansionTile(
+                  leading: const Icon(Icons.format_line_spacing_sharp),
+                  initiallyExpanded: true,
+                  title: const Text('Itens adicionados ao carrinho'),
+                  children: [
+                    ListView.builder(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                      itemCount: listItensConfirmed.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return Dismissible(
+                          key: UniqueKey(),
+                          direction: DismissDirection.startToEnd,
+                          onDismissed: (direction) {
+                            setState(() {
+                              listItensConfirmed.removeAt(index);
+                            });
+                          },
+                          background: Container(
+                            color: Colors.red,
+                            alignment: Alignment.centerLeft,
+                            padding: const EdgeInsets.only(left: 10),
+                            child: const Icon(
+                              Icons.delete,
+                              color: Colors.white,
+                            ),
+                          ),
+                          child: ItemListConfirmed(
+                            item: listItensConfirmed[index],
+                          ),
+                        );
+                      },
+                    ),
+                  ],
                 ),
               ],
             ),
           ),
-          GestureDetector(
-            onTapDown: (_) {
-              _animationController.forward();
-              setState(() {
-                isContainerPressed = true;
-              });
-            },
-            onTapUp: (_) {
-              _animationController.reverse();
-              setState(() {
-                isContainerPressed = false;
-              });
-            },
-            onTapCancel: () {
-              _animationController.reverse();
-              setState(() {
-                isContainerPressed = false;
-              });
-            },
+          Align(
+            alignment: Alignment.bottomCenter,
             child: Container(
               padding: const EdgeInsets.fromLTRB(30, 15, 30, 15),
               decoration: BoxDecoration(

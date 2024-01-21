@@ -227,7 +227,7 @@ Future<Produto?> newItemScreen(BuildContext context) async {
 
   // Adicione informações padrão ao newItem se necessário
   newItem?.barras = 12345678.toString();
-  newItem?.precoAtual = 5.0;
+  //newItem?.precoAtual = 0.0;
   newItem?.historicoPreco = [4, 5, 5, 5];
 
   return completer.future;
