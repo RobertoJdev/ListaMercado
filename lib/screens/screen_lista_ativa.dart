@@ -29,6 +29,8 @@ class _ActiveListState extends State<ScreenActiveList>
   late String totalValue;
   bool isContainerPressed = false;
   late AnimationController _animationController;
+  late bool isListPendentExpanded;
+  late bool isListConfirmedExpanded;
 
   @override
   void initState() {
@@ -40,6 +42,10 @@ class _ActiveListState extends State<ScreenActiveList>
       duration: Duration(milliseconds: 100),
     );
     testeExibirListaItems();
+    isListPendentExpanded =
+        true; // Inicie com a lista de itens que faltam expandida
+    isListConfirmedExpanded =
+        false; // Inicie com a lista de itens adicionados ao carrinho contraída
   }
 
   @override
@@ -82,85 +88,107 @@ class _ActiveListState extends State<ScreenActiveList>
       ),
       body: Stack(
         children: [
-          //const DecorationListBar(),
           SingleChildScrollView(
             child: Column(
               children: [
-                ExpansionTile(
-                  leading: const Icon(Icons.format_line_spacing_sharp),
-                  initiallyExpanded: true,
-                  title: const Text('Itens que faltam'),
+                ExpansionPanelList(
+                  elevation: 1,
+                  expandedHeaderPadding: EdgeInsets.all(0),
+                  animationDuration: Duration(milliseconds: 100),
+                  expansionCallback: (panelIndex, isExpanded) {
+                    setState(() {
+                      if (panelIndex == 0) {
+                        isListPendentExpanded = !isListPendentExpanded;
+                        isListConfirmedExpanded = !isListPendentExpanded;
+                      } else {
+                        isListConfirmedExpanded = !isListConfirmedExpanded;
+                        isListPendentExpanded = !isListConfirmedExpanded;
+                      }
+                    });
+                  },
                   children: [
-                    ListView.builder(
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                      itemCount: listItensPendent.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return Dismissible(
-                          key: UniqueKey(),
-                          direction: DismissDirection.startToEnd,
-                          onDismissed: (direction) {
-                            setState(() {
-                              listItensPendent.removeAt(index);
-                            });
-                          },
-                          background: Container(
-                            color: Colors.red,
-                            alignment: Alignment.centerLeft,
-                            padding: const EdgeInsets.only(left: 10),
-                            child: const Icon(
-                              Icons.delete,
-                              color: Colors.white,
-                            ),
-                          ),
-                          child: GestureDetector(
-                            onTap: () {
-                              moveItemToConfirmedList(listItensPendent[index]);
+                    ExpansionPanel(
+                      canTapOnHeader: true,
+                      isExpanded: isListPendentExpanded,
+                      headerBuilder: (context, isExpanded) {
+                        return ListTile(
+                          title: const Text('Itens que faltam'),
+                        );
+                      },
+                      body: ListView.builder(
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                        itemCount: listItensPendent.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return Dismissible(
+                            key: UniqueKey(),
+                            direction: DismissDirection.startToEnd,
+                            onDismissed: (direction) {
+                              setState(() {
+                                listItensPendent.removeAt(index);
+                              });
                             },
-                            child: ItemListPendent(
-                              item: listItensPendent[index],
-                              moveCallback: moveItemToConfirmedList,
+                            background: Container(
+                              color: Colors.red,
+                              alignment: Alignment.centerLeft,
+                              padding: const EdgeInsets.only(left: 10),
+                              child: const Icon(
+                                Icons.delete,
+                                color: Colors.white,
+                              ),
                             ),
-                          ),
-                        );
-                      },
+                            child: GestureDetector(
+                              onTap: () {
+                                moveItemToConfirmedList(
+                                    listItensPendent[index]);
+                              },
+                              child: ItemListPendent(
+                                item: listItensPendent[index],
+                                moveCallback: moveItemToConfirmedList,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
                     ),
-                  ],
-                ),
-                ExpansionTile(
-                  leading: const Icon(Icons.format_line_spacing_sharp),
-                  initiallyExpanded: true,
-                  title: const Text('Itens adicionados ao carrinho'),
-                  children: [
-                    ListView.builder(
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                      itemCount: listItensConfirmed.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return Dismissible(
-                          key: UniqueKey(),
-                          direction: DismissDirection.startToEnd,
-                          onDismissed: (direction) {
-                            setState(() {
-                              listItensConfirmed.removeAt(index);
-                            });
-                          },
-                          background: Container(
-                            color: Colors.red,
-                            alignment: Alignment.centerLeft,
-                            padding: const EdgeInsets.only(left: 10),
-                            child: const Icon(
-                              Icons.delete,
-                              color: Colors.white,
-                            ),
-                          ),
-                          child: ItemListConfirmed(
-                            item: listItensConfirmed[index],
-                          ),
+                    ExpansionPanel(
+                      canTapOnHeader: true,
+                      isExpanded: isListConfirmedExpanded,
+                      headerBuilder: (context, isExpanded) {
+                        return ListTile(
+                          title: const Text('Itens adicionados ao carrinho'),
                         );
                       },
+                      body: ListView.builder(
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                        itemCount: listItensConfirmed.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return Dismissible(
+                            key: UniqueKey(),
+                            direction: DismissDirection.startToEnd,
+                            onDismissed: (direction) {
+                              setState(() {
+                                listItensConfirmed.removeAt(index);
+                              });
+                            },
+                            background: Container(
+                              color: Colors.red,
+                              alignment: Alignment.centerLeft,
+                              padding: const EdgeInsets.only(left: 10),
+                              child: const Icon(
+                                Icons.delete,
+                                color: Colors.white,
+                              ),
+                            ),
+                            child: ItemListConfirmed(
+                              item: listItensConfirmed[index],
+                            ),
+                          );
+                        },
+                      ),
                     ),
                   ],
                 ),
