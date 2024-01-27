@@ -15,6 +15,7 @@ class ItemListConfirmed extends StatelessWidget {
       thousandSeparator: '.',
       leftSymbol: 'R\$ ',
     );
+    
 
     precoController.updateValue(item.precoAtual);
 

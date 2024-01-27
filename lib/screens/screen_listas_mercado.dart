@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:lista_mercado/components/decoration_list_bar.dart';
-import 'package:lista_mercado/components/item_list_compra.dart';
-import 'package:lista_mercado/components/item_list_compra_nao_finalizada.dart';
+import 'package:lista_mercado/components/items/item_list_compra.dart';
+import 'package:lista_mercado/components/items/item_list_compra_nao_finalizada.dart';
 import 'package:lista_mercado/db/market_db.dart';
-import 'package:lista_mercado/screens/modal_screen_lista_nao_finalizada.dart';
+import 'package:lista_mercado/components/modals/modal_screen_lista_nao_finalizada.dart';
 import 'package:lista_mercado/util/data_util.dart';
 import 'package:lista_mercado/models/lista_mercado.dart';
 import 'package:lista_mercado/models/produto.dart';
-import 'package:lista_mercado/screens/modal_screen_exclui_lista.dart';
-import 'package:lista_mercado/screens/modal_screen_reabrir_lista.dart';
-import 'package:lista_mercado/screens/screen_lista_ativa.dart';
+import 'package:lista_mercado/components/modals/modal_screen_exclui_lista.dart';
+import 'package:lista_mercado/components/modals/modal_screen_reabrir_lista.dart';
+import 'package:lista_mercado/screens/screen_active_list.dart';
 
 class ScreenListasMercado extends StatefulWidget {
   const ScreenListasMercado({Key? key}) : super(key: key);
