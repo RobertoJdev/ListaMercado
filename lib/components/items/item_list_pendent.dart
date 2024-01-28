@@ -22,16 +22,19 @@ class ItemListPendent extends StatelessWidget {
 
     precoController.updateValue(item.precoAtual);
 
+// é preciso mapear os dados para o item que retona o modal.
+
     return GestureDetector(
       onTap: () async {
-        double? confirmedPrice = await confirmItemScreen(context: context);
-        if (confirmedPrice != null) {
-          item.precoAtual = confirmedPrice;
+        Produto temp =
+            await confirmEditItemScreen(context: context, itemTemp: item);
+        if (temp.precoAtual != null) {
+          item.precoAtual = temp.precoAtual;
           moveCallback(item);
         }
       },
       child: Container(
-        margin: const EdgeInsets.only(bottom: 5),
+        margin: const EdgeInsets.only(top: 2, bottom: 2),
         color: Categorias.obterCorPorDescricao(item.categoria),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,

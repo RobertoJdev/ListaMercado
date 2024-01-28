@@ -210,6 +210,7 @@ class _listasMercadoState extends State<ScreenListasMercado> {
       if (tempLista != null) {
         for (var element in tempLista.itens) {
           element.pendente = true;
+          element.precoAtual = 0;
         }
 
         Navigator.push(

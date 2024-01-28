@@ -52,12 +52,14 @@ Future<Produto?> newItemScreen(BuildContext context) async {
                         labelText: 'Produto',
                       ),
                       onChanged: (text) {
-                        setState(() {
-                          isButtonEnabled =
-                              _textEditingControllerNewItem.text.isNotEmpty &&
-                                  _textEditingControllerNewItemQuant
-                                      .text.isNotEmpty;
-                        });
+                        setState(
+                          () {
+                            isButtonEnabled =
+                                _textEditingControllerNewItem.text.isNotEmpty &&
+                                    _textEditingControllerNewItemQuant
+                                        .text.isNotEmpty;
+                          },
+                        );
                       },
                     ),
                   ),

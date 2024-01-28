@@ -15,12 +15,11 @@ class ItemListConfirmed extends StatelessWidget {
       thousandSeparator: '.',
       leftSymbol: 'R\$ ',
     );
-    
 
     precoController.updateValue(item.precoAtual);
 
     return Container(
-      margin: const EdgeInsets.only(bottom: 5),
+      margin: const EdgeInsets.only(top: 2, bottom: 2),
       color: Colors.green[50],
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,

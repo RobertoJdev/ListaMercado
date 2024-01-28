@@ -39,7 +39,7 @@ class _ActiveListState extends State<ScreenActiveList>
       vsync: this,
       duration: Duration(milliseconds: 100),
     );
-    testeExibirListaItems();
+    //testeExibirListaItems();
   }
 
   @override

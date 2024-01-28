@@ -1,7 +1,127 @@
+/*
+      
+      body: Stack(
+        children: [
+          SingleChildScrollView(
+            child: Column(
+              children: [
+                ExpansionTile(
+                  leading: const Icon(Icons.format_line_spacing_sharp),
+                  initiallyExpanded: isPendentExpanded,
+                  title: const Text('Itens que faltam'),
+                  onExpansionChanged: (expanded) {
+                    setState(() {
+                      isPendentExpanded = expanded;
+                      isConfirmedExpanded = !expanded;
+                    });
+                  },
+                  children: [
+                    ListView.builder(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                      itemCount: listItensPendent.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return Dismissible(
+                          key: UniqueKey(),
+                          onDismissed: (direction) {
+                            if (direction == DismissDirection.startToEnd) {
+                              moveItemToConfirmedList(listItensPendent[index]);
+                            } else if (direction ==
+                                DismissDirection.endToStart) {
+                              excluirItemPendente(listItensPendent[index]);
+                            }
+                          },
+                          background: Container(
+                            color: Colors.green,
+                            alignment: Alignment.centerLeft,
+                            padding: const EdgeInsets.only(left: 10),
+                            child: const Icon(
+                              Icons.check,
+                              color: Colors.white,
+                            ),
+                          ),
+                          secondaryBackground: Container(
+                            color: Colors.red,
+                            alignment: Alignment.centerRight,
+                            padding: const EdgeInsets.only(right: 10),
+                            child: const Icon(
+                              Icons.delete,
+                              color: Colors.white,
+                            ),
+                          ),
+                          child: ItemListPendent(
+                            item: listItensPendent[index],
+                            moveCallback: moveItemToConfirmedList,
+                          ),
+                        );
+                      },
+                    ),
+                  ],
+                ),
+                ExpansionTile(
+                  leading: const Icon(Icons.format_line_spacing_sharp),
+                  initiallyExpanded: isConfirmedExpanded,
+                  title: const Text('Itens adicionados ao carrinho'),
+                  onExpansionChanged: (expanded) {
+                    if (expanded) {
+                      setState(() {
+                        isConfirmedExpanded = expanded;
+                        isPendentExpanded = !expanded;
+                      });
+                    }
+                  },
+                  children: [
+                    ListView.builder(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                      itemCount: listItensConfirmed.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return Dismissible(
+                          key: UniqueKey(),
+                          onDismissed: (direction) {
+                            if (direction == DismissDirection.endToStart) {
+                              setState(() {
+                                listItensConfirmed.removeAt(index);
+                              });
+                            } else if (direction ==
+                                DismissDirection.startToEnd) {
+                              setState(() {
+                                listItensConfirmed.removeAt(index);
+                              });
+                            }
+                          },
+                          background: Container(
+                            color: Colors.red,
+                            alignment: Alignment.centerLeft,
+                            padding: const EdgeInsets.only(left: 10),
+                            child: const Icon(
+                              Icons.delete,
+                              color: Colors.white,
+                            ),
+                          ),
+                          secondaryBackground: Container(
+                            color: Colors.red,
+                            alignment: Alignment.centerRight,
+                            padding: const EdgeInsets.only(right: 10),
+                            child: const Icon(
+                              Icons.delete,
+                              color: Colors.white,
+                            ),
+                          ),
+                          child: ItemListConfirmed(
+                            item: listItensConfirmed[index],
+
+      ),
+
+*/
+
 import 'package:flutter/material.dart';
 import 'package:lista_mercado/components/decoration_list_bar.dart';
 import 'package:lista_mercado/components/items/item_list_pendent.dart';
 import 'package:lista_mercado/components/items/item_list_confirmed.dart';
+import 'package:lista_mercado/components/modals/modal_screen_confirm_item.dart';
 import 'package:lista_mercado/db/market_db.dart';
 import 'package:lista_mercado/models/lista_mercado.dart';
 import 'package:lista_mercado/models/produto.dart';
@@ -29,6 +149,8 @@ class _ActiveListState extends State<ScreenActiveList>
   late String totalValue;
   bool isContainerPressed = false;
   late AnimationController _animationController;
+  late bool isListPendentExpanded;
+  late bool isListConfirmedExpanded;
 
   @override
   void initState() {
@@ -39,7 +161,11 @@ class _ActiveListState extends State<ScreenActiveList>
       vsync: this,
       duration: Duration(milliseconds: 100),
     );
-    testeExibirListaItems();
+    //testeExibirListaItems();
+    isListPendentExpanded =
+        true; // Inicie com a lista de itens que faltam expandida
+    isListConfirmedExpanded =
+        false; // Inicie com a lista de itens adicionados ao carrinho contraída
   }
 
   @override
@@ -82,111 +208,146 @@ class _ActiveListState extends State<ScreenActiveList>
       ),
       body: Stack(
         children: [
-          //const DecorationListBar(),
           SingleChildScrollView(
             child: Column(
               children: [
-                ExpansionTile(
-                  leading: const Icon(Icons.format_line_spacing_sharp),
-                  initiallyExpanded: true,
-                  title: const Text('Itens que faltam'),
+                ExpansionPanelList(
+                  dividerColor: Colors.amber,
+                  materialGapSize: 0,
+                  //elevation: 1,
+                  expandedHeaderPadding: const EdgeInsets.all(0),
+                  animationDuration: const Duration(milliseconds: 100),
+                  expansionCallback: (panelIndex, isExpanded) {
+                    setState(() {
+                      if (panelIndex == 0) {
+                        isListPendentExpanded = !isListPendentExpanded;
+                        isListConfirmedExpanded = !isListPendentExpanded;
+                      } else {
+                        isListConfirmedExpanded = !isListConfirmedExpanded;
+                        isListPendentExpanded = !isListConfirmedExpanded;
+                      }
+                    });
+                  },
                   children: [
-                    ListView.builder(
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                      itemCount: listItensPendent.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return Dismissible(
-                          key: UniqueKey(),
-                          //direction: DismissDirection.horizontal,
-                          onDismissed: (direction) {
-                            if (direction == DismissDirection.startToEnd) {
-                              // Mover o item para confirmado
-                              moveItemToConfirmedList(listItensPendent[index]);
-                            } else if (direction ==
-                                DismissDirection.endToStart) {
-                              // Excluir o item
-                              excluirItemPendente(listItensPendent[index]);
-                            }
-                          },
-                          background: Container(
-                            color: Colors.green,
-                            alignment: Alignment.centerLeft,
-                            padding: const EdgeInsets.only(left: 10),
-                            child: const Icon(
-                              Icons.check,
-                              color: Colors.white,
+                    ExpansionPanel(
+                      canTapOnHeader: true,
+                      isExpanded: isListPendentExpanded,
+                      headerBuilder: (context, isExpanded) {
+                        return const ListTile(
+                          leading: Icon(Icons.checklist),
+                          title: Text('Itens que faltam'),
+                        );
+                      },
+                      body: ListView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                        itemCount: listItensPendent.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return Dismissible(
+                            key: UniqueKey(),
+                            //direction: DismissDirection.startToEnd,
+                            onDismissed: (direction) {
+                              if (direction == DismissDirection.startToEnd) {
+                                moveItemToConfirmedList(
+                                    listItensPendent[index]);
+                              } else if (direction ==
+                                  DismissDirection.endToStart) {
+                                excluirItemPendente(listItensPendent[index]);
+                              }
+                            },
+                            background: Container(
+                              color: Colors.green,
+                              alignment: Alignment.centerLeft,
+                              padding: const EdgeInsets.only(left: 10),
+                              child: const Icon(
+                                Icons.check,
+                                color: Colors.white,
+                              ),
                             ),
-                          ),
-                          secondaryBackground: Container(
-                            color: Colors.red,
-                            alignment: Alignment.centerRight,
-                            padding: const EdgeInsets.only(right: 10),
-                            child: const Icon(
-                              Icons.delete,
-                              color: Colors.white,
+                            secondaryBackground: Container(
+                              color: Colors.red,
+                              alignment: Alignment.centerRight,
+                              padding: const EdgeInsets.only(right: 10),
+                              child: const Icon(
+                                Icons.delete,
+                                color: Colors.white,
+                              ),
                             ),
-                          ),
+                            child: GestureDetector(
+                              onTap: () {
+                                Produto? temp;
+                                temp = confirmEditItemScreen(
+                                        itemTemp: listItensPendent[index])
+                                    as Produto?;
 
-                          child: ItemListPendent(
-                            item: listItensPendent[index],
-                            moveCallback: moveItemToConfirmedList,
-                          ),
-                        );
-                      },
+                                if (temp?.pendente != null &&
+                                    temp?.pendente == false &&
+                                    temp?.precoAtual != 0.0) {
+                                  moveItemToConfirmedList(
+                                      listItensPendent[index]);
+                                }
+                              },
+                              child: Column(
+                                children: [
+                                  ItemListPendent(
+                                    item: listItensPendent[index],
+                                    moveCallback: moveItemToConfirmedList,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                      ),
                     ),
-                  ],
-                ),
-                ExpansionTile(
-                  leading: const Icon(Icons.format_line_spacing_sharp),
-                  initiallyExpanded: true,
-                  title: const Text('Itens adicionados ao carrinho'),
-                  children: [
-                    ListView.builder(
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                      itemCount: listItensConfirmed.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return Dismissible(
-                          key: UniqueKey(),
-                          //direction: DismissDirection.startToEnd,
-                          onDismissed: (direction) {
-                            if (direction == DismissDirection.endToStart) {
-                              setState(() {
-                                listItensConfirmed.removeAt(index);
-                              });
-                            } else if (direction ==
-                                DismissDirection.startToEnd) {
-                              setState(() {
-                                listItensConfirmed.removeAt(index);
-                              });
-                            }
-                          },
-                          background: Container(
-                            color: Colors.red,
-                            alignment: Alignment.centerLeft,
-                            padding: const EdgeInsets.only(left: 10),
-                            child: const Icon(
-                              Icons.delete,
-                              color: Colors.white,
-                            ),
-                          ),
-                          secondaryBackground: Container(
-                            color: Colors.red,
-                            alignment: Alignment.centerRight,
-                            padding: const EdgeInsets.only(right: 10),
-                            child: const Icon(
-                              Icons.delete,
-                              color: Colors.white,
-                            ),
-                          ),
-                          child: ItemListConfirmed(
-                            item: listItensConfirmed[index],
-                          ),
+                    ExpansionPanel(
+                      canTapOnHeader: true,
+                      isExpanded: isListConfirmedExpanded,
+                      headerBuilder: (context, isExpanded) {
+                        return const ListTile(
+                          leading: Icon(Icons.playlist_add_check),
+                          title: Text('Itens adicionados ao carrinho'),
                         );
                       },
+                      body: ListView.builder(
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                        itemCount: listItensConfirmed.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return Dismissible(
+                            key: UniqueKey(),
+                            direction: DismissDirection.horizontal,
+                            onDismissed: (direction) {
+                              setState(() {
+                                listItensConfirmed.removeAt(index);
+                              });
+                            },
+                            background: Container(
+                              color: Colors.red,
+                              alignment: Alignment.centerLeft,
+                              padding: const EdgeInsets.only(left: 10),
+                              child: const Icon(
+                                Icons.delete,
+                                color: Colors.white,
+                              ),
+                            ),
+                            secondaryBackground: Container(
+                              color: Colors.red,
+                              alignment: Alignment.centerRight,
+                              padding: const EdgeInsets.only(right: 10),
+                              child: const Icon(
+                                Icons.delete,
+                                color: Colors.white,
+                              ),
+                            ),
+                            child: ItemListConfirmed(
+                              item: listItensConfirmed[index],
+                            ),
+                          );
+                        },
+                      ),
                     ),
                   ],
                 ),
@@ -286,11 +447,15 @@ class _ActiveListState extends State<ScreenActiveList>
   }
 
   void moveItemToConfirmedList(Produto item) {
-    db.printAllItems();
+    //db.printAllItems();
     setState(() {
-      item.pendente = false;
-      listItensPendent.remove(item);
-      listItensConfirmed.add(item);
+      if (item.pendente == false &&
+          item.precoAtual != 0.0 &&
+          item.precoAtual != null) {
+        //item.pendente = false;
+        listItensPendent.remove(item);
+        listItensConfirmed.add(item);
+      }
     });
   }
 
