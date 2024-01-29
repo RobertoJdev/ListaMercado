@@ -39,6 +39,25 @@ class ItemListPendent extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
+            RotatedBox(
+              quarterTurns: 3,
+              child: Container(
+                alignment: Alignment.center,
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                color:
+                    Categorias.obterCorSecundariaPorDescricao(item.categoria),
+                child: Center(
+                  // Alinhe o texto ao centro
+                  child: Text(
+                    Categoria.abreviarCategoria(item.categoria),
+                    style: const TextStyle(
+                      fontSize: 10,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+              ),
+            ),
             Container(
               color: Colors.amber,
               child: Padding(
@@ -80,18 +99,6 @@ class ItemListPendent extends StatelessWidget {
                 color: Colors.grey,
               ),
             ),
-            Container(
-              color: Categorias.obterCorSecundariaPorDescricao(item.categoria),
-              child: Transform.rotate(
-                angle: -3.14159 / 2,
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 12.0, bottom: 12.0),
-                  child: Text(
-                    Categoria.abreviarCategoria(item.categoria),
-                  ),
-                ),
-              ),
-            )
           ],
         ),
       ),

@@ -25,10 +25,10 @@ Future<bool?> abrirListaNaoFinalizada(BuildContext? context) async {
                   TextButton(
                     style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.all(
-                        Colors.deepPurple,
+                        Colors.deepPurple[100],
                       ),
                       foregroundColor: MaterialStateProperty.all(
-                        Colors.white,
+                        Colors.deepPurple,
                       ),
                     ),
                     onPressed: () {
@@ -43,10 +43,10 @@ Future<bool?> abrirListaNaoFinalizada(BuildContext? context) async {
                   TextButton(
                     style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.all(
-                        Colors.deepPurple[100],
+                        Colors.deepPurple,
                       ),
                       foregroundColor: MaterialStateProperty.all(
-                        Colors.deepPurple,
+                        Colors.white,
                       ),
                     ),
                     onPressed: () {

@@ -10,7 +10,7 @@ class Categoria {
       {required this.nome, required this.cor, required this.corSecundaria});
 
   static String abreviarCategoria(String nomeCategoria) {
-    return nomeCategoria.substring(0, 3).toUpperCase();
+    return nomeCategoria.substring(0, 5).toUpperCase();
   }
 }
 
@@ -43,8 +43,8 @@ class Categorias {
   static final Categoria bebidas = Categoria(
       nome: 'Bebidas', cor: Colors.teal[50]!, corSecundaria: Colors.teal[100]!);
 
-  static final Categoria naoPereciveis = Categoria(
-      nome: 'Não Perecíveis',
+  static final Categoria mercearia = Categoria(
+      nome: 'Mercearia',
       cor: Colors.yellow[50]!,
       corSecundaria: Colors.yellow[100]!);
 
@@ -62,7 +62,7 @@ class Categorias {
       //snacks,
       //produtosBebe,
       //limpezaDomestica,
-      naoPereciveis,
+      mercearia,
     ];
 
     final Random random = Random();
@@ -86,7 +86,7 @@ class Categorias {
       //'Snacks e Aperitivos': snacks,
       //'Produtos de Bebê': produtosBebe,
       //'Limpeza Doméstica': limpezaDomestica,
-      'Não Perecíveis': naoPereciveis,
+      'Mercearia': mercearia,
     };
 
     return mapaCategorias[descricao]?.cor ?? Colors.grey[50]!;
@@ -107,7 +107,7 @@ class Categorias {
       //'Snacks e Aperitivos': snacks,
       //'Produtos de Bebê': produtosBebe,
       //'Limpeza Doméstica': limpezaDomestica,
-      'Não Perecíveis': naoPereciveis,
+      'Mercearia': mercearia,
     };
 
     return mapaCategorias[descricao]?.corSecundaria ?? Colors.grey[100]!;
@@ -128,7 +128,7 @@ class Categorias {
       //snacks,
       //produtosBebe,
       //limpezaDomestica,
-      naoPereciveis,
+      mercearia,
     ];
 
     return todasCategorias;
