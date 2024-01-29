@@ -66,7 +66,7 @@ class ItemListPendent extends StatelessWidget {
               padding: const EdgeInsets.only(right: 10.0, left: 10),
               child: Text(
                 precoController.text == 'R\$ 0,00'
-                    ? 'R\$ ---,---'
+                    ? 'R\$ --,--'
                     : precoController.text,
                 style: precoController.text == 'R\$ 0,00'
                     ? const TextStyle(color: Colors.grey)
@@ -80,6 +80,18 @@ class ItemListPendent extends StatelessWidget {
                 color: Colors.grey,
               ),
             ),
+            Container(
+              color: Categorias.obterCorSecundariaPorDescricao(item.categoria),
+              child: Transform.rotate(
+                angle: -3.14159 / 2,
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 12.0, bottom: 12.0),
+                  child: Text(
+                    Categoria.abreviarCategoria(item.categoria),
+                  ),
+                ),
+              ),
+            )
           ],
         ),
       ),
