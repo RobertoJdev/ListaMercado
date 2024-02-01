@@ -18,35 +18,35 @@ class Categorias {
   static final Categoria hortifruti = Categoria(
       nome: 'Hortifruti',
       cor: Colors.green[50]!,
-      corSecundaria: Colors.green[100]!);
+      corSecundaria: Colors.green[200]!);
   static final Categoria padaria = Categoria(
       nome: 'Padaria',
       cor: Colors.brown[50]!,
-      corSecundaria: Colors.brown[100]!);
+      corSecundaria: Colors.brown[200]!);
   static final Categoria laticinios = Categoria(
       nome: 'Laticínios',
       cor: Colors.blue[50]!,
-      corSecundaria: Colors.blue[100]!);
+      corSecundaria: Colors.blue[200]!);
   static final Categoria frios = Categoria(
-      nome: 'Frios', cor: Colors.red[50]!, corSecundaria: Colors.red[100]!);
+      nome: 'Frios', cor: Colors.red[50]!, corSecundaria: Colors.red[200]!);
 
   static final Categoria limpeza = Categoria(
       nome: 'Limpeza',
       cor: Colors.orange[50]!,
-      corSecundaria: Colors.orange[100]!);
+      corSecundaria: Colors.orange[200]!);
 
   static final Categoria higienePessoal = Categoria(
       nome: 'Higiene Pessoal',
       cor: Colors.purple[50]!,
-      corSecundaria: Colors.purple[100]!);
+      corSecundaria: Colors.purple[200]!);
 
   static final Categoria bebidas = Categoria(
-      nome: 'Bebidas', cor: Colors.teal[50]!, corSecundaria: Colors.teal[100]!);
+      nome: 'Bebidas', cor: Colors.teal[50]!, corSecundaria: Colors.teal[200]!);
 
   static final Categoria mercearia = Categoria(
       nome: 'Mercearia',
       cor: Colors.yellow[50]!,
-      corSecundaria: Colors.yellow[100]!);
+      corSecundaria: Colors.yellow[200]!);
 
   static obterCategoriaAleatoria() {
     final List<Categoria> todasCategorias = [
@@ -110,7 +110,7 @@ class Categorias {
       'Mercearia': mercearia,
     };
 
-    return mapaCategorias[descricao]?.corSecundaria ?? Colors.grey[100]!;
+    return mapaCategorias[descricao]?.corSecundaria ?? Colors.grey[200]!;
   }
 
   static obterTodasCategorias() {

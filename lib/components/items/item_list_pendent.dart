@@ -43,7 +43,7 @@ class ItemListPendent extends StatelessWidget {
               quarterTurns: 3,
               child: Container(
                 alignment: Alignment.center,
-                padding: const EdgeInsets.symmetric(horizontal: 8),
+                padding: const EdgeInsets.symmetric(horizontal: 6),
                 color:
                     Categorias.obterCorSecundariaPorDescricao(item.categoria),
                 child: Center(

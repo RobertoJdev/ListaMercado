@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:intl/intl.dart';
+import 'package:lista_mercado/models/categoria.dart';
 import 'package:lista_mercado/models/produto.dart';
 import 'package:lista_mercado/util/formatValue.dart';
 
@@ -24,6 +25,24 @@ class ItemListConfirmed extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
+          RotatedBox(
+            quarterTurns: 3,
+            child: Container(
+              alignment: Alignment.center,
+              padding: const EdgeInsets.symmetric(horizontal: 6),
+              color: Categorias.obterCorSecundariaPorDescricao(item.categoria),
+              child: Center(
+                // Alinhe o texto ao centro
+                child: Text(
+                  Categoria.abreviarCategoria(item.categoria),
+                  style: const TextStyle(
+                    fontSize: 10,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+            ),
+          ),
           Container(
             color: Colors.green,
             child: Padding(
