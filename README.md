@@ -14,6 +14,9 @@ A few resources to get you started if this is your first Flutter project:
 For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
+<<<<<<< HEAD
 
 Usar na filtragem do debug 
 !SchedulerBinding,!Render,!PipelineOwner,!Element,!WidgetsBinding
+=======
+>>>>>>> fe0d4d11418a8e542fd00e7a732347feef6bc5bf

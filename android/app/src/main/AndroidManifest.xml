@@ -1,6 +1,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application
+<<<<<<< HEAD
         android:label="Lista de Mercado"
+=======
+        android:label="lista_mercado"
+>>>>>>> fe0d4d11418a8e542fd00e7a732347feef6bc5bf
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
