@@ -186,19 +186,38 @@ Future<Produto> confirmEditItemScreen(
                                       .replaceAll(',', '.'),
                                 );
 
-                                if (quantidade != null) {
+                                if (valor == null ||
+                                    valor == 0.0 &&
+                                        _textEditingControllerEditItem.text !=
+                                            '') {
+                                  if (valor == null) {
+                                    valor = 0.0;
+                                  }
                                   itemTemp.descricao =
                                       _textEditingControllerEditItem.text;
-                                  itemTemp.quantidade = quantidade;
-                                  itemTemp.precoAtual = valor ??= 0.0;
+                                  itemTemp.quantidade = quantidade!;
+                                  itemTemp.precoAtual = valor ?? 0.0;
+                                  itemTemp.categoria = selectedCategory;
+
+                                  itemTemp.pendente = true;
+
+                                  //print('${valor} =========================');
+
+                                  Navigator.of(context).pop(itemTemp);
+                                } else if (valor != null &&
+                                    valor > 0.0 &&
+                                    _textEditingControllerEditItem.text != '') {
+                                  itemTemp.descricao =
+                                      _textEditingControllerEditItem.text;
+                                  itemTemp.quantidade = quantidade!;
+                                  itemTemp.precoAtual = valor;
                                   itemTemp.categoria = selectedCategory;
 
                                   itemTemp.pendente = false;
 
+                                  //print('${valor} ***************************');
+
                                   Navigator.of(context).pop(itemTemp);
-                                } else {
-                                  // Trate o caso em que a conversão falhou.
-                                  print("Quantidade ou valor inválido");
                                 }
                               }
                             : null,

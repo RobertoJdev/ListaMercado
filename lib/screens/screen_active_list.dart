@@ -1,122 +1,3 @@
-/*
-      
-      body: Stack(
-        children: [
-          SingleChildScrollView(
-            child: Column(
-              children: [
-                ExpansionTile(
-                  leading: const Icon(Icons.format_line_spacing_sharp),
-                  initiallyExpanded: isPendentExpanded,
-                  title: const Text('Itens que faltam'),
-                  onExpansionChanged: (expanded) {
-                    setState(() {
-                      isPendentExpanded = expanded;
-                      isConfirmedExpanded = !expanded;
-                    });
-                  },
-                  children: [
-                    ListView.builder(
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                      itemCount: listItensPendent.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return Dismissible(
-                          key: UniqueKey(),
-                          onDismissed: (direction) {
-                            if (direction == DismissDirection.startToEnd) {
-                              moveItemToConfirmedList(listItensPendent[index]);
-                            } else if (direction ==
-                                DismissDirection.endToStart) {
-                              excluirItemPendente(listItensPendent[index]);
-                            }
-                          },
-                          background: Container(
-                            color: Colors.green,
-                            alignment: Alignment.centerLeft,
-                            padding: const EdgeInsets.only(left: 10),
-                            child: const Icon(
-                              Icons.check,
-                              color: Colors.white,
-                            ),
-                          ),
-                          secondaryBackground: Container(
-                            color: Colors.red,
-                            alignment: Alignment.centerRight,
-                            padding: const EdgeInsets.only(right: 10),
-                            child: const Icon(
-                              Icons.delete,
-                              color: Colors.white,
-                            ),
-                          ),
-                          child: ItemListPendent(
-                            item: listItensPendent[index],
-                            moveCallback: moveItemToConfirmedList,
-                          ),
-                        );
-                      },
-                    ),
-                  ],
-                ),
-                ExpansionTile(
-                  leading: const Icon(Icons.format_line_spacing_sharp),
-                  initiallyExpanded: isConfirmedExpanded,
-                  title: const Text('Itens adicionados ao carrinho'),
-                  onExpansionChanged: (expanded) {
-                    if (expanded) {
-                      setState(() {
-                        isConfirmedExpanded = expanded;
-                        isPendentExpanded = !expanded;
-                      });
-                    }
-                  },
-                  children: [
-                    ListView.builder(
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                      itemCount: listItensConfirmed.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return Dismissible(
-                          key: UniqueKey(),
-                          onDismissed: (direction) {
-                            if (direction == DismissDirection.endToStart) {
-                              setState(() {
-                                listItensConfirmed.removeAt(index);
-                              });
-                            } else if (direction ==
-                                DismissDirection.startToEnd) {
-                              setState(() {
-                                listItensConfirmed.removeAt(index);
-                              });
-                            }
-                          },
-                          background: Container(
-                            color: Colors.red,
-                            alignment: Alignment.centerLeft,
-                            padding: const EdgeInsets.only(left: 10),
-                            child: const Icon(
-                              Icons.delete,
-                              color: Colors.white,
-                            ),
-                          ),
-                          secondaryBackground: Container(
-                            color: Colors.red,
-                            alignment: Alignment.centerRight,
-                            padding: const EdgeInsets.only(right: 10),
-                            child: const Icon(
-                              Icons.delete,
-                              color: Colors.white,
-                            ),
-                          ),
-                          child: ItemListConfirmed(
-                            item: listItensConfirmed[index],
-
-      ),
-
-*/
-
 import 'package:flutter/material.dart';
 import 'package:lista_mercado/components/decoration_list_bar.dart';
 import 'package:lista_mercado/components/items/item_list_pendent.dart';
@@ -249,6 +130,7 @@ class _ActiveListState extends State<ScreenActiveList>
                             //direction: DismissDirection.startToEnd,
                             onDismissed: (direction) {
                               if (direction == DismissDirection.startToEnd) {
+                                listItensPendent[index].pendente = false;
                                 moveItemToConfirmedList(
                                     listItensPendent[index]);
                               } else if (direction ==
@@ -281,8 +163,7 @@ class _ActiveListState extends State<ScreenActiveList>
                                         itemTemp: listItensPendent[index])
                                     as Produto?;
 
-                                if (temp?.pendente != null &&
-                                    temp?.pendente == false &&
+                                if (temp?.pendente == true &&
                                     temp?.precoAtual != 0.0) {
                                   moveItemToConfirmedList(
                                       listItensPendent[index]);
@@ -449,9 +330,7 @@ class _ActiveListState extends State<ScreenActiveList>
   void moveItemToConfirmedList(Produto item) {
     //db.printAllItems();
     setState(() {
-      if (item.pendente == false &&
-          item.precoAtual != 0.0 &&
-          item.precoAtual != null) {
+      if (item.pendente == false) {
         //item.pendente = false;
         listItensPendent.remove(item);
         listItensConfirmed.add(item);
