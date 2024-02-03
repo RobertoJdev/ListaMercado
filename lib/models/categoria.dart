@@ -15,6 +15,9 @@ class Categoria {
 }
 
 class Categorias {
+  static final Categoria carnes = Categoria(
+      nome: 'Carnes', cor: Colors.pink[50]!, corSecundaria: Colors.pink[200]!);
+
   static final Categoria hortifruti = Categoria(
       nome: 'Hortifruti',
       cor: Colors.green[50]!,
@@ -50,6 +53,7 @@ class Categorias {
 
   static obterCategoriaAleatoria() {
     final List<Categoria> todasCategorias = [
+      carnes,
       hortifruti,
       padaria,
       laticinios,
@@ -73,6 +77,7 @@ class Categorias {
 
   static Color obterCorPorDescricao(String descricao) {
     final Map<String, Categoria> mapaCategorias = {
+      'Carnes': carnes,
       'Hortifruti': hortifruti,
       'Padaria': padaria,
       'Laticínios': laticinios,
@@ -94,7 +99,8 @@ class Categorias {
 
   static Color obterCorSecundariaPorDescricao(String descricao) {
     final Map<String, Categoria> mapaCategorias = {
-      'Frutas e Vegetais': hortifruti,
+      'Carnes': carnes,
+      'Hortifruti': hortifruti,
       'Padaria': padaria,
       'Laticínios': laticinios,
       'Frios': frios,
@@ -115,6 +121,7 @@ class Categorias {
 
   static obterTodasCategorias() {
     final List<Categoria> todasCategorias = [
+      carnes,
       hortifruti,
       padaria,
       laticinios,
