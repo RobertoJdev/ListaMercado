@@ -27,6 +27,7 @@ class _listasMercadoState extends State<ScreenListasMercado> {
   void initState() {
     super.initState();
     _initializeDB();
+    db.getUnfinishedLists();
   }
 
   @override
