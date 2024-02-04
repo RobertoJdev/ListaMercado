@@ -27,6 +27,7 @@ class AppInfo {
       _appName = 'Nome do App Não Encontrado';
       _packageName = 'Pacote do App Não Encontrado';
       _installerStore = 'Loja de Instalação Não Encontrada';
+      
     }
   }
 
