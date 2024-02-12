@@ -15,7 +15,7 @@ Future<bool?> abrirListaNaoFinalizada(BuildContext? context) async {
               const Padding(
                 padding: EdgeInsets.fromLTRB(0, 30, 0, 20),
                 child: Text(
-                  'Existe uma lista não finalizda. O que deseja fazer?',
+                  'Existe uma lista não finalizada. O que deseja fazer?',
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
               ),

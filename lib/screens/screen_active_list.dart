@@ -265,7 +265,7 @@ class _ActiveListState extends State<ScreenActiveList>
                         ),
                         const SizedBox(width: 5),
                         const Text(
-                          'Valor total: ',
+                          'Finalizar: ',
                           style: TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.w400,

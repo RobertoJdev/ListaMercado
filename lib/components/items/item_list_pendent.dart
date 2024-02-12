@@ -5,7 +5,7 @@ import 'package:lista_mercado/components/modals/modal_screen_confirm_item.dart';
 import 'package:lista_mercado/models/categoria.dart';
 import 'package:lista_mercado/components/items/item_list_confirmed.dart';
 import 'package:lista_mercado/models/produto.dart';
-import 'package:lista_mercado/util/formatValue.dart';
+import 'package:lista_mercado/util/format_value.dart';
 
 class ItemListPendent extends StatelessWidget {
   ItemListPendent({super.key, required this.item, required this.moveCallback});

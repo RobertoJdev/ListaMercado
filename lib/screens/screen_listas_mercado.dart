@@ -170,10 +170,10 @@ class _listasMercadoState extends State<ScreenListasMercado> {
     if (listaNaoFinaliza != null) {
       bool? resultado = await abrirListaNaoFinalizada(context);
 
-      // Use o resultado conforme necessário
       if (resultado != null) {
         if (resultado) {
           // O usuário escolheu excluir
+          db.deleteListaMercado(listaNaoFinaliza!);
         } else {
           abrirListaMercadoNaoFinalizada(context, listaNaoFinaliza!);
         }
@@ -261,6 +261,7 @@ class _listasMercadoState extends State<ScreenListasMercado> {
     setState(() {
       listasMercado.remove(lista);
     });
+    db.deleteListaMercado(lista);
     // Adicione aqui a lógica para excluir permanentemente do banco de dados
   }
 }

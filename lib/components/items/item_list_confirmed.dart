@@ -3,7 +3,7 @@ import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:intl/intl.dart';
 import 'package:lista_mercado/models/categoria.dart';
 import 'package:lista_mercado/models/produto.dart';
-import 'package:lista_mercado/util/formatValue.dart';
+import 'package:lista_mercado/util/format_value.dart';
 
 class ItemListConfirmed extends StatelessWidget {
   ItemListConfirmed({super.key, required this.item});

@@ -1,4 +1,3 @@
-// market_db.dart
 import 'package:lista_mercado/models/lista_mercado.dart';
 import 'package:lista_mercado/models/produto.dart';
 import 'package:sqflite/sqflite.dart';
@@ -225,7 +224,7 @@ class MarketDB {
         print('Preço Atual: ${productInfo[0]['precoAtual']}');
       }
     }
-    print('------------------------------------------------------------');
+    print('--------------------------------------------------------------------------------------------------');
   }
 
   Future<bool> getUnfinishedLists() async {
@@ -428,5 +427,24 @@ class MarketDB {
         );
       }
     });
+  }
+
+  Future<void> deleteListaMercado(ListaMercado listaMercado) async {
+    await openDB();
+    int? listaMercadoId = listaMercado.id;
+
+    // Exclui a lista de mercado
+    await _database.delete(
+      'ListaMercado',
+      where: 'id = ?',
+      whereArgs: [listaMercadoId],
+    );
+
+    // Exclui os produtos associados à lista de mercado
+    await _database.delete(
+      'ListaMercadoProduto',
+      where: 'listaMercadoId = ?',
+      whereArgs: [listaMercadoId],
+    );
   }
 }
