@@ -8,7 +8,14 @@ class DataUtil {
   }
 
   static String returnDataFormatted(String data) {
-    DateTime date = DateFormat('yy-MM-dd').parse(data);
+    DateTime date;
+
+    if (data.length <= 10) {
+      date = DateFormat('yy-MM-dd').parse(data);
+    } else {
+      date = DateFormat('yyyy-MM-dd').parse(data);
+    }
+
     String formattedDate = DateFormat('dd-MM-yy').format(date);
     return formattedDate;
   }
