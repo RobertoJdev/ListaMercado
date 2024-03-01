@@ -32,7 +32,6 @@ class ItemListConfirmed extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 6),
               color: Categorias.obterCorSecundariaPorDescricao(item.categoria),
               child: Center(
-                // Alinhe o texto ao centro
                 child: Text(
                   Categoria.abreviarCategoria(item.categoria),
                   style: const TextStyle(

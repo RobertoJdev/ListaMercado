@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lista_mercado/components/modals/modal_screen_compartilhar_lista.dart';
 import 'package:lista_mercado/models/lista_mercado.dart';
 
 class ItemListCompras extends StatelessWidget {
@@ -20,13 +21,13 @@ class ItemListCompras extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(bottom: 5),
+      margin: const EdgeInsets.only(top: 2, bottom: 2),
       color: Colors.grey[200],
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Container(
-            padding: const EdgeInsets.all(12.0),
+            padding: const EdgeInsets.fromLTRB(10, 12, 10, 12),
             color: Colors.deepPurple[100],
             child: Text(
               listaMercado.data,
@@ -52,11 +53,17 @@ class ItemListCompras extends StatelessWidget {
               fontWeight: FontWeight.normal,
             ),
           ),
-          const Padding(
-            padding: EdgeInsets.only(right: 10, left: 10),
-            child: Icon(
-              Icons.query_stats_outlined,
-              color: Colors.grey,
+          GestureDetector(
+            onTap: () {
+              compartilharLista(context: context, lista: listaMercado);
+              print('teste de compartilhamento');
+            },
+            child: const Padding(
+              padding: EdgeInsets.only(right: 10, left: 10),
+              child: Icon(
+                Icons.share,
+                color: Colors.deepPurple,
+              ),
             ),
           ),
         ],

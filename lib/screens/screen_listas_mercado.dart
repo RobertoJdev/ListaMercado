@@ -61,7 +61,7 @@ class _listasMercadoState extends State<ScreenListasMercado> {
         const DecorationListBar(isListMercado: true),
         Expanded(
           child: Padding(
-            padding: const EdgeInsets.all(15.0),
+            padding: const EdgeInsets.all(10.0),
             child: Column(
               children: [
                 const Padding(

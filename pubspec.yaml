@@ -40,6 +40,8 @@ dependencies:
   intl: ^0.18.1
   flutter_masked_text2: ^0.9.1
   package_info_plus: ^3.0.3
+  share: ^2.0.4
+  url_launcher: ^6.2.5
 
 
 dev_dependencies:
