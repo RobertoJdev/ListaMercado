@@ -29,5 +29,16 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+        <!-- Definição do provedor de compartilhamento de arquivos -->
+        <!-- Other configurations -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.example.lista_mercado.provider"
+            android:grantUriPermissions="true"
+            android:exported="false">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths"/>
+        </provider>
     </application>
 </manifest>

@@ -1,5 +1,5 @@
 name: lista_mercado
-description: "A new Flutter project."
+description: "App para criar lista de compras para supermercado."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
@@ -40,8 +40,8 @@ dependencies:
   intl: ^0.18.1
   flutter_masked_text2: ^0.9.1
   package_info_plus: ^3.0.3
-  share: ^2.0.4
   url_launcher: ^6.2.5
+  path_provider: ^2.0.14
 
 
 dev_dependencies:

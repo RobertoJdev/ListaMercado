@@ -55,8 +55,7 @@ class ItemListCompras extends StatelessWidget {
           ),
           GestureDetector(
             onTap: () {
-              compartilharLista(context: context, lista: listaMercado);
-              print('teste de compartilhamento');
+              compartilharLista(context: context, listaMercado: listaMercado);
             },
             child: const Padding(
               padding: EdgeInsets.only(right: 10, left: 10),

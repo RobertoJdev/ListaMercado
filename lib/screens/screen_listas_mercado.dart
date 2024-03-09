@@ -41,13 +41,9 @@ class _listasMercadoState extends State<ScreenListasMercado> {
           style: TextStyle(),
         ),
         actions: [
-          const Icon(
-            Icons.bar_chart_outlined,
-            color: Colors.grey,
-          ),
           GestureDetector(
             child: const Icon(
-              Icons.share,
+              Icons.bar_chart_outlined,
               color: Colors.grey,
             ),
             onTap: () {
