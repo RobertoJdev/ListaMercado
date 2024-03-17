@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:lista_mercado/components/decoration_list_bar.dart';
-import 'package:lista_mercado/components/items/item_list_compra.dart';
-import 'package:lista_mercado/components/items/item_list_compra_nao_finalizada.dart';
+import 'package:lista_mercado/widgets/decoration_list_bar.dart';
+import 'package:lista_mercado/widgets/items/item_list_compra.dart';
+import 'package:lista_mercado/widgets/items/item_list_compra_nao_finalizada.dart';
 import 'package:lista_mercado/db/market_db.dart';
-import 'package:lista_mercado/components/modals/modal_screen_lista_nao_finalizada.dart';
+import 'package:lista_mercado/widgets/modals/modal_screen_lista_nao_finalizada.dart';
 import 'package:lista_mercado/util/data_util.dart';
 import 'package:lista_mercado/models/lista_mercado.dart';
 import 'package:lista_mercado/models/produto.dart';
-import 'package:lista_mercado/components/modals/modal_screen_exclui_lista.dart';
-import 'package:lista_mercado/components/modals/modal_screen_reabrir_lista.dart';
+import 'package:lista_mercado/widgets/modals/modal_screen_exclui_lista.dart';
+import 'package:lista_mercado/widgets/modals/modal_screen_reabrir_lista.dart';
 import 'package:lista_mercado/screens/screen_active_list.dart';
+import 'package:lista_mercado/widgets/custom_app_bar.dart.dart';
 
 class ScreenListasMercado extends StatefulWidget {
   const ScreenListasMercado({Key? key}) : super(key: key);
@@ -33,32 +34,9 @@ class _listasMercadoState extends State<ScreenListasMercado> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: const Text(
-          'Lista de Mercado',
-          textAlign: TextAlign.center,
-          style: TextStyle(),
-        ),
-        actions: [
-          const Icon(
-            Icons.bar_chart_outlined,
-            color: Colors.grey,
-          ),
-          GestureDetector(
-            child: const Icon(
-              Icons.share,
-              color: Colors.grey,
-            ),
-            onTap: () {
-              //PopUpItemConfirm.showAlertDialog(context);
-            },
-          ),
-          const Padding(padding: EdgeInsets.only(right: 10))
-        ],
-      ),
+      appBar: const CustomAppBar(),
       body: Column(children: [
-        const DecorationListBar(isListMercado: true),
+        //const DecorationListBar(isListMercado: true),
         Expanded(
           child: Padding(
             padding: const EdgeInsets.all(15.0),

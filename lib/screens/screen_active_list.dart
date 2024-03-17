@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:lista_mercado/components/decoration_list_bar.dart';
-import 'package:lista_mercado/components/items/item_list_pendent.dart';
-import 'package:lista_mercado/components/items/item_list_confirmed.dart';
-import 'package:lista_mercado/components/modals/modal_screen_confirm_item.dart';
+import 'package:lista_mercado/widgets/decoration_list_bar.dart';
+import 'package:lista_mercado/widgets/items/item_list_pendent.dart';
+import 'package:lista_mercado/widgets/items/item_list_confirmed.dart';
+import 'package:lista_mercado/widgets/modals/modal_screen_confirm_item.dart';
 import 'package:lista_mercado/db/market_db.dart';
 import 'package:lista_mercado/models/lista_mercado.dart';
 import 'package:lista_mercado/models/produto.dart';
-import 'package:lista_mercado/components/modals/modal_screen_confirm_mercado.dart';
-import 'package:lista_mercado/components/modals/modal_screen_new_item.dart';
+import 'package:lista_mercado/widgets/modals/modal_screen_confirm_mercado.dart';
+import 'package:lista_mercado/widgets/modals/modal_screen_new_item.dart';
 import 'package:lista_mercado/screens/screen_listas_mercado.dart';
 import 'package:lista_mercado/util/data_util.dart';
+import 'package:lista_mercado/widgets/custom_app_bar.dart.dart';
 
 class ScreenActiveList extends StatefulWidget {
   ScreenActiveList(this.listaMercado, {Key? key}) : super(key: key);
@@ -43,10 +44,13 @@ class _ActiveListState extends State<ScreenActiveList>
       duration: Duration(milliseconds: 100),
     );
     //testeExibirListaItems();
-    isListPendentExpanded =
-        true; // Inicie com a lista de itens que faltam expandida
-    isListConfirmedExpanded =
-        false; // Inicie com a lista de itens adicionados ao carrinho contraída
+    // Inicie com a lista de itens que faltam expandida
+    isListPendentExpanded = true;
+    // Se lista pendente estiver vazia, inicie a lista confirmada expandida
+    if (listItensPendent.isEmpty) {
+      isListConfirmedExpanded = listItensPendent.isEmpty;
+      isListPendentExpanded = false;
+    }
   }
 
   @override
@@ -54,39 +58,7 @@ class _ActiveListState extends State<ScreenActiveList>
     totalValue = somarList(listItensConfirmed).toStringAsFixed(2);
 
     return Scaffold(
-      appBar: AppBar(
-        bottom: const PreferredSize(
-          preferredSize: Size.fromHeight(1.0),
-          child: Divider(
-            color: Colors.deepPurple,
-            height: 1.0,
-          ),
-        ),
-        centerTitle: true,
-        title: const Text(
-          'Lista de Mercado',
-          textAlign: TextAlign.center,
-          style: TextStyle(),
-        ),
-        actions: [
-          const Icon(
-            Icons.bar_chart_outlined,
-            color: Colors.grey,
-          ),
-          GestureDetector(
-            child: const Icon(
-              Icons.share,
-              color: Colors.grey,
-            ),
-            onTap: () {
-              //PopUpItemConfirm.showAlertDialog(context);
-            },
-          ),
-          const Padding(
-            padding: EdgeInsets.only(right: 10),
-          ),
-        ],
-      ),
+      appBar: const CustomAppBar(),
       body: Stack(
         children: [
           SingleChildScrollView(
@@ -101,11 +73,11 @@ class _ActiveListState extends State<ScreenActiveList>
                   expansionCallback: (panelIndex, isExpanded) {
                     setState(() {
                       if (panelIndex == 0) {
-                        isListPendentExpanded = !isListPendentExpanded;
-                        isListConfirmedExpanded = !isListPendentExpanded;
+                        isListPendentExpanded = isExpanded;
+                        isListConfirmedExpanded = !isExpanded;
                       } else {
-                        isListConfirmedExpanded = !isListConfirmedExpanded;
-                        isListPendentExpanded = !isListConfirmedExpanded;
+                        isListPendentExpanded = !isExpanded;
+                        isListConfirmedExpanded = isExpanded;
                       }
                     });
                   },
@@ -156,27 +128,9 @@ class _ActiveListState extends State<ScreenActiveList>
                                 color: Colors.white,
                               ),
                             ),
-                            child: GestureDetector(
-                              onTap: () {
-                                Produto? temp;
-                                temp = confirmEditItemScreen(
-                                        itemTemp: listItensPendent[index])
-                                    as Produto?;
-
-                                if (temp?.pendente == true &&
-                                    temp?.precoAtual != 0.0) {
-                                  moveItemToConfirmedList(
-                                      listItensPendent[index]);
-                                }
-                              },
-                              child: Column(
-                                children: [
-                                  ItemListPendent(
-                                    item: listItensPendent[index],
-                                    moveCallback: moveItemToConfirmedList,
-                                  ),
-                                ],
-                              ),
+                            child: ItemListPendent(
+                              item: listItensPendent[index],
+                              moveCallback: moveItemToConfirmedList,
                             ),
                           );
                         },
@@ -201,16 +155,21 @@ class _ActiveListState extends State<ScreenActiveList>
                             key: UniqueKey(),
                             direction: DismissDirection.horizontal,
                             onDismissed: (direction) {
-                              setState(() {
+                              if (direction == DismissDirection.startToEnd) {
+                                listItensConfirmed[index].pendente = true;
+                                moveItemToPendentList(
+                                    listItensConfirmed[index]);
+                              } else if (direction ==
+                                  DismissDirection.endToStart) {
                                 listItensConfirmed.removeAt(index);
-                              });
+                              }
                             },
                             background: Container(
-                              color: Colors.red,
+                              color: Colors.blueAccent,
                               alignment: Alignment.centerLeft,
                               padding: const EdgeInsets.only(left: 10),
                               child: const Icon(
-                                Icons.delete,
+                                Icons.unarchive_outlined,
                                 color: Colors.white,
                               ),
                             ),
@@ -225,6 +184,7 @@ class _ActiveListState extends State<ScreenActiveList>
                             ),
                             child: ItemListConfirmed(
                               item: listItensConfirmed[index],
+                              moveCallback: moveItemToPendentList,
                             ),
                           );
                         },
@@ -336,6 +296,34 @@ class _ActiveListState extends State<ScreenActiveList>
         listItensConfirmed.add(item);
       }
     });
+    // Verifique se a lista de itens pendentes está vazia após a movimentação
+    if (listItensPendent.isEmpty) {
+      setState(() {
+        // Expandir a lista confirmada automaticamente
+        isListPendentExpanded = false;
+        isListConfirmedExpanded = true;
+      });
+    }
+  }
+
+  void moveItemToPendentList(Produto item) {
+    setState(() {
+      if (item.precoAtual == 0.0 ||
+          item.precoAtual == null ||
+          item.pendente == true) {
+        item.precoAtual = 0.0;
+        item.pendente = true;
+        listItensConfirmed.remove(item);
+        listItensPendent.add(item);
+      }
+    });
+    if (listItensConfirmed.isEmpty) {
+      setState(() {
+        // Expandir a lista pendente automaticamente
+        isListPendentExpanded = true;
+        isListConfirmedExpanded = false;
+      });
+    }
   }
 
   double somarList(List<Produto> produtos) {

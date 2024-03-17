@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:intl/intl.dart';
-import 'package:lista_mercado/components/modals/modal_screen_confirm_item.dart';
 import 'package:lista_mercado/models/categoria.dart';
-import 'package:lista_mercado/components/items/item_list_confirmed.dart';
 import 'package:lista_mercado/models/produto.dart';
 import 'package:lista_mercado/util/format_value.dart';
+import 'package:lista_mercado/widgets/modals/modal_screen_confirm_item.dart';
 
-class ItemListPendent extends StatelessWidget {
-  ItemListPendent({super.key, required this.item, required this.moveCallback});
-  final Produto item;
+class ItemListConfirmed extends StatelessWidget {
+  ItemListConfirmed(
+      {super.key, required this.item, required this.moveCallback});
+  Produto item;
   final Function(Produto) moveCallback;
 
   @override
@@ -22,20 +22,16 @@ class ItemListPendent extends StatelessWidget {
 
     precoController.updateValue(item.precoAtual);
 
-// é preciso mapear os dados para o item que retona o modal.
-
     return GestureDetector(
       onTap: () async {
         Produto temp =
             await confirmEditItemScreen(context: context, itemTemp: item);
-        if (temp.precoAtual != null) {
-          item.precoAtual = temp.precoAtual;
-          moveCallback(item);
-        }
+        item.precoAtual = temp.precoAtual;
+        moveCallback(item);
       },
       child: Container(
         margin: const EdgeInsets.only(top: 2, bottom: 2),
-        color: Categorias.obterCorPorDescricao(item.categoria),
+        color: Colors.green[50],
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -59,7 +55,7 @@ class ItemListPendent extends StatelessWidget {
               ),
             ),
             Container(
-              color: Colors.amber,
+              color: Colors.green,
               child: Padding(
                 padding: const EdgeInsets.all(12.0),
                 child: Text(
@@ -72,7 +68,7 @@ class ItemListPendent extends StatelessWidget {
             ),
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.only(left: 10, right: 10),
+                padding: const EdgeInsets.only(left: 12, right: 12),
                 child: Text(
                   item.descricao,
                   style: const TextStyle(
@@ -82,16 +78,10 @@ class ItemListPendent extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(right: 10.0, left: 10),
-              child: Text(
-                precoController.text == 'R\$ 0,00'
-                    ? 'R\$ --,--'
-                    : precoController.text,
-                style: precoController.text == 'R\$ 0,00'
-                    ? const TextStyle(color: Colors.grey)
-                    : const TextStyle(),
-              ),
+              padding: const EdgeInsets.only(right: 12.0),
+              child: Text(precoController.text),
             ),
+            /*
             const Padding(
               padding: EdgeInsets.only(right: 10.0),
               child: Icon(
@@ -99,6 +89,7 @@ class ItemListPendent extends StatelessWidget {
                 color: Colors.grey,
               ),
             ),
+            */
           ],
         ),
       ),

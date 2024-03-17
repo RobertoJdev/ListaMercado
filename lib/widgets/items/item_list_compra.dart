@@ -37,7 +37,7 @@ class ItemListCompras extends StatelessWidget {
           ),
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.only(right: 10, left: 10),
+              padding: const EdgeInsets.only(right: 12, left: 12),
               child: Text(
                 listaMercado.supermercado,
                 style: const TextStyle(
@@ -46,19 +46,24 @@ class ItemListCompras extends StatelessWidget {
               ),
             ),
           ),
-          Text(
-            formatCurrency(listaMercado.custoTotal),
-            style: const TextStyle(
-              fontWeight: FontWeight.normal,
+          Padding(
+            padding: const EdgeInsets.only(right: 12),
+            child: Text(
+              formatCurrency(listaMercado.custoTotal),
+              style: const TextStyle(
+                fontWeight: FontWeight.normal,
+              ),
             ),
           ),
+          /*
           const Padding(
-            padding: EdgeInsets.only(right: 10, left: 10),
+            padding: EdgeInsets.only(right: 12),
             child: Icon(
               Icons.query_stats_outlined,
               color: Colors.grey,
             ),
           ),
+            */
         ],
       ),
     );
