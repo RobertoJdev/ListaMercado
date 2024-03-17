@@ -45,11 +45,15 @@ class _ActiveListState extends State<ScreenActiveList>
     );
     //testeExibirListaItems();
     // Inicie com a lista de itens que faltam expandida
-    isListPendentExpanded = true;
+    //isListPendentExpanded = true;
+    //isListConfirmedExpanded = false;
     // Se lista pendente estiver vazia, inicie a lista confirmada expandida
     if (listItensPendent.isEmpty) {
       isListConfirmedExpanded = listItensPendent.isEmpty;
       isListPendentExpanded = false;
+    }else{
+      isListConfirmedExpanded = listItensPendent.isEmpty;
+      isListPendentExpanded = true;
     }
   }
 
