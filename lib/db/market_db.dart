@@ -1,5 +1,5 @@
-import 'package:lista_mercado/models/lista_mercado.dart';
-import 'package:lista_mercado/models/produto.dart';
+import '/models/lista_mercado.dart';
+import '/models/produto.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
