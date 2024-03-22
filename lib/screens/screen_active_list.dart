@@ -51,7 +51,7 @@ class _ActiveListState extends State<ScreenActiveList>
     if (listItensPendent.isEmpty) {
       isListConfirmedExpanded = listItensPendent.isEmpty;
       isListPendentExpanded = false;
-    }else{
+    } else {
       isListConfirmedExpanded = listItensPendent.isEmpty;
       isListPendentExpanded = true;
     }
@@ -165,7 +165,9 @@ class _ActiveListState extends State<ScreenActiveList>
                                     listItensConfirmed[index]);
                               } else if (direction ==
                                   DismissDirection.endToStart) {
-                                listItensConfirmed.removeAt(index);
+                                setState(() {
+                                  listItensConfirmed.removeAt(index);
+                                });
                               }
                             },
                             background: Container(
@@ -202,7 +204,7 @@ class _ActiveListState extends State<ScreenActiveList>
           Align(
             alignment: Alignment.bottomCenter,
             child: Container(
-              padding: const EdgeInsets.fromLTRB(30, 15, 30, 15),
+              padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
               decoration: BoxDecoration(
                 color: isContainerPressed
                     ? Colors.deepPurple.withOpacity(0.5)
@@ -228,43 +230,31 @@ class _ActiveListState extends State<ScreenActiveList>
                           color: Colors.white,
                         ),
                         const SizedBox(width: 5),
-                        const Text(
-                          'Finalizar: ',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w400,
+                        const Padding(
+                          padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
+                          child: Text(
+                            'Finalizar: ',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w400,
+                            ),
                           ),
                         ),
-                        Text(
-                          'R\$ $totalValue',
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(0, 20, 0, 20),
+                          child: Text(
+                            'R\$ $totalValue',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
                       ],
                     ),
                   ),
                   GestureDetector(
-                    onTap: () async {
-                      Produto? temp;
-                      temp = await newItemScreen(context);
-                      if (temp != null && temp.precoAtual == 0.0) {
-                        db.insertItem(widget.listaMercado, temp);
-                        listItensPendent.add(temp!);
-                        setState(() {
-                          listItensPendent =
-                              Produto.ordenarItens(listItensPendent);
-                        });
-                      } else if (temp?.precoAtual != 0.0) {
-                        db.insertItem(widget.listaMercado, temp!);
-                        listItensConfirmed.add(temp);
-                        setState(() {
-                          listItensConfirmed =
-                              Produto.ordenarItens(listItensConfirmed);
-                        });
-                      }
-                    },
+                    onTap: adicionarNovoItem,
                     child: const Row(
                       children: [
                         Icon(
@@ -395,5 +385,23 @@ class _ActiveListState extends State<ScreenActiveList>
       listItensPendent.remove(produto);
     });
     // Adicione aqui a lógica para excluir permanentemente do banco de dados
+  }
+
+  Future adicionarNovoItem() async {
+    Produto? temp;
+    temp = await newItemScreen(context);
+    if (temp != null && temp.precoAtual == 0.0) {
+      db.insertItem(widget.listaMercado, temp);
+      listItensPendent.add(temp!);
+      setState(() {
+        listItensPendent = Produto.ordenarItens(listItensPendent);
+      });
+    } else if (temp?.precoAtual != 0.0) {
+      db.insertItem(widget.listaMercado, temp!);
+      listItensConfirmed.add(temp);
+      setState(() {
+        listItensConfirmed = Produto.ordenarItens(listItensConfirmed);
+      });
+    }
   }
 }
