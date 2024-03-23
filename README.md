@@ -11,12 +11,12 @@ O Lista de Mercado é um aplicativo desenvolvido para simplificar e facilitar su
 
 ## Capturas de Tela
 
-![Captura de Tela 1]<img src="screenshots/screenshot1.png" width="360" height="800">
-![Captura de Tela 1]<img src="screenshots/screenshot2.png" width="360" height="800">
-![Captura de Tela 2]<img src="screenshots/screenshot3.png" width="360" height="800">
-![Captura de Tela 2]<img src="screenshots/screenshot4.png" width="360" height="800">
-![Captura de Tela 2]<img src="screenshots/screenshot5.png" width="360" height="800">
-![Captura de Tela 2]<img src="screenshots/screenshot6.png" width="360" height="800">
+<img src="screenshots/screenshot1.png" width="360" height="800">
+<img src="screenshots/screenshot2.png" width="360" height="800">
+<img src="screenshots/screenshot3.png" width="360" height="800">
+<img src="screenshots/screenshot4.png" width="360" height="800">
+<img src="screenshots/screenshot5.png" width="360" height="800">
+<img src="screenshots/screenshot6.png" width="360" height="800">
 
 ## Como Contribuir
 
