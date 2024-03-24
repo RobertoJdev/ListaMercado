@@ -1,5 +1,7 @@
 name: 'lista_mercado'
-description: "A new Flutter project."
+description: |
+  "Simples, intuitivo e projetado para simplificar suas idas ao mercado.
+  Com o Lista de Mercado, você tem o poder de criar e gerenciar suas listas de compras de forma rápida e fácil."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev

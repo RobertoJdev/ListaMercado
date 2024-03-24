@@ -11,6 +11,7 @@ import 'package:lista_mercado/widgets/modals/modal_screen_new_item.dart';
 import 'package:lista_mercado/screens/screen_listas_mercado.dart';
 import 'package:lista_mercado/util/data_util.dart';
 import 'package:lista_mercado/widgets/custom_app_bar.dart.dart';
+import 'package:flutter/services.dart';
 
 class ScreenActiveList extends StatefulWidget {
   ScreenActiveList(this.listaMercado, {Key? key}) : super(key: key);
@@ -201,6 +202,8 @@ class _ActiveListState extends State<ScreenActiveList>
               ],
             ),
           ),
+          ///////////////////////////////////////////////////// verificar mudança de inclusão dentro de proprio widget
+          //////////////////////////////////////////////////////////////////////////////////
           Align(
             alignment: Alignment.bottomCenter,
             child: Container(
