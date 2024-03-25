@@ -1,7 +1,7 @@
 import 'package:package_info_plus/package_info_plus.dart';
 
 class AppInfo {
-  static late String _version;
+  static late String _version = '';
   static late String _buildNumber;
   static late String _buildSignature;
   static late String _appName;
@@ -27,7 +27,6 @@ class AppInfo {
       _appName = 'Nome do App Não Encontrado';
       _packageName = 'Pacote do App Não Encontrado';
       _installerStore = 'Loja de Instalação Não Encontrada';
-      
     }
   }
 

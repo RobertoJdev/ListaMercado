@@ -6,6 +6,8 @@ import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
 
 class MainActivity: FlutterActivity() {
+    /*
+    
     private val CHANNEL = "openCalculator"
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
@@ -25,4 +27,8 @@ class MainActivity: FlutterActivity() {
         intent.addCategory(Intent.CATEGORY_APP_CALCULATOR)
         startActivity(intent)
     }
+    
+    
+    
+    */
 }

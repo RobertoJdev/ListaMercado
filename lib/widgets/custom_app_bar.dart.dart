@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_simple_calculator/flutter_simple_calculator.dart';
+import 'package:lista_mercado/widgets/calculator.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   static const platform = MethodChannel('openCalculator');
@@ -33,7 +35,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       actions: [
         GestureDetector(
           onTap: () {
-            _openCalculator();
+            calculator(context);
           },
           child: const Padding(
             padding: EdgeInsets.all(10.0),
@@ -62,6 +64,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     );
   }
 
+/*
   static Future<void> _openCalculator() async {
     try {
       await platform.invokeMethod('open');
@@ -69,4 +72,5 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       print("Erro ao abrir a calculadora: '${e.message}'.");
     }
   }
+  */
 }

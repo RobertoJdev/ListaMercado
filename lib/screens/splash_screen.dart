@@ -53,9 +53,7 @@ class _SplashScreenState extends State<SplashScreen> {
             Expanded(
               child: Container(),
             ),
-            Text(AppInfo.version != null
-                ? 'Versão ${AppInfo.version}'
-                : 'Versão não identificada'),
+            Text(AppInfo.version),
             const Padding(
               padding: EdgeInsets.only(bottom: 16.0),
               child: Row(
