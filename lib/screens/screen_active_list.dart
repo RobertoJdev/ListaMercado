@@ -265,11 +265,14 @@ class _ActiveListState extends State<ScreenActiveList>
                           color: Colors.white,
                         ),
                         SizedBox(width: 5),
-                        Text(
-                          'Adicionar Item',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
+                        Padding(
+                          padding: EdgeInsets.fromLTRB(0, 0, 5, 0),
+                          child: Text(
+                            'Adicionar Item',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
                       ],

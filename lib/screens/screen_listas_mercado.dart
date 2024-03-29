@@ -3,6 +3,7 @@ import 'package:lista_mercado/widgets/decoration_list_bar.dart';
 import 'package:lista_mercado/widgets/items/item_list_compra.dart';
 import 'package:lista_mercado/widgets/items/item_list_compra_nao_finalizada.dart';
 import 'package:lista_mercado/db/market_db.dart';
+import 'package:lista_mercado/widgets/menu.dart';
 import 'package:lista_mercado/widgets/modals/modal_screen_lista_nao_finalizada.dart';
 import 'package:lista_mercado/util/data_util.dart';
 import 'package:lista_mercado/models/lista_mercado.dart';
@@ -34,6 +35,7 @@ class _listasMercadoState extends State<ScreenListasMercado> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: const Menu(),
       appBar: const CustomAppBar(),
       body: Column(children: [
         //const DecorationListBar(isListMercado: true),
@@ -106,7 +108,8 @@ class _listasMercadoState extends State<ScreenListasMercado> {
                       ),
                     ),
                     child: const Padding(
-                      padding: EdgeInsets.all(10.0),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 10.0, vertical: 12),
                       child: Text(
                         'Nova lista',
                         style: TextStyle(

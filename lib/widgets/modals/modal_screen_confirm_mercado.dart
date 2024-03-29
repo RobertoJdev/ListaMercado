@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:async';
 
+import 'package:lista_mercado/widgets/botton/custom_buttons%20.dart';
+
 Future<String?> confirmMercadoScreen({BuildContext? context}) async {
   TextEditingController _textEditingController = TextEditingController();
   Completer<String?> completer = Completer();
@@ -28,7 +30,7 @@ Future<String?> confirmMercadoScreen({BuildContext? context}) async {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                    padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
                     child: TextField(
                       autofocus: true,
                       controller: _textEditingController,
@@ -47,7 +49,13 @@ Future<String?> confirmMercadoScreen({BuildContext? context}) async {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      TextButton(
+                      CustomButtons.buttomCancelar(
+                          completer: completer,
+                          context: context,
+                          boolComplete: null),
+
+                      /*
+                      ElevatedButton(
                         style: ButtonStyle(
                           backgroundColor: MaterialStateProperty.all(
                             Colors.deepPurple[100],
@@ -57,8 +65,13 @@ Future<String?> confirmMercadoScreen({BuildContext? context}) async {
                           completer.complete(null);
                           Navigator.of(context).pop();
                         },
-                        child: const Text('Cancelar'),
+                        child: const Padding(
+                          padding: EdgeInsets.all(10.0),
+                          child: Text('Cancelar'),
+                        ),
                       ),
+                      */
+
                       ElevatedButton(
                         style: ButtonStyle(
                           backgroundColor: isButtonEnabled
@@ -76,10 +89,7 @@ Future<String?> confirmMercadoScreen({BuildContext? context}) async {
                                 Navigator.of(context).pop();
                               }
                             : null,
-                        child: const Text(
-                          '  OK  ',
-                          style: TextStyle(color: Colors.white),
-                        ),
+                        child: CustomButtons.buttomOK(),
                       )
                     ],
                   ),

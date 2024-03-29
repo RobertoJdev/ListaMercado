@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:lista_mercado/widgets/botton/custom_buttons%20.dart';
 
 Future<bool?> reabrirListaScreen({BuildContext? context}) async {
   Completer<bool?> completer = Completer();
@@ -21,42 +22,38 @@ Future<bool?> reabrirListaScreen({BuildContext? context}) async {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  TextButton(
+                  CustomButtons.buttomReutilizar(
+                      completer: completer,
+                      context: context,
+                      boolComplete: true),
+                  /* TextButton(
                     style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(
-                        Colors.deepPurple,
-                      ),
-                      foregroundColor: MaterialStateProperty.all(
-                        Colors.white,
-                      ),
-                    ),
+                      backgroundColor: MaterialStateProperty.all(Colors.deepPurple),
+                      foregroundColor: MaterialStateProperty.all(Colors.white)),
                     onPressed: () {
                       completer.complete(true);
                       Navigator.of(context).pop();
                     },
-                    child: const Padding(
-                      padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                      child: Text('Reutilizar'),
-                    ),
-                  ),
-                  TextButton(
+                    child: const Padding(padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
+                      child: Text('Reutilizar')),
+                  ), */
+                  CustomButtons.buttomAbrir(
+                      completer: completer,
+                      context: context,
+                      boolComplete: false),
+                  /* TextButton(
                     style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(
-                        Colors.deepPurple[100],
-                      ),
-                      foregroundColor: MaterialStateProperty.all(
-                        Colors.deepPurple,
-                      ),
+                      backgroundColor: MaterialStateProperty.all(Colors.deepPurple[100],),
+                      foregroundColor: MaterialStateProperty.all(Colors.deepPurple,),
                     ),
                     onPressed: () {
                       completer.complete(false);
                       Navigator.of(context).pop();
                     },
                     child: const Padding(
-                      padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                      padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
                       child: Text('    Abrir    '),
-                    ),
-                  )
+                    )) */
                 ],
               ),
             ],

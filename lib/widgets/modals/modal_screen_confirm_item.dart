@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lista_mercado/models/categoria.dart';
 import 'package:lista_mercado/models/produto.dart';
+import 'package:lista_mercado/widgets/botton/custom_buttons%20.dart';
 
 Future<Produto> confirmEditItemScreen(
     {BuildContext? context, required Produto itemTemp}) async {
@@ -157,17 +158,24 @@ Future<Produto> confirmEditItemScreen(
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      TextButton(
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all(
-                            Colors.deepPurple[100],
+                      CustomButtons.buttomCancelar(
+                          context: context, boolComplete: null),
+
+/*
+                      ElevatedButton(
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all(
+                              Colors.deepPurple[100],
+                            ),
                           ),
-                        ),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        child: const Text('Cancelar'),
-                      ),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: const Padding(
+                              padding: EdgeInsets.all(10.0),
+                              child: Text('Cancelar'))),
+*/
+
                       ElevatedButton(
                         style: ButtonStyle(
                           backgroundColor: isButtonEnabled
@@ -221,10 +229,7 @@ Future<Produto> confirmEditItemScreen(
                                 }
                               }
                             : null,
-                        child: const Text(
-                          '  OK  ',
-                          style: TextStyle(color: Colors.white),
-                        ),
+                        child: CustomButtons.buttomOK(),
                       ),
                     ],
                   )

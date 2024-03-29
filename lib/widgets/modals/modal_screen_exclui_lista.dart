@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:lista_mercado/widgets/botton/custom_buttons%20.dart';
 
 Future<bool?> showDeleteConfirmationDialog(BuildContext context) async {
   Completer<bool?> completer = Completer();
@@ -22,7 +23,8 @@ Future<bool?> showDeleteConfirmationDialog(BuildContext context) async {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  TextButton(
+                  /*
+                  ElevatedButton(
                     onPressed: () {
                       completer.complete(false);
                       Navigator.of(context).pop();
@@ -36,11 +38,20 @@ Future<bool?> showDeleteConfirmationDialog(BuildContext context) async {
                       ),
                     ),
                     child: const Padding(
-                      padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                      padding: EdgeInsets.all(10.0),
                       child: Text('Cancelar'),
                     ),
                   ),
-                  TextButton(
+                  */
+                  CustomButtons.buttomCancelar(
+                      completer: completer,
+                      context: context,
+                      boolComplete: false),
+                  CustomButtons.buttomExcluir(
+                      completer: completer, context: context, boolComplete: true),
+
+                  /*
+                  ElevatedButton(
                     onPressed: () {
                       completer.complete(true);
                       Navigator.of(context).pop();
@@ -54,10 +65,11 @@ Future<bool?> showDeleteConfirmationDialog(BuildContext context) async {
                       ),
                     ),
                     child: const Padding(
-                      padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                      padding: EdgeInsets.all(10.0),
                       child: Text(' Excluir '),
                     ),
                   )
+*/
                 ],
               ),
             ],
