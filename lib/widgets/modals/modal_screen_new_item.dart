@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:lista_mercado/models/categoria.dart';
 import 'package:lista_mercado/models/produto.dart';
 import 'package:intl/intl.dart';
+import 'package:lista_mercado/util/my_theme.dart';
 import 'package:lista_mercado/widgets/botton/custom_buttons%20.dart';
 import 'package:path/path.dart';
 
@@ -29,7 +30,6 @@ Future<Produto?> newItemScreen(BuildContext context) async {
         builder: (BuildContext context, StateSetter setState) {
           return SingleChildScrollView(
             child: Container(
-              //color: const Color.fromARGB(255, 92, 92, 92),
               color: Colors.grey[200],
               padding: EdgeInsets.only(
                 bottom: MediaQuery.of(context).viewInsets.bottom,
@@ -50,14 +50,10 @@ Future<Produto?> newItemScreen(BuildContext context) async {
                       keyboardType: TextInputType.text,
                       controller: _textEditingControllerNewItem,
                       textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        fontSize: 20,
-                      ),
+                      style: MyTheme.myTextFieldStyleInputText,
+                      //style: MyTheme.myTextFieldStyle,
                       decoration: const InputDecoration(
-                        filled: true,
-                        border: OutlineInputBorder(borderSide: BorderSide.none),
                         labelText: 'Produto',
-                        fillColor: Colors.white,
                       ),
                       cursorColor: Colors.deepPurple,
                       onChanged: (text) {
@@ -86,7 +82,7 @@ Future<Produto?> newItemScreen(BuildContext context) async {
                             keyboardType: TextInputType.number,
                             controller: _textEditingControllerNewItemQuant,
                             textAlign: TextAlign.center,
-                            style: const TextStyle(fontSize: 20),
+                            // style: const TextStyle(fontSize: 20),
                             onChanged: (text) {
                               setState(() {
                                 isButtonEnabled = _textEditingControllerNewItem
@@ -95,12 +91,8 @@ Future<Produto?> newItemScreen(BuildContext context) async {
                                         .text.isNotEmpty;
                               });
                             },
-                            decoration: const InputDecoration(
-                                filled: true,
-                                border: OutlineInputBorder(
-                                    borderSide: BorderSide.none),
-                                fillColor: Colors.white,
-                                labelText: 'Quantidade'),
+                            decoration:
+                                const InputDecoration(labelText: 'Quantidade'),
                             cursorColor: Colors.deepPurple,
                           ),
                         ),
@@ -114,13 +106,9 @@ Future<Produto?> newItemScreen(BuildContext context) async {
                             keyboardType: TextInputType.number,
                             controller: _textEditingControllerNewItemValor,
                             textAlign: TextAlign.center,
-                            style: const TextStyle(fontSize: 20),
-                            decoration: const InputDecoration(
-                                filled: true,
-                                border: OutlineInputBorder(
-                                    borderSide: BorderSide.none),
-                                fillColor: Colors.white,
-                                labelText: 'Valor'),
+//                            style: const TextStyle(fontSize: 20),
+                            decoration:
+                                const InputDecoration(labelText: 'Valor'),
                             cursorColor: Colors.deepPurple,
                           ),
                         ),

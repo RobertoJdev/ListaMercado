@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lista_mercado/screens/screen_listas_mercado.dart';
 import 'package:lista_mercado/screens/splash_screen.dart';
+import 'package:lista_mercado/util/my_theme.dart';
 
 void main() {
   runApp(const MyApp());
@@ -18,11 +19,14 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Simple List Mercado',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+      title: 'Lista de Mercado',
+      theme: MyTheme.themeData,
+      /* theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.deepPurple,
+        ),
         useMaterial3: true,
-      ),
+      ), */
       home: SplashScreen(),
     );
   }
