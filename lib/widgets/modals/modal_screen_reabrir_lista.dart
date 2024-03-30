@@ -33,17 +33,6 @@ Future<bool?> reabrirListaScreen({BuildContext? context}) async {
                             completer: completer,
                             context: context,
                             boolComplete: true),
-                        /* TextButton(
-                          style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all(Colors.deepPurple),
-                            foregroundColor: MaterialStateProperty.all(Colors.white)),
-                          onPressed: () {
-                            completer.complete(true);
-                            Navigator.of(context).pop();
-                          },
-                          child: const Padding(padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
-                            child: Text('Reutilizar')),
-                        ), */
                         CustomButtons.buttomAbrir(
                             completer: completer,
                             context: context,
@@ -51,16 +40,13 @@ Future<bool?> reabrirListaScreen({BuildContext? context}) async {
                         /* TextButton(
                           style: ButtonStyle(
                             backgroundColor: MaterialStateProperty.all(Colors.deepPurple[100],),
-                            foregroundColor: MaterialStateProperty.all(Colors.deepPurple,),
-                          ),
+                            foregroundColor: MaterialStateProperty.all(Colors.deepPurple,),),
                           onPressed: () {
                             completer.complete(false);
-                            Navigator.of(context).pop();
-                          },
+                            Navigator.of(context).pop();},
                           child: const Padding(
                             padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
-                            child: Text('    Abrir    '),
-                          )) */
+                            child: Text('    Abrir    '),)) */
                       ],
                     ),
                   ),

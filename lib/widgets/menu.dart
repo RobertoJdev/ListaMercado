@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lista_mercado/util/app_info.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class Menu extends StatefulWidget {
@@ -22,22 +23,35 @@ class _MenuState extends State<Menu> {
         crossAxisAlignment: CrossAxisAlignment.start,
         //padding: EdgeInsets.zero,
         children: [
-          const DrawerHeader(
-            decoration: BoxDecoration(
-              color: Colors.deepPurple,
-            ),
-            //------------user image section  and other deatils //
-            child: ListTile(
-              title: Text(
-                'Usuario e email',
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.white,
+          Container(
+            alignment: Alignment.center,
+            color: Colors.deepPurple,
+            height: 200,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 15),
+                  child: Image.asset('assets/images/app_logo.png',
+                      width: 60, height: 60),
                 ),
-              ),
+                const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Text(
+                    'Lista de Mercado',
+                    style: TextStyle(
+                      fontSize: 22,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
           ListTile(
+            leading: const Icon(Icons.privacy_tip),
             title: const Text('Políticas de Privacidade'),
             onTap: () {
               abrirUrl(urlPoliticas);
@@ -50,11 +64,17 @@ class _MenuState extends State<Menu> {
               onTap: null,
             ),
           ),
-          const Divider(),
-          const ListTile(title: Text('Versão 1.0.0')),
+          const Divider(
+            color: Colors.black12,
+          ),
+          ListTile(
+            leading: const Icon(Icons.info),
+            title: Text('Versão: ${AppInfo.version}'),
+          ),
           Padding(
             padding: const EdgeInsets.only(bottom: 5),
             child: ListTile(
+              leading: const Icon(Icons.developer_mode),
               onTap: () {
                 abrirUrl(urlDesenvolvedor);
               },
