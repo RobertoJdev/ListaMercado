@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:intl/intl.dart';
+import 'package:lista_mercado/my_theme.dart';
 import 'package:lista_mercado/widgets/modals/modal_screen_confirm_item.dart';
 import 'package:lista_mercado/models/categoria.dart';
 import 'package:lista_mercado/widgets/items/item_list_confirmed.dart';
@@ -21,9 +22,6 @@ class ItemListPendent extends StatelessWidget {
     );
 
     precoController.updateValue(item.precoAtual);
-
-// é preciso mapear os dados para o item que retona o modal.
-
     return GestureDetector(
       onTap: () async {
         Produto temp =
@@ -34,7 +32,7 @@ class ItemListPendent extends StatelessWidget {
         }
       },
       child: Container(
-        margin: const EdgeInsets.only(top: 2, bottom: 2),
+        margin: MyTheme.myCustomEdgeInsetsSpaceExtern,
         color: Categorias.obterCorPorDescricao(item.categoria),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -43,53 +41,45 @@ class ItemListPendent extends StatelessWidget {
               quarterTurns: 3,
               child: Container(
                 alignment: Alignment.center,
-                padding: const EdgeInsets.symmetric(horizontal: 6),
+                padding:
+                    MyTheme.myCustomEdgeInsetsItemSpaceInternCategoryProduct,
                 color:
                     Categorias.obterCorSecundariaPorDescricao(item.categoria),
                 child: Center(
                   // Alinhe o texto ao centro
-                  child: Text(
-                    Categoria.abreviarCategoria(item.categoria),
-                    style: const TextStyle(
-                      fontSize: 10,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
+                  child: Text(Categoria.abreviarCategoria(item.categoria),
+                      style: MyTheme.myTextStyleCategoryProduct),
                 ),
               ),
             ),
             Container(
               color: Colors.amber,
               child: Padding(
-                padding: const EdgeInsets.all(12.0),
+                padding: MyTheme.myCustomEdgeInsetsItemSpaceIntern,
                 child: Text(
                   FortmatValue.formatDouble(item.quantidade),
-                  style: const TextStyle(
-                    fontWeight: FontWeight.w500,
-                  ),
+                  style: MyTheme.myTextStyleDescriptionItem,
                 ),
               ),
             ),
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.only(left: 12, right: 12),
+                padding: MyTheme.myCustomEdgeInsetsItemSpaceIntern,
                 child: Text(
                   item.descricao,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.w500,
-                  ),
+                  style: MyTheme.myTextStyleDescriptionItem,
                 ),
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(right: 12.0),
+              padding: MyTheme.myCustomEdgeInsetsItemSpaceInternRight,
               child: Text(
                 precoController.text == 'R\$ 0,00'
                     ? 'R\$ --,--'
                     : precoController.text,
                 style: precoController.text == 'R\$ 0,00'
                     ? const TextStyle(color: Colors.grey)
-                    : const TextStyle(),
+                    : MyTheme.myTextStylePrice,
               ),
             ),
             /*

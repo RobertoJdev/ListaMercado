@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lista_mercado/models/categoria.dart';
 import 'package:lista_mercado/models/produto.dart';
+import 'package:lista_mercado/my_theme.dart';
 import 'package:lista_mercado/widgets/botton/custom_buttons%20.dart';
 
 Future<Produto> confirmEditItemScreen(
@@ -33,26 +34,24 @@ Future<Produto> confirmEditItemScreen(
         builder: (BuildContext context, StateSetter setState) {
           return SingleChildScrollView(
             child: Container(
+              color: MyTheme.modalColorBackground,
               padding: EdgeInsets.only(
                 bottom: MediaQuery.of(context).viewInsets.bottom,
               ),
               child: Column(
                 children: [
                   const Padding(
-                    padding: EdgeInsets.fromLTRB(0, 30, 0, 0),
-                    child: Text(
-                      'Edite ou confirme o produto.',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
+                    padding: MyTheme.myCustomEdgeInsetsTitleModal,
+                    child: Text('Edite ou confirme o produto.',
+                        style: MyTheme.myTextStyleTitleModal),
                   ),
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                    padding: MyTheme.myCustomEdgeInsetsTextFildItensModal,
                     child: TextField(
                       //autofocus: true,
                       keyboardType: TextInputType.text,
                       controller: _textEditingControllerEditItem,
                       textAlign: TextAlign.center,
-                      style: const TextStyle(fontSize: 20),
                       decoration: const InputDecoration(
                         labelText: 'Produto',
                       ),
@@ -67,7 +66,7 @@ Future<Produto> confirmEditItemScreen(
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                    padding: MyTheme.myCustomEdgeInsetsTextFildItensModal,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -80,7 +79,6 @@ Future<Produto> confirmEditItemScreen(
                             keyboardType: TextInputType.number,
                             controller: _textEditingControllerEditItemQuant,
                             textAlign: TextAlign.center,
-                            style: const TextStyle(fontSize: 20),
                             onChanged: (text) {
                               setState(() {
                                 isButtonEnabled = _textEditingControllerEditItem
@@ -105,7 +103,6 @@ Future<Produto> confirmEditItemScreen(
                             keyboardType: TextInputType.number,
                             controller: _textEditingControllerEditItemValor,
                             textAlign: TextAlign.center,
-                            style: const TextStyle(fontSize: 20),
                             onChanged: (text) {
                               setState(() {
                                 isButtonEnabled = _textEditingControllerEditItem
@@ -122,116 +119,115 @@ Future<Produto> confirmEditItemScreen(
                       ],
                     ),
                   ),
-                  // Adicione esta parte para a lista suspensa de categorias
+                  // Lista suspensa de categorias
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(20, 20, 20, 10),
+                    padding: MyTheme.myCustomEdgeInsetsTextFildItensModal,
+                    child: Expanded(
+                      child: Container(
+                        alignment: Alignment.center,
+                        decoration: const BoxDecoration(color: Colors.white),
+                        child: Padding(
+                          padding: MyTheme.myCustomEdgeInsetsTextFildItensModal,
+                          child: DropdownButtonHideUnderline(
+                            child: DropdownButton<String>(
+                              //menuMaxHeight: 100,
+                              dropdownColor: Colors.white,
+                              isExpanded: true,
+                              alignment: Alignment.center,
+                              style: MyTheme.myTextStyleDropDownButton,
+                              value: selectedCategory,
+                              onChanged: (String? newValue) {
+                                setState(() {
+                                  selectedCategory = newValue!;
+                                });
+                              },
+                              items: Categorias.obterTodasCategorias()
+                                  .map<DropdownMenuItem<String>>(
+                                    (Categoria categoria) =>
+                                        DropdownMenuItem<String>(
+                                      alignment: Alignment.center,
+                                      value: categoria.nome,
+                                      child: Text(
+                                        categoria.nome,
+                                        style:
+                                            MyTheme.myTextStyleDropDownButton,
+                                      ),
+                                    ),
+                                  )
+                                  .toList(),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: MyTheme.myCustomEdgeInsetsButtomModal,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Expanded(
-                          child: DropdownButton<String>(
-                            style: const TextStyle(
-                              fontSize: 20,
-                              color: Colors.black,
-                            ),
-                            value: selectedCategory,
-                            onChanged: (String? newValue) {
-                              setState(() {
-                                selectedCategory = newValue!;
-                              });
-                            },
-                            items: Categorias.obterTodasCategorias()
-                                .map<DropdownMenuItem<String>>(
-                                  (Categoria categoria) =>
-                                      DropdownMenuItem<String>(
-                                    alignment: Alignment.center,
-                                    value: categoria.nome,
-                                    child: Text(categoria.nome),
-                                  ),
-                                )
-                                .toList(),
-                          ),
+                        CustomButtons.buttomCancelar(
+                          context: context,
+                          boolComplete: null,
                         ),
-                      ],
-                    ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      CustomButtons.buttomCancelar(
-                          context: context, boolComplete: null),
-
-/*
-                      ElevatedButton(
-                          style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all(
-                              Colors.deepPurple[100],
+                        ElevatedButton(
+                            style: ButtonStyle(
+                              backgroundColor: isButtonEnabled
+                                  ? MaterialStateProperty.all(Colors.deepPurple)
+                                  : MaterialStateProperty.all(
+                                      Colors.deepPurple[100]),
                             ),
-                          ),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                          child: const Padding(
-                              padding: EdgeInsets.all(10.0),
-                              child: Text('Cancelar'))),
-*/
+                            onPressed: isButtonEnabled
+                                ? () {
+                                    double? quantidade = double.tryParse(
+                                      _textEditingControllerEditItemQuant.text
+                                          .replaceAll(',', '.'),
+                                    );
+                                    double? valor = double.tryParse(
+                                      _textEditingControllerEditItemValor.text
+                                          .replaceAll(',', '.'),
+                                    );
 
-                      ElevatedButton(
-                        style: ButtonStyle(
-                          backgroundColor: isButtonEnabled
-                              ? MaterialStateProperty.all(Colors.deepPurple)
-                              : MaterialStateProperty.all(
-                                  Colors.deepPurple[100]),
-                        ),
-                        onPressed: isButtonEnabled
-                            ? () {
-                                double? quantidade = double.tryParse(
-                                  _textEditingControllerEditItemQuant.text
-                                      .replaceAll(',', '.'),
-                                );
-                                double? valor = double.tryParse(
-                                  _textEditingControllerEditItemValor.text
-                                      .replaceAll(',', '.'),
-                                );
+                                    if (valor == null ||
+                                        valor == 0.0 &&
+                                            _textEditingControllerEditItem
+                                                    .text !=
+                                                '') {
+                                      if (valor == null) {
+                                        valor = 0.0;
+                                      }
+                                      itemTemp.descricao =
+                                          _textEditingControllerEditItem.text;
+                                      itemTemp.quantidade = quantidade!;
+                                      itemTemp.precoAtual = valor ?? 0.0;
+                                      itemTemp.categoria = selectedCategory;
 
-                                if (valor == null ||
-                                    valor == 0.0 &&
+                                      itemTemp.pendente = true;
+
+                                      //print('${valor} =========================');
+
+                                      Navigator.of(context).pop(itemTemp);
+                                    } else if (valor != null &&
+                                        valor > 0.0 &&
                                         _textEditingControllerEditItem.text !=
                                             '') {
-                                  if (valor == null) {
-                                    valor = 0.0;
+                                      itemTemp.descricao =
+                                          _textEditingControllerEditItem.text;
+                                      itemTemp.quantidade = quantidade!;
+                                      itemTemp.precoAtual = valor;
+                                      itemTemp.categoria = selectedCategory;
+
+                                      itemTemp.pendente = false;
+
+                                      //print('${valor} ***************************');
+
+                                      Navigator.of(context).pop(itemTemp);
+                                    }
                                   }
-                                  itemTemp.descricao =
-                                      _textEditingControllerEditItem.text;
-                                  itemTemp.quantidade = quantidade!;
-                                  itemTemp.precoAtual = valor ?? 0.0;
-                                  itemTemp.categoria = selectedCategory;
-
-                                  itemTemp.pendente = true;
-
-                                  //print('${valor} =========================');
-
-                                  Navigator.of(context).pop(itemTemp);
-                                } else if (valor != null &&
-                                    valor > 0.0 &&
-                                    _textEditingControllerEditItem.text != '') {
-                                  itemTemp.descricao =
-                                      _textEditingControllerEditItem.text;
-                                  itemTemp.quantidade = quantidade!;
-                                  itemTemp.precoAtual = valor;
-                                  itemTemp.categoria = selectedCategory;
-
-                                  itemTemp.pendente = false;
-
-                                  //print('${valor} ***************************');
-
-                                  Navigator.of(context).pop(itemTemp);
-                                }
-                              }
-                            : null,
-                        child: CustomButtons.buttomOK(),
-                      ),
-                    ],
+                                : null,
+                            child: CustomButtons.buttomOK()),
+                      ],
+                    ),
                   )
                 ],
               ),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lista_mercado/screens/screen_listas_mercado.dart';
 import 'package:lista_mercado/screens/splash_screen.dart';
-import 'package:lista_mercado/util/my_theme.dart';
+import 'package:lista_mercado/my_theme.dart';
 
 void main() {
   runApp(const MyApp());

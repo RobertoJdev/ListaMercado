@@ -3,6 +3,7 @@ import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:intl/intl.dart';
 import 'package:lista_mercado/models/categoria.dart';
 import 'package:lista_mercado/models/produto.dart';
+import 'package:lista_mercado/my_theme.dart';
 import 'package:lista_mercado/util/format_value.dart';
 import 'package:lista_mercado/widgets/modals/modal_screen_confirm_item.dart';
 
@@ -30,7 +31,7 @@ class ItemListConfirmed extends StatelessWidget {
         moveCallback(item);
       },
       child: Container(
-        margin: const EdgeInsets.only(top: 2, bottom: 2),
+        margin: MyTheme.myCustomEdgeInsetsSpaceExtern,
         color: Colors.green[50],
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -39,17 +40,14 @@ class ItemListConfirmed extends StatelessWidget {
               quarterTurns: 3,
               child: Container(
                 alignment: Alignment.center,
-                padding: const EdgeInsets.symmetric(horizontal: 6),
+                padding:
+                    MyTheme.myCustomEdgeInsetsItemSpaceInternCategoryProduct,
                 color:
                     Categorias.obterCorSecundariaPorDescricao(item.categoria),
                 child: Center(
-                  // Alinhe o texto ao centro
                   child: Text(
                     Categoria.abreviarCategoria(item.categoria),
-                    style: const TextStyle(
-                      fontSize: 10,
-                      fontWeight: FontWeight.w500,
-                    ),
+                    style: MyTheme.myTextStyleCategoryProduct,
                   ),
                 ),
               ),
@@ -57,28 +55,24 @@ class ItemListConfirmed extends StatelessWidget {
             Container(
               color: Colors.green,
               child: Padding(
-                padding: const EdgeInsets.all(12.0),
+                padding: MyTheme.myCustomEdgeInsetsItemSpaceIntern,
                 child: Text(
                   FortmatValue.formatDouble(item.quantidade),
-                  style: const TextStyle(
-                    fontWeight: FontWeight.w500,
-                  ),
+                  style: MyTheme.myTextStyleQuantItem,
                 ),
               ),
             ),
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.only(left: 12, right: 12),
+                padding: MyTheme.myCustomEdgeInsetsItemSpaceIntern,
                 child: Text(
                   item.descricao,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.w500,
-                  ),
+                  style: MyTheme.myTextStyleDescriptionItem,
                 ),
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(right: 12.0),
+              padding: MyTheme.myCustomEdgeInsetsItemSpaceInternRight,
               child: Text(precoController.text),
             ),
             /*

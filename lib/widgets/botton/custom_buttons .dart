@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 
@@ -34,12 +33,29 @@ class CustomButtons {
         Navigator.of(context).pop();
       },
       style: ButtonStyle(
-        backgroundColor: MaterialStateProperty.all(
-          Colors.deepPurple,
-        ),
-        foregroundColor: MaterialStateProperty.all(
-          Colors.white,
-        ),
+          backgroundColor: MaterialStateProperty.all(Colors.deepPurple[100]),
+          foregroundColor: MaterialStateProperty.all(Colors.deepPurple)),
+      child: const Padding(
+        padding: EdgeInsets.all(10.0),
+        child: Text('Cancelar'),
+      ),
+    );
+  }
+
+  static Widget buttomCancelarAlt({
+    Completer? completer,
+    required BuildContext context,
+    required bool? boolComplete,
+    //required VoidCallback onPressed,
+  }) {
+    return ElevatedButton(
+      onPressed: () {
+        completer?.complete(boolComplete);
+        Navigator.of(context).pop();
+      },
+      style: ButtonStyle(
+        backgroundColor: MaterialStateProperty.all(Colors.deepPurple),
+        foregroundColor: MaterialStateProperty.all(Colors.white),
       ),
       child: const Padding(
         padding: EdgeInsets.all(10.0),
@@ -52,7 +68,7 @@ class CustomButtons {
     return const Padding(
       padding: EdgeInsets.all(10.0),
       child: Text(
-        '    OK    ',
+        '     OK     ',
         style: TextStyle(color: Colors.white),
       ),
     );
@@ -74,7 +90,7 @@ class CustomButtons {
           backgroundColor: MaterialStateProperty.all(Colors.deepPurple[100]),
           foregroundColor: MaterialStateProperty.all(Colors.deepPurple)),
       child: const Padding(
-        padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
+        padding: EdgeInsets.all(10),
         child: Text('    Abrir    '),
       ),
     );
@@ -98,7 +114,7 @@ class CustomButtons {
         foregroundColor: MaterialStateProperty.all(Colors.white),
       ),
       child: const Padding(
-        padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
+        padding: EdgeInsets.all(10),
         child: Text('Reutilizar'),
       ),
     );

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lista_mercado/models/lista_mercado.dart';
+import 'package:lista_mercado/my_theme.dart';
 
 class ItemListCompras extends StatelessWidget {
   ItemListCompras({
@@ -20,39 +21,33 @@ class ItemListCompras extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(bottom: 5),
+      margin: MyTheme.myCustomEdgeInsetsSpaceExtern,
       color: Colors.grey[200],
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Container(
-            padding: const EdgeInsets.all(12.0),
+            padding: MyTheme.myCustomEdgeInsetsItemSpaceIntern,
             color: Colors.deepPurple[100],
             child: Text(
               listaMercado.data,
-              style: const TextStyle(
-                fontWeight: FontWeight.normal,
-              ),
+              style: MyTheme.myTextStyleDateListMarket,
             ),
           ),
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.only(right: 12, left: 12),
+              padding: MyTheme.myCustomEdgeInsetsItemSpaceIntern,
               child: Text(
                 listaMercado.supermercado,
-                style: const TextStyle(
-                  fontWeight: FontWeight.w500,
-                ),
+                style: MyTheme.myTextStyleDescriptionItem,
               ),
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(right: 12),
+            padding: MyTheme.myCustomEdgeInsetsItemSpaceInternRight,
             child: Text(
               formatCurrency(listaMercado.custoTotal),
-              style: const TextStyle(
-                fontWeight: FontWeight.normal,
-              ),
+              style: MyTheme.myTextStylePrice,
             ),
           ),
           /*

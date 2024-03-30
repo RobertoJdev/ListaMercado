@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:lista_mercado/models/lista_mercado.dart';
+import 'package:lista_mercado/my_theme.dart';
 
 Future<bool?> abrirListaNaoFinalizada(BuildContext? context) async {
   Completer<bool?> completer = Completer();
@@ -13,16 +14,15 @@ Future<bool?> abrirListaNaoFinalizada(BuildContext? context) async {
           return Column(
             children: [
               const Padding(
-                padding: EdgeInsets.fromLTRB(0, 30, 0, 20),
+                padding: MyTheme.myCustomEdgeInsetsTitleModal,
                 child: Text(
-                  'Existe uma lista não finalizada. O que deseja fazer?',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
+                    'Existe uma lista não finalizada. O que deseja fazer?',
+                    style: MyTheme.myTextStyleTitleModal),
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  TextButton(
+                  ElevatedButton(
                     style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.all(
                         Colors.deepPurple[100],
@@ -40,7 +40,7 @@ Future<bool?> abrirListaNaoFinalizada(BuildContext? context) async {
                       child: Text('    Excluir    '),
                     ),
                   ),
-                  TextButton(
+                  ElevatedButton(
                     style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.all(
                         Colors.deepPurple,
