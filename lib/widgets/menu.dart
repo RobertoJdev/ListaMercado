@@ -37,7 +37,7 @@ class _MenuState extends State<Menu> {
                       width: 60, height: 60),
                 ),
                 const Padding(
-                  padding: EdgeInsets.all(8.0),
+                  padding: EdgeInsets.fromLTRB(10,6,10,0),
                   child: Text(
                     'Lista de Mercado',
                     style: TextStyle(

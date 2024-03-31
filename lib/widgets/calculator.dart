@@ -19,6 +19,7 @@ Future<void> calculator(BuildContext? context) async {
         height: MediaQuery.of(context).size.height * 0.75,
         child: const SimpleCalculator(
           theme: CalculatorThemeData(
+            borderColor: Colors.black26,
             //borderWidth: 2,
             //displayColor: Colors.black,
             displayStyle: TextStyle(

@@ -96,6 +96,28 @@ class CustomButtons {
     );
   }
 
+  static Widget buttomAbrirAlt({
+    //completer.complete(false);
+    required Completer completer,
+    required BuildContext context,
+    required bool? boolComplete,
+    //required VoidCallback onPressed,
+  }) {
+    return ElevatedButton(
+      onPressed: () {
+        completer.complete(boolComplete);
+        Navigator.of(context).pop();
+      },
+      style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.all(Colors.deepPurple),
+          foregroundColor: MaterialStateProperty.all(Colors.white)),
+      child: const Padding(
+        padding: EdgeInsets.all(10),
+        child: Text('    Abrir    '),
+      ),
+    );
+  }
+
   static Widget buttomReutilizar({
     //completer.complete(false);
     required Completer completer,

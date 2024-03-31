@@ -28,7 +28,7 @@ Future<bool?> abrirListaNaoFinalizada(BuildContext? context) async {
                         completer: completer,
                         context: context,
                         boolComplete: true),
-                    CustomButtons.buttomAbrir(
+                    CustomButtons.buttomAbrirAlt(
                         completer: completer,
                         context: context,
                         boolComplete: false),
