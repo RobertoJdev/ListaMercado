@@ -3,10 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lista_mercado/models/categoria.dart';
 import 'package:lista_mercado/models/produto.dart';
-import 'package:intl/intl.dart';
 import 'package:lista_mercado/my_theme.dart';
 import 'package:lista_mercado/widgets/botton/custom_buttons%20.dart';
-import 'package:path/path.dart';
 
 Future<Produto?> newItemScreen(BuildContext context) async {
   Produto? newItem;
@@ -101,7 +99,6 @@ Future<Produto?> newItemScreen(BuildContext context) async {
                             keyboardType: TextInputType.number,
                             controller: _textEditingControllerNewItemValor,
                             textAlign: TextAlign.center,
-//                            style: const TextStyle(fontSize: 20),
                             decoration:
                                 const InputDecoration(labelText: 'Valor'),
                             cursorColor: Colors.deepPurple,
@@ -226,9 +223,7 @@ Future<Produto?> newItemScreen(BuildContext context) async {
     },
   );
 
-  // Adicione informações padrão ao newItem se necessário
   newItem?.barras = 12345678.toString();
-  //newItem?.precoAtual = 0.0;
   newItem?.historicoPreco = [4, 5, 5, 5];
 
   return completer.future;
