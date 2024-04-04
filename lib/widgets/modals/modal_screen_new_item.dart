@@ -5,8 +5,9 @@ import 'package:lista_mercado/models/categoria.dart';
 import 'package:lista_mercado/models/produto.dart';
 import 'package:intl/intl.dart';
 import 'package:lista_mercado/my_theme.dart';
-import 'package:lista_mercado/widgets/botton/custom_buttons%20.dart';
 import 'package:path/path.dart';
+
+import '../botton/custom_buttons .dart';
 
 Future<Produto?> newItemScreen(BuildContext context) async {
   Produto? newItem;
@@ -38,8 +39,10 @@ Future<Produto?> newItemScreen(BuildContext context) async {
                 children: [
                   const Padding(
                     padding: MyTheme.myCustomEdgeInsetsTitleModal,
-                    child: Text('Informe o novo item.',
-                        style: MyTheme.myTextStyleTitleModal),
+                    child: Text(
+                      'Informe o novo item.',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
                   ),
                   Padding(
                     padding: MyTheme.myCustomEdgeInsetsTextFildItensModal,
@@ -48,10 +51,10 @@ Future<Produto?> newItemScreen(BuildContext context) async {
                       keyboardType: TextInputType.text,
                       controller: _textEditingControllerNewItem,
                       textAlign: TextAlign.center,
+                      style: const TextStyle(fontSize: 20),
                       decoration: const InputDecoration(
                         labelText: 'Produto',
                       ),
-                      cursorColor: Colors.deepPurple,
                       onChanged: (text) {
                         setState(
                           () {
@@ -78,6 +81,7 @@ Future<Produto?> newItemScreen(BuildContext context) async {
                             keyboardType: TextInputType.number,
                             controller: _textEditingControllerNewItemQuant,
                             textAlign: TextAlign.center,
+                            style: const TextStyle(fontSize: 20),
                             onChanged: (text) {
                               setState(() {
                                 isButtonEnabled = _textEditingControllerNewItem
@@ -86,9 +90,9 @@ Future<Produto?> newItemScreen(BuildContext context) async {
                                         .text.isNotEmpty;
                               });
                             },
-                            decoration:
-                                const InputDecoration(labelText: 'Quantidade'),
-                            cursorColor: Colors.deepPurple,
+                            decoration: const InputDecoration(
+                              labelText: 'Quantidade',
+                            ),
                           ),
                         ),
                         const SizedBox(width: 10), // Espaço entre os campos
@@ -101,10 +105,10 @@ Future<Produto?> newItemScreen(BuildContext context) async {
                             keyboardType: TextInputType.number,
                             controller: _textEditingControllerNewItemValor,
                             textAlign: TextAlign.center,
-//                            style: const TextStyle(fontSize: 20),
-                            decoration:
-                                const InputDecoration(labelText: 'Valor'),
-                            cursorColor: Colors.deepPurple,
+                            style: const TextStyle(fontSize: 20),
+                            decoration: const InputDecoration(
+                              labelText: 'Valor',
+                            ),
                           ),
                         ),
                       ],
@@ -112,110 +116,113 @@ Future<Produto?> newItemScreen(BuildContext context) async {
                   ),
                   Padding(
                     padding: MyTheme.myCustomEdgeInsetsTextFildItensModal,
-                    child: Expanded(
-                      child: Container(
-                        alignment: Alignment.center,
-                        decoration: const BoxDecoration(color: Colors.white),
-                        child: Padding(
-                          padding: MyTheme.myCustomEdgeInsetsTextFildItensModal,
-                          child: DropdownButtonHideUnderline(
-                            child: DropdownButton<String>(
-                              //menuMaxHeight: 100,
-                              dropdownColor: Colors.white,
-                              isExpanded: true,
-                              alignment: Alignment.center,
-                              style: MyTheme.myTextStyleDropDownButton,
-                              value: selectedCategory,
-                              onChanged: (String? newValue) {
-                                setState(() {
-                                  selectedCategory = newValue!;
-                                });
-                              },
-                              items: Categorias.obterTodasCategorias()
-                                  .map<DropdownMenuItem<String>>(
-                                    (Categoria categoria) =>
-                                        DropdownMenuItem<String>(
-                                      alignment: Alignment.center,
-                                      value: categoria.nome,
-                                      child: Text(
-                                        categoria.nome,
-                                        style:
-                                            MyTheme.myTextStyleDropDownButton,
-                                      ),
-                                    ),
-                                  )
-                                  .toList(),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: MyTheme.myCustomEdgeInsetsButtomModal,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        CustomButtons.buttomCancelar(
-                            completer: completer,
-                            context: context,
-                            boolComplete: null),
-                        ElevatedButton(
-                            style: ButtonStyle(
-                              backgroundColor: _textEditingControllerNewItem
-                                          .text.isNotEmpty &&
-                                      _textEditingControllerNewItemQuant
-                                          .text.isNotEmpty
-                                  ? MaterialStateProperty.all(Colors.deepPurple)
-                                  : MaterialStateProperty.all(
-                                      Colors.deepPurple[100]),
+                        Expanded(
+                          child: Container(
+                            alignment: Alignment.center,
+                            decoration:
+                                const BoxDecoration(color: Colors.white),
+                            child: Padding(
+                              padding:
+                                  MyTheme.myCustomEdgeInsetsTextFildItensModal,
+                              child: DropdownButtonHideUnderline(
+                                child: DropdownButton<String>(
+                                  dropdownColor: Colors.white,
+                                  isExpanded: true,
+                                  alignment: Alignment.center,
+                                  style: MyTheme.myTextStyleDropDownButton,
+                                  value: selectedCategory,
+                                  onChanged: (String? newValue) {
+                                    setState(() {
+                                      selectedCategory = newValue!;
+                                    });
+                                  },
+                                  items: Categorias.obterTodasCategorias()
+                                      .map<DropdownMenuItem<String>>(
+                                        (Categoria categoria) =>
+                                            DropdownMenuItem<String>(
+                                          alignment: Alignment.center,
+                                          value: categoria.nome,
+                                          child: Text(
+                                            categoria.nome,
+                                            style: MyTheme
+                                                .myTextStyleDropDownButton,
+                                          ),
+                                        ),
+                                      )
+                                      .toList(),
+                                ),
+                              ),
                             ),
-                            onPressed: _textEditingControllerNewItem
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      CustomButtons.buttomCancelar(
+                        context: context,
+                        boolComplete: null,
+                      ),
+                      ElevatedButton(
+                          style: ButtonStyle(
+                            backgroundColor: _textEditingControllerNewItem
                                         .text.isNotEmpty &&
                                     _textEditingControllerNewItemQuant
                                         .text.isNotEmpty
-                                ? () {
-                                    String descricao =
-                                        _textEditingControllerNewItem.text;
-                                    String quantidadeText =
-                                        _textEditingControllerNewItemQuant.text;
-                                    String valorText =
-                                        _textEditingControllerNewItemValor.text;
+                                ? MaterialStateProperty.all(Colors.deepPurple)
+                                : MaterialStateProperty.all(
+                                    Colors.deepPurple[100]),
+                          ),
+                          onPressed: _textEditingControllerNewItem
+                                      .text.isNotEmpty &&
+                                  _textEditingControllerNewItemQuant
+                                      .text.isNotEmpty
+                              ? () {
+                                  String descricao =
+                                      _textEditingControllerNewItem.text;
+                                  String quantidadeText =
+                                      _textEditingControllerNewItemQuant.text;
+                                  String valorText =
+                                      _textEditingControllerNewItemValor.text;
 
-                                    // Substituir ',' por '.' antes da conversão
-                                    quantidadeText =
-                                        quantidadeText.replaceAll(',', '.');
-                                    valorText = valorText.replaceAll(',', '.');
+                                  // Substituir ',' por '.' antes da conversão
+                                  quantidadeText =
+                                      quantidadeText.replaceAll(',', '.');
+                                  valorText = valorText.replaceAll(',', '.');
 
-                                    double? quantidade =
-                                        double.tryParse(quantidadeText);
-                                    double? valor = double.tryParse(valorText);
+                                  double? quantidade =
+                                      double.tryParse(quantidadeText);
+                                  double? valor = double.tryParse(valorText);
 
-                                    if (quantidade != null) {
-                                      newItem = Produto.newItemList(
-                                        descricao: descricao,
-                                        quantidade: quantidade,
-                                        precoAtual: valor ?? 0.0,
-                                        categoria: selectedCategory,
-                                      );
+                                  if (quantidade != null) {
+                                    newItem = Produto.newItemList(
+                                      descricao: descricao,
+                                      quantidade: quantidade,
+                                      precoAtual: valor ?? 0.0,
+                                      categoria: selectedCategory,
+                                    );
 
-                                      _textEditingControllerNewItem.text = '';
-                                      _textEditingControllerNewItemQuant.text =
-                                          '';
-                                      _textEditingControllerNewItemValor.text =
-                                          '';
+                                    _textEditingControllerNewItem.text = '';
+                                    _textEditingControllerNewItemQuant.text =
+                                        '';
+                                    _textEditingControllerNewItemValor.text =
+                                        '';
 
-                                      completer.complete(newItem);
-                                      Navigator.of(context).pop();
-                                    } else {
-                                      // Trate o caso em que a conversão falhou.
-                                      print("Quantidade inválida");
-                                    }
+                                    completer.complete(newItem);
+                                    Navigator.of(context).pop();
+                                  } else {
+                                    // Trate o caso em que a conversão falhou.
+                                    print("Quantidade inválida");
                                   }
-                                : null,
-                            child: CustomButtons.buttomOK()),
-                      ],
-                    ),
+                                }
+                              : null,
+                          child: CustomButtons.buttomOK()),
+                    ],
                   )
                 ],
               ),

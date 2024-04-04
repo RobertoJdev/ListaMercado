@@ -1,9 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_simple_calculator/flutter_simple_calculator.dart';
-import 'package:lista_mercado/models/categoria.dart';
-import 'package:lista_mercado/models/produto.dart';
 
 Future<void> calculator(BuildContext? context) async {
   await showModalBottomSheet(
