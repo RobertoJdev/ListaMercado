@@ -122,43 +122,50 @@ Future<Produto> confirmEditItemScreen(
                   // Lista suspensa de categorias
                   Padding(
                     padding: MyTheme.myCustomEdgeInsetsTextFildItensModal,
-                    child: Expanded(
-                      child: Container(
-                        alignment: Alignment.center,
-                        decoration: const BoxDecoration(color: Colors.white),
-                        child: Padding(
-                          padding: MyTheme.myCustomEdgeInsetsTextFildItensModal,
-                          child: DropdownButtonHideUnderline(
-                            child: DropdownButton<String>(
-                              //menuMaxHeight: 100,
-                              dropdownColor: Colors.white,
-                              isExpanded: true,
-                              alignment: Alignment.center,
-                              style: MyTheme.myTextStyleDropDownButton,
-                              value: selectedCategory,
-                              onChanged: (String? newValue) {
-                                setState(() {
-                                  selectedCategory = newValue!;
-                                });
-                              },
-                              items: Categorias.obterTodasCategorias()
-                                  .map<DropdownMenuItem<String>>(
-                                    (Categoria categoria) =>
-                                        DropdownMenuItem<String>(
-                                      alignment: Alignment.center,
-                                      value: categoria.nome,
-                                      child: Text(
-                                        categoria.nome,
-                                        style:
-                                            MyTheme.myTextStyleDropDownButton,
-                                      ),
-                                    ),
-                                  )
-                                  .toList(),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          child: Container(
+                            alignment: Alignment.center,
+                            decoration:
+                                const BoxDecoration(color: Colors.white),
+                            child: Padding(
+                              padding:
+                                  MyTheme.myCustomEdgeInsetsTextFildItensModal,
+                              child: DropdownButtonHideUnderline(
+                                child: DropdownButton<String>(
+                                  //menuMaxHeight: 100,
+                                  dropdownColor: Colors.white,
+                                  isExpanded: true,
+                                  alignment: Alignment.center,
+                                  style: MyTheme.myTextStyleDropDownButton,
+                                  value: selectedCategory,
+                                  onChanged: (String? newValue) {
+                                    setState(() {
+                                      selectedCategory = newValue!;
+                                    });
+                                  },
+                                  items: Categorias.obterTodasCategorias()
+                                      .map<DropdownMenuItem<String>>(
+                                        (Categoria categoria) =>
+                                            DropdownMenuItem<String>(
+                                          alignment: Alignment.center,
+                                          value: categoria.nome,
+                                          child: Text(
+                                            categoria.nome,
+                                            style: MyTheme
+                                                .myTextStyleDropDownButton,
+                                          ),
+                                        ),
+                                      )
+                                      .toList(),
+                                ),
+                              ),
                             ),
                           ),
                         ),
-                      ),
+                      ],
                     ),
                   ),
                   Padding(

@@ -16,6 +16,12 @@ def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
 if (flutterVersionCode == null) {
     flutterVersionCode = '1'
 }
+if (flutterVersionCode == '1') {
+    flutterVersionCode = '3'
+    //correção temporária para verificação de setagem da versaoCode em local.properties.
+    //mesmo após definir a versão para 2 em local.properties está mudando para 1 gerando erro no upload para loja.
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+}
 
 def flutterVersionName = localProperties.getProperty('flutter.versionName')
 if (flutterVersionName == null) {
