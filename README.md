@@ -17,6 +17,7 @@ O Lista de Mercado é um aplicativo desenvolvido para simplificar e facilitar su
 <img src="screenshots/screenshot4.png" width="360" height="800">
 <img src="screenshots/screenshot5.png" width="360" height="800">
 <img src="screenshots/screenshot6.png" width="360" height="800">
+<img src="screenshots/screenshot7.png" width="360" height="800">
 
 ## Como Contribuir
 
