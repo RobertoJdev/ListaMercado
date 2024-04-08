@@ -110,6 +110,11 @@ class MyTheme {
     color: Colors.black,
   );
 
+  static ButtonStyle chavePixButton = ButtonStyle(
+    backgroundColor: MaterialStateProperty.all(Colors.deepPurple),
+    foregroundColor: MaterialStateProperty.all(Colors.white),
+  );
+
   static const EdgeInsets myCustomEdgeInsetsSpaceExtern =
       EdgeInsets.only(bottom: 4);
 
@@ -132,4 +137,6 @@ class MyTheme {
       EdgeInsets.symmetric(vertical: 10);
 
   static Color? modalColorBackground = Colors.grey[200];
+
+  static Color? alertColorBackground = Colors.white;
 }

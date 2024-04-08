@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lista_mercado/util/app_info.dart';
+import 'package:lista_mercado/widgets/alerts/donation_alert.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class Menu extends StatefulWidget {
@@ -31,19 +32,29 @@ class _MenuState extends State<Menu> {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Padding(
-                  padding: const EdgeInsets.only(top: 15),
-                  child: Image.asset('assets/images/app_logo.png',
-                      width: 60, height: 60),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 15),
+                    child: Image.asset('assets/images/app_logo.png',
+                        width: 60, height: 60),
+                  ),
                 ),
-                const Padding(
-                  padding: EdgeInsets.fromLTRB(10,6,10,0),
-                  child: Text(
-                    'Lista de Mercado',
-                    style: TextStyle(
-                      fontSize: 22,
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
+                GestureDetector(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Padding(
+                    padding: EdgeInsets.fromLTRB(10, 6, 10, 0),
+                    child: Text(
+                      'Lista de Mercado',
+                      style: TextStyle(
+                        fontSize: 22,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ),
@@ -51,7 +62,10 @@ class _MenuState extends State<Menu> {
             ),
           ),
           ListTile(
-            leading: const Icon(Icons.privacy_tip),
+            leading: const Icon(
+              Icons.privacy_tip,
+              color: Colors.indigo,
+            ),
             title: const Text('Políticas de Privacidade'),
             onTap: () {
               abrirUrl(urlPoliticas);
@@ -67,9 +81,31 @@ class _MenuState extends State<Menu> {
           const Divider(
             color: Colors.black12,
           ),
-          ListTile(
-            leading: const Icon(Icons.info),
-            title: Text('Versão: ${AppInfo.version}'),
+          Padding(
+            padding: const EdgeInsets.all(0.0),
+            child: ListTile(
+              onTap: () {
+                Navigator.pop(context);
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return DonationAlert();
+                  },
+                );
+              },
+              leading: const Icon(
+                Icons.favorite,
+                color: Colors.red,
+              ),
+              title: const Text('Doe ao desenvolvedor'),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(0.0),
+            child: ListTile(
+              leading: const Icon(Icons.info),
+              title: Text('Versão: ${AppInfo.version}'),
+            ),
           ),
           Padding(
             padding: const EdgeInsets.only(bottom: 5),
