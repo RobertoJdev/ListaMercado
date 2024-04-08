@@ -63,14 +63,17 @@ class _ActiveListState extends State<ScreenActiveList>
     totalValue = somarList(listItensConfirmed).toStringAsFixed(2);
 
     return Scaffold(
-      appBar: const CustomAppBar(),
+      appBar: const CustomAppBar(screenReturn: true),
       body: Stack(
         children: [
           SingleChildScrollView(
+            padding: EdgeInsets.only(
+              bottom: MediaQuery.of(context).viewInsets.bottom + 60,
+            ),
             child: Column(
               children: [
                 ExpansionPanelList(
-                  dividerColor: Colors.amber,
+                  //dividerColor: Colors.amber,
                   materialGapSize: 0,
                   //elevation: 1,
                   expandedHeaderPadding: const EdgeInsets.all(0),

@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:lista_mercado/models/categoria.dart';
+import 'package:lista_mercado/models/categorias.dart';
 import 'package:uuid/uuid.dart';
 
 class Produto {
@@ -47,7 +48,7 @@ class Produto {
       quantidade: 10,
       pendente: true,
       precoAtual: 5,
-      categoria: Categorias.obterCategoriaAleatoria(),
+      categoria: Categorias.obterCategoriaAleatoria().nomeFormatado,
       historicoPreco: [7, 9, 5],
     );
     return produtoExemplo;
@@ -56,14 +57,24 @@ class Produto {
   static generateMultiProdutosExemplo() {
     List<Produto> listExemploProdutos = [];
     final nomesProdutos = [
-      'Feijão Mulatinho',
+      'Carne',
+      'Frango',
+      'Alface',
+      'Tomate',
+      'Pão de forma',
+      'Pão de queijo',
+      'Queijo coalho',
+      'Queijo prato',
+      'Mortadela',
+      'Salame',
+      'Desinfetante',
+      'Esponja',
+      'Shampoo',
+      'Sabonete',
+      'Rum',
+      'Whisky',
+      'Açúcar',
       'Arroz',
-      'Macarrão',
-      'Óleo',
-      'Biscoito',
-      'Biscoito de Sal',
-      'Banana',
-      'Maçã',
     ];
 
     for (var element in nomesProdutos) {
@@ -73,7 +84,7 @@ class Produto {
         quantidade: Random().nextInt(10) + 1,
         pendente: true,
         precoAtual: 5,
-        categoria: Categorias.obterCategoriaAleatoria(),
+        categoria: Categorias.defineCategoriaAuto(element),
         historicoPreco: [7, 9, 5],
       );
       listExemploProdutos.add(produtoTemp);
@@ -82,8 +93,7 @@ class Produto {
     return listExemploProdutos;
   }
 
-  static List<Produto> ordenarItens(
-      List<Produto> listaProdutos) {
+  static List<Produto> ordenarItens(List<Produto> listaProdutos) {
     return listaProdutos
       ..sort((a, b) {
         final categoriaComparison =

@@ -36,95 +36,97 @@ class _listasMercadoState extends State<ScreenListasMercado> {
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: const Menu(),
-      appBar: const CustomAppBar(),
-      body: Column(children: [
-        //const DecorationListBar(isListMercado: true),
-        Expanded(
-          child: Padding(
-            padding: const EdgeInsets.all(15.0),
-            child: Column(
-              children: [
-                const Padding(
-                  padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
-                  child: Text(
-                    'Listas de compras finalizadas',
+      appBar: const CustomAppBar(screenReturn: false),
+      body: Column(
+        children: [
+          //const DecorationListBar(isListMercado: true),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: Column(
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
+                    child: Text(
+                      'Listas de compras finalizadas',
+                    ),
                   ),
-                ),
-                Expanded(
-                  child: ListView.builder(
-                    itemCount: listasMercado.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return Dismissible(
-                        key: UniqueKey(),
-                        background: Container(
-                          color: Colors.red,
-                          alignment: Alignment.centerLeft,
-                          child: const Icon(
-                            Icons.delete,
-                            color: Colors.white,
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: listasMercado.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return Dismissible(
+                          key: UniqueKey(),
+                          background: Container(
+                            color: Colors.red,
+                            alignment: Alignment.centerLeft,
+                            child: const Icon(
+                              Icons.delete,
+                              color: Colors.white,
+                            ),
                           ),
-                        ),
-                        secondaryBackground: Container(
-                          color: Colors.red,
-                          alignment: Alignment.centerRight,
-                          child: const Icon(
-                            Icons.delete,
-                            color: Colors.white,
+                          secondaryBackground: Container(
+                            color: Colors.red,
+                            alignment: Alignment.centerRight,
+                            child: const Icon(
+                              Icons.delete,
+                              color: Colors.white,
+                            ),
                           ),
-                        ),
-                        onDismissed: (direction) {
-                          excluirLista(listasMercado[index]);
-                        },
-                        confirmDismiss: (direction) async {
-                          return await showDeleteConfirmationDialog(context);
-                        },
-                        child: GestureDetector(
-                          onTap: () {
-                            abrirListaMercadoFinalizada(
-                              context,
-                              listasMercado[index],
-                            );
+                          onDismissed: (direction) {
+                            excluirLista(listasMercado[index]);
                           },
-                          child: ItemListCompras(
-                            listaMercado: listasMercado[index],
+                          confirmDismiss: (direction) async {
+                            return await showDeleteConfirmationDialog(context);
+                          },
+                          child: GestureDetector(
+                            onTap: () {
+                              abrirListaMercadoFinalizada(
+                                context,
+                                listasMercado[index],
+                              );
+                            },
+                            child: ItemListCompras(
+                              listaMercado: listasMercado[index],
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                  Container(
+                    alignment: Alignment.bottomRight,
+                    padding: const EdgeInsets.all(10),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        criarNovaListaMercado(context);
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.deepPurple,
+                        elevation: 5,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15.0),
+                        ),
+                      ),
+                      child: const Padding(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 10.0, vertical: 12),
+                        child: Text(
+                          'Nova lista',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
-                      );
-                    },
-                  ),
-                ),
-                Container(
-                  alignment: Alignment.bottomRight,
-                  padding: const EdgeInsets.all(10),
-                  child: ElevatedButton(
-                    onPressed: () {
-                      criarNovaListaMercado(context);
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.deepPurple,
-                      elevation: 5,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15.0),
-                      ),
-                    ),
-                    child: const Padding(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 10.0, vertical: 12),
-                      child: Text(
-                        'Nova lista',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
-        ),
-      ]),
+        ],
+      ),
     );
   }
 

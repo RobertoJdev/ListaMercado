@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:intl/intl.dart';
+import 'package:lista_mercado/models/categorias.dart';
 import 'package:lista_mercado/my_theme.dart';
 import 'package:lista_mercado/widgets/modals/modal_screen_confirm_item.dart';
 import 'package:lista_mercado/models/categoria.dart';
@@ -47,7 +48,7 @@ class ItemListPendent extends StatelessWidget {
                     Categorias.obterCorSecundariaPorDescricao(item.categoria),
                 child: Center(
                   // Alinhe o texto ao centro
-                  child: Text(Categoria.abreviarCategoria(item.categoria),
+                  child: Text(Categorias.abreviarCategoria(item.categoria),
                       style: MyTheme.myTextStyleCategoryProduct),
                 ),
               ),

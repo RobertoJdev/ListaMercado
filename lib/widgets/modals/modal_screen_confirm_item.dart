@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lista_mercado/models/categoria.dart';
+import 'package:lista_mercado/models/categorias.dart';
 import 'package:lista_mercado/models/produto.dart';
 import 'package:lista_mercado/my_theme.dart';
 import 'package:lista_mercado/widgets/botton/custom_buttons%20.dart';
@@ -61,6 +62,7 @@ Future<Produto> confirmEditItemScreen(
                               _textEditingControllerEditItem.text.isNotEmpty &&
                                   _textEditingControllerEditItemQuant
                                       .text.isNotEmpty;
+                          //selectedCategory = Categoria.obterCategoriaAutomatico('');
                         });
                       },
                     ),
@@ -80,12 +82,18 @@ Future<Produto> confirmEditItemScreen(
                             controller: _textEditingControllerEditItemQuant,
                             textAlign: TextAlign.center,
                             onChanged: (text) {
-                              setState(() {
-                                isButtonEnabled = _textEditingControllerEditItem
-                                        .text.isNotEmpty &&
-                                    _textEditingControllerEditItemQuant
-                                        .text.isNotEmpty;
-                              });
+                              setState(
+                                () {
+                                  isButtonEnabled =
+                                      _textEditingControllerEditItem
+                                              .text.isNotEmpty &&
+                                          _textEditingControllerEditItemQuant
+                                              .text.isNotEmpty;
+                                  selectedCategory =
+                                      Categorias.defineCategoriaAuto(
+                                          _textEditingControllerEditItem.text);
+                                },
+                              );
                             },
                             decoration: const InputDecoration(
                               labelText: 'Quantidade',
@@ -151,9 +159,9 @@ Future<Produto> confirmEditItemScreen(
                                         (Categoria categoria) =>
                                             DropdownMenuItem<String>(
                                           alignment: Alignment.center,
-                                          value: categoria.nome,
+                                          value: categoria.nomeFormatado,
                                           child: Text(
-                                            categoria.nome,
+                                            categoria.nomeFormatado,
                                             style: MyTheme
                                                 .myTextStyleDropDownButton,
                                           ),

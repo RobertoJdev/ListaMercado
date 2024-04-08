@@ -1,19 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_simple_calculator/flutter_simple_calculator.dart';
+import 'package:lista_mercado/widgets/alerts/confirm_exit_list.dart';
 import 'package:lista_mercado/widgets/calculator.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   static const platform = MethodChannel('openCalculator');
   final String? title;
   final String defaultTitle;
+  final bool screenReturn;
 
   const CustomAppBar(
-      {Key? key, this.title, this.defaultTitle = 'Lista de Mercado'})
+      {Key? key,
+      this.title,
+      this.defaultTitle = 'Lista de Mercado',
+      this.screenReturn = false})
       : super(key: key);
 
   @override
   Size get preferredSize => Size.fromHeight(kToolbarHeight);
+
+  get context => null;
 
   @override
   Widget build(BuildContext context) {
@@ -21,6 +28,19 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       foregroundColor: Colors.white,
       backgroundColor: Colors.deepPurple,
       centerTitle: true,
+      leading: screenReturn
+          ? IconButton(
+              icon: const Icon(Icons.arrow_back),
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return ConfirmExitDialog();
+                  },
+                );
+              },
+            )
+          : null,
       title: title != null
           ? Text(
               title!,
@@ -33,6 +53,17 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               style: const TextStyle(color: Colors.white),
             ),
       actions: [
+        IconButton(
+          onPressed: () {
+            calculator(context);
+          },
+          icon: const Icon(
+            Icons.calculate_outlined,
+          ),
+        ),
+      ],
+
+/*
         GestureDetector(
           onTap: () {
             calculator(context);
@@ -44,7 +75,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             ),
           ),
         )
-      ],
+*/
       /*actions: [
           const Icon(
             Icons.bar_chart_outlined,

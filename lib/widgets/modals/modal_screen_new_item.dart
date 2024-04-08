@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lista_mercado/models/categoria.dart';
+import 'package:lista_mercado/models/categorias.dart';
 import 'package:lista_mercado/models/produto.dart';
 import 'package:intl/intl.dart';
 import 'package:lista_mercado/my_theme.dart';
@@ -21,7 +22,7 @@ Future<Produto?> newItemScreen(BuildContext context) async {
   Completer<Produto?> completer = Completer();
 
   bool isButtonEnabled = false;
-  String selectedCategory = Categorias.obterCategoriaAleatoria();
+  String selectedCategory = Categorias.obterCategoriaAleatoria().nomeFormatado;
 
   await showModalBottomSheet(
     isScrollControlled: true,
@@ -83,12 +84,18 @@ Future<Produto?> newItemScreen(BuildContext context) async {
                             textAlign: TextAlign.center,
                             style: const TextStyle(fontSize: 20),
                             onChanged: (text) {
-                              setState(() {
-                                isButtonEnabled = _textEditingControllerNewItem
-                                        .text.isNotEmpty &&
-                                    _textEditingControllerNewItemQuant
-                                        .text.isNotEmpty;
-                              });
+                              setState(
+                                () {
+                                  isButtonEnabled =
+                                      _textEditingControllerNewItem
+                                              .text.isNotEmpty &&
+                                          _textEditingControllerNewItemQuant
+                                              .text.isNotEmpty;
+                                  selectedCategory =
+                                      Categorias.defineCategoriaAuto(
+                                          _textEditingControllerNewItem.text);
+                                },
+                              );
                             },
                             decoration: const InputDecoration(
                               labelText: 'Quantidade',
@@ -144,9 +151,9 @@ Future<Produto?> newItemScreen(BuildContext context) async {
                                         (Categoria categoria) =>
                                             DropdownMenuItem<String>(
                                           alignment: Alignment.center,
-                                          value: categoria.nome,
+                                          value: categoria.nomeFormatado,
                                           child: Text(
-                                            categoria.nome,
+                                            categoria.nomeFormatado,
                                             style: MyTheme
                                                 .myTextStyleDropDownButton,
                                           ),

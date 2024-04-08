@@ -1,143 +1,84 @@
-import 'dart:math';
 import 'package:flutter/material.dart';
 
-class Categoria {
-  final String nome;
-  final Color cor;
-  final Color corSecundaria;
-
-  Categoria(
-      {required this.nome, required this.cor, required this.corSecundaria});
-
-  static String abreviarCategoria(String nomeCategoria) {
-    return nomeCategoria.substring(0, 5).toUpperCase();
-  }
+enum Categoria {
+  carnes,
+  hortifruti,
+  padaria,
+  laticinios,
+  frios,
+  limpeza,
+  higienePessoal,
+  bebidas,
+  mercearia,
 }
 
-class Categorias {
-  static final Categoria carnes = Categoria(
-      nome: 'Carnes', cor: Colors.pink[50]!, corSecundaria: Colors.pink[200]!);
-
-  static final Categoria hortifruti = Categoria(
-      nome: 'Hortifruti',
-      cor: Colors.green[50]!,
-      corSecundaria: Colors.green[200]!);
-  static final Categoria padaria = Categoria(
-      nome: 'Padaria',
-      cor: Colors.brown[50]!,
-      corSecundaria: Colors.brown[200]!);
-  static final Categoria laticinios = Categoria(
-      nome: 'Laticínios',
-      cor: Colors.blue[50]!,
-      corSecundaria: Colors.blue[200]!);
-  static final Categoria frios = Categoria(
-      nome: 'Frios', cor: Colors.red[50]!, corSecundaria: Colors.red[200]!);
-
-  static final Categoria limpeza = Categoria(
-      nome: 'Limpeza',
-      cor: Colors.orange[50]!,
-      corSecundaria: Colors.orange[200]!);
-
-  static final Categoria higienePessoal = Categoria(
-      nome: 'Higiene Pessoal',
-      cor: Colors.purple[50]!,
-      corSecundaria: Colors.purple[200]!);
-
-  static final Categoria bebidas = Categoria(
-      nome: 'Bebidas', cor: Colors.teal[50]!, corSecundaria: Colors.teal[200]!);
-
-  static final Categoria mercearia = Categoria(
-      nome: 'Mercearia',
-      cor: Colors.yellow[50]!,
-      corSecundaria: Colors.yellow[200]!);
-
-  static obterCategoriaAleatoria() {
-    final List<Categoria> todasCategorias = [
-      carnes,
-      hortifruti,
-      padaria,
-      laticinios,
-      frios,
-      limpeza,
-      higienePessoal,
-      bebidas,
-      //cereais,
-      //molhos,
-      //snacks,
-      //produtosBebe,
-      //limpezaDomestica,
-      mercearia,
-    ];
-
-    final Random random = Random();
-    final int indiceAleatorio = random.nextInt(todasCategorias.length);
-
-    return todasCategorias[indiceAleatorio].nome.toString();
+extension CategoriaExtension on Categoria {
+  String get nomeFormatado {
+    switch (this) {
+      case Categoria.carnes:
+        return 'Carnes';
+      case Categoria.hortifruti:
+        return 'Hortifruti';
+      case Categoria.padaria:
+        return 'Padaria';
+      case Categoria.laticinios:
+        return 'Laticínios';
+      case Categoria.frios:
+        return 'Frios';
+      case Categoria.limpeza:
+        return 'Limpeza';
+      case Categoria.higienePessoal:
+        return 'Higiene Pessoal';
+      case Categoria.bebidas:
+        return 'Bebidas';
+      case Categoria.mercearia:
+        return 'Mercearia';
+    }
   }
 
-  static Color obterCorPorDescricao(String descricao) {
-    final Map<String, Categoria> mapaCategorias = {
-      'Carnes': carnes,
-      'Hortifruti': hortifruti,
-      'Padaria': padaria,
-      'Laticínios': laticinios,
-      'Frios': frios,
-      //'Congelados': congelados,
-      'Limpeza': limpeza,
-      'Higiene Pessoal': higienePessoal,
-      'Bebidas': bebidas,
-      //'Cereais e Grãos': cereais,
-      //'Molhos e Condimentos': molhos,
-      //'Snacks e Aperitivos': snacks,
-      //'Produtos de Bebê': produtosBebe,
-      //'Limpeza Doméstica': limpezaDomestica,
-      'Mercearia': mercearia,
-    };
-
-    return mapaCategorias[descricao]?.cor ?? Colors.grey[50]!;
+  Color get cor {
+    switch (this) {
+      case Categoria.carnes:
+        return Colors.pink[50]!;
+      case Categoria.hortifruti:
+        return Colors.green[50]!;
+      case Categoria.padaria:
+        return Colors.brown[50]!;
+      case Categoria.laticinios:
+        return Colors.blue[50]!;
+      case Categoria.frios:
+        return Colors.blueGrey[50]!;
+      case Categoria.limpeza:
+        return Colors.deepOrange[50]!;
+      case Categoria.higienePessoal:
+        return Colors.deepPurple[50]!;
+      case Categoria.bebidas:
+        return Colors.teal[50]!;
+      case Categoria.mercearia:
+        return Colors.yellow[50]!;
+    }
   }
 
-  static Color obterCorSecundariaPorDescricao(String descricao) {
-    final Map<String, Categoria> mapaCategorias = {
-      'Carnes': carnes,
-      'Hortifruti': hortifruti,
-      'Padaria': padaria,
-      'Laticínios': laticinios,
-      'Frios': frios,
-      //'Congelados': congelados,
-      'Limpeza': limpeza,
-      'Higiene Pessoal': higienePessoal,
-      'Bebidas': bebidas,
-      //'Cereais e Grãos': cereais,
-      //'Molhos e Condimentos': molhos,
-      //'Snacks e Aperitivos': snacks,
-      //'Produtos de Bebê': produtosBebe,
-      //'Limpeza Doméstica': limpezaDomestica,
-      'Mercearia': mercearia,
-    };
-
-    return mapaCategorias[descricao]?.corSecundaria ?? Colors.grey[200]!;
-  }
-
-  static obterTodasCategorias() {
-    final List<Categoria> todasCategorias = [
-      carnes,
-      hortifruti,
-      padaria,
-      laticinios,
-      frios,
-      //congelados,
-      limpeza,
-      higienePessoal,
-      bebidas,
-      //cereais,
-      //molhos,
-      //snacks,
-      //produtosBebe,
-      //limpezaDomestica,
-      mercearia,
-    ];
-
-    return todasCategorias;
+  Color get corSecundaria {
+    switch (this) {
+      case Categoria.carnes:
+        return Colors.pink[200]!;
+      case Categoria.hortifruti:
+        return Colors.green[200]!;
+      case Categoria.padaria:
+        return Colors.brown[200]!;
+      case Categoria.laticinios:
+        return Colors.blue[200]!;
+      case Categoria.frios:
+        return Colors.blueGrey[200]!;
+      case Categoria.limpeza:
+        return Colors.orange[200]!;
+      case Categoria.higienePessoal:
+        return Colors.purple[200]!;
+      case Categoria.bebidas:
+        return Colors.teal[200]!;
+      case Categoria.mercearia:
+        return Colors.yellow[200]!;
+    }
   }
 }

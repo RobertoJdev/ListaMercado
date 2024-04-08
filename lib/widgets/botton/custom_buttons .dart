@@ -74,6 +74,23 @@ class CustomButtons {
     );
   }
 
+  static Widget buttomSair({
+    required BuildContext context,
+  }) {
+    return ElevatedButton(
+      onPressed: () {
+        Navigator.of(context).pop();
+      },
+      style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.all(Colors.deepPurple),
+          foregroundColor: MaterialStateProperty.all(Colors.white)),
+      child: const Padding(
+        padding: EdgeInsets.all(10),
+        child: Text('   Sair   '),
+      ),
+    );
+  }
+
   static Widget buttomAbrir({
     //completer.complete(false);
     required Completer completer,
