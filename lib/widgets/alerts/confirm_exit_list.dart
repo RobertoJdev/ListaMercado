@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:lista_mercado/screens/screen_active_list.dart';
 
 import '../botton/custom_buttons .dart';
 
 class ConfirmExitDialog extends StatelessWidget {
+  //final VoidCallback onSaveAndExit;
+
+  const ConfirmExitDialog({
+    Key? key,
+  }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -24,18 +31,24 @@ class ConfirmExitDialog extends StatelessWidget {
             Navigator.of(context).pop();
           },
           child: const Text(
-            'Cancelar',
+            '    Cancelar    ',
             style: TextStyle(color: Colors.red),
           ),
         ),
         TextButton(
           onPressed: () {
-            Navigator.of(context).pop();
-            Navigator.of(context).pop();
+            if (activeListKey.currentState != null) {
+              activeListKey.currentState!.salvarListaTemp();
+            } else {
+              print('activeListKey.currentState is null');
+            }
+            // activeListKey.currentState?.salvarListaTemp();
+            //Navigator.of(context).pop();
+            //Navigator.of(context).pop();            
           },
           child: const Text(
-            '   Sair   ',
-             style: TextStyle(color: Colors.deepPurple),
+            'Salvar e Sair',
+            style: TextStyle(color: Colors.deepPurple),
           ),
         ),
       ],

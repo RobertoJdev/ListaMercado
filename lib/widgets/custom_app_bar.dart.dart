@@ -10,12 +10,14 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String defaultTitle;
   final bool screenReturn;
 
-  const CustomAppBar(
-      {Key? key,
-      this.title,
-      this.defaultTitle = 'Lista de Mercado',
-      this.screenReturn = false})
-      : super(key: key);
+  //final Function salvarListaTemp;
+
+  const CustomAppBar({
+    Key? key,
+    this.title,
+    this.defaultTitle = 'Lista de Mercado',
+    this.screenReturn = false,
+  }) : super(key: key);
 
   @override
   Size get preferredSize => Size.fromHeight(kToolbarHeight);
@@ -35,7 +37,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                 showDialog(
                   context: context,
                   builder: (BuildContext context) {
-                    return ConfirmExitDialog();
+                    return ConfirmExitDialog(
+                    );
                   },
                 );
               },

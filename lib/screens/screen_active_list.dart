@@ -14,12 +14,17 @@ import 'package:lista_mercado/widgets/custom_app_bar.dart.dart';
 import 'package:flutter/services.dart';
 
 class ScreenActiveList extends StatefulWidget {
-  ScreenActiveList(this.listaMercado, {Key? key}) : super(key: key);
+  ScreenActiveList(this.listaMercado, {Key? key})
+      : super(key: key ?? activeListKey);
+
+  //ScreenActiveList(this.listaMercado, {Key? key}) : super(key: key);
   final ListaMercado listaMercado;
 
   @override
   State<ScreenActiveList> createState() => _ActiveListState();
 }
+
+final GlobalKey<_ActiveListState> activeListKey = GlobalKey<_ActiveListState>();
 
 class _ActiveListState extends State<ScreenActiveList>
     with TickerProviderStateMixin {
@@ -63,7 +68,10 @@ class _ActiveListState extends State<ScreenActiveList>
     totalValue = somarList(listItensConfirmed).toStringAsFixed(2);
 
     return Scaffold(
-      appBar: const CustomAppBar(screenReturn: true),
+      //key: activeListKey,
+      appBar: const CustomAppBar(
+        screenReturn: true,
+      ),
       body: Stack(
         children: [
           SingleChildScrollView(
@@ -412,5 +420,71 @@ class _ActiveListState extends State<ScreenActiveList>
         listItensConfirmed = Produto.ordenarItens(listItensConfirmed);
       });
     }
+  }
+
+  void salvarListaTemp() async {
+    print(
+        '***************** teste de chamada salvar lista **********************************');
+
+    //void finalizarListCompras() async {
+    String? nomeMercado = 'Lista salva automática.';
+
+    listaAberta = widget.listaMercado.finalizada;
+
+    if (nomeMercado != null) {
+      widget.listaMercado.custoTotal = double.parse(totalValue);
+      widget.listaMercado.itens = listItensPendent + listItensConfirmed;
+      widget.listaMercado.supermercado = nomeMercado;
+      widget.listaMercado.finalizada = true;
+      widget.listaMercado.data = DataUtil.getCurrentFormattedDate();
+
+      if (!listaAberta) {
+        db.updateListaMercado(widget.listaMercado);
+
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => const ScreenListasMercado()),
+          (route) => false,
+        );
+      } else {}
+
+      db.novaListaMercado(widget.listaMercado);
+
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => const ScreenListasMercado()),
+        (route) => false,
+      );
+    }
+
+/* 
+    listaAberta = widget.listaMercado.finalizada;
+    print(listaAberta);
+
+    try {
+        widget.listaMercado.custoTotal = double.parse(totalValue);
+        widget.listaMercado.itens = listItensPendent + listItensConfirmed;
+        widget.listaMercado.supermercado = 'Lista salva automática.';
+        widget.listaMercado.finalizada = true;
+        widget.listaMercado.data = DataUtil.getCurrentFormattedDate();
+
+        if (!listaAberta) {
+            db.updateListaMercado(widget.listaMercado);
+        } else {
+            db.novaListaMercado(widget.listaMercado);
+        }
+        
+        print('Lista salva com sucesso!');
+        
+        // Realize a navegação para ScreenListasMercado após salvar a lista
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => const ScreenListasMercado()),
+            (route) => false,
+        );
+    } catch (e) {
+        print('Erro ao salvar a lista: $e');
+    }
+*/
   }
 }

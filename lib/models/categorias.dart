@@ -83,6 +83,10 @@ class Categorias {
   }
 
   static String defineCategoriaAuto(String nomeProduto) {
+    //print(nomeProduto);
+    //print('********************************************************');
+    nomeProduto = nomeProduto.trim();
+    //print(nomeProduto);
     switch (nomeProduto.toLowerCase()) {
       case 'carne':
       case 'frango':
