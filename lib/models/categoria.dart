@@ -10,6 +10,7 @@ enum Categoria {
   higienePessoal,
   bebidas,
   mercearia,
+  indefinido,
 }
 
 extension CategoriaExtension on Categoria {
@@ -33,6 +34,8 @@ extension CategoriaExtension on Categoria {
         return 'Bebidas';
       case Categoria.mercearia:
         return 'Mercearia';
+      case Categoria.indefinido:
+        return 'Indefinido';
     }
   }
 
@@ -56,6 +59,8 @@ extension CategoriaExtension on Categoria {
         return Colors.teal[50]!;
       case Categoria.mercearia:
         return Colors.yellow[50]!;
+      case Categoria.indefinido:
+        return Colors.grey[50]!;
     }
   }
 
@@ -79,6 +84,8 @@ extension CategoriaExtension on Categoria {
         return Colors.teal[200]!;
       case Categoria.mercearia:
         return Colors.yellow[200]!;
+      case Categoria.indefinido:
+        return Colors.grey[200]!;
     }
   }
 }
