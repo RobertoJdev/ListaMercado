@@ -7,6 +7,7 @@ import 'package:lista_mercado/db/market_db.dart';
 import 'package:lista_mercado/models/lista_mercado.dart';
 import 'package:lista_mercado/models/produto.dart';
 import 'package:lista_mercado/widgets/modals/modal_screen_confirm_mercado.dart';
+import 'package:lista_mercado/widgets/modals/modal_screen_exlui_item.dart';
 import 'package:lista_mercado/widgets/modals/modal_screen_new_item.dart';
 import 'package:lista_mercado/screens/screen_listas_mercado.dart';
 import 'package:lista_mercado/util/data_util.dart';
@@ -115,6 +116,58 @@ class _ActiveListState extends State<ScreenActiveList>
                         itemBuilder: (BuildContext context, int index) {
                           return Dismissible(
                             key: UniqueKey(),
+                            confirmDismiss: (direction) async {
+                              if (direction == DismissDirection.startToEnd) {
+                                // Lógica para confirmar a ação ao mover para a lista confirmada (opcional)
+                                return true; // ou implemente uma confirmação específica se necessário
+                              } else if (direction ==
+                                  DismissDirection.endToStart) {
+                                // Confirmação ao tentar excluir o item
+                                return await showDeleteItemConfirmationDialog(
+                                    context);
+                              }
+                              return false;
+                            },
+                            onDismissed: (direction) {
+                              if (direction == DismissDirection.startToEnd) {
+                                listItensPendent[index].pendente = false;
+                                moveItemToConfirmedList(
+                                    listItensPendent[index]);
+                              } else if (direction ==
+                                  DismissDirection.endToStart) {
+                                // Lógica ao excluir o item
+                                // Exemplo: listItensPendent.removeAt(index);
+                              }
+                            },
+                            // demais propriedades do Dismissible
+                            background: Container(
+                              color: Colors.green,
+                              alignment: Alignment.centerLeft,
+                              padding: const EdgeInsets.only(left: 10),
+                              child: const Icon(
+                                Icons.check,
+                                color: Colors.white,
+                              ),
+                            ),
+                            secondaryBackground: Container(
+                              color: Colors.red,
+                              alignment: Alignment.centerRight,
+                              padding: const EdgeInsets.only(right: 10),
+                              child: const Icon(
+                                Icons.delete,
+                                color: Colors.white,
+                              ),
+                            ),
+                            child: ItemListPendent(
+                              item: listItensPendent[index],
+                              moveCallback: moveItemToConfirmedList,
+                            ),
+                          );
+
+/*
+                          
+                          return Dismissible(
+                            key: UniqueKey(),
                             //direction: DismissDirection.startToEnd,
                             onDismissed: (direction) {
                               if (direction == DismissDirection.startToEnd) {
@@ -123,7 +176,7 @@ class _ActiveListState extends State<ScreenActiveList>
                                     listItensPendent[index]);
                               } else if (direction ==
                                   DismissDirection.endToStart) {
-                                excluirItemPendente(listItensPendent[index]);
+                                //excluirItemPendente(listItensPendent[index]);
                               }
                             },
                             background: Container(
@@ -149,6 +202,8 @@ class _ActiveListState extends State<ScreenActiveList>
                               moveCallback: moveItemToConfirmedList,
                             ),
                           );
+
+*/
                         },
                       ),
                     ),

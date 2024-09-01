@@ -27,6 +27,8 @@ Future<Produto> confirmEditItemScreen(
   isButtonEnabled = _textEditingControllerEditItem.text.isNotEmpty &&
       _textEditingControllerEditItemQuant.text.isNotEmpty;
 
+  //FocusNode _focusNodeQuant = FocusNode();
+
   await showModalBottomSheet(
     isScrollControlled: true,
     context: context!,
@@ -65,6 +67,15 @@ Future<Produto> confirmEditItemScreen(
                           //selectedCategory = Categoria.obterCategoriaAutomatico('');
                         });
                       },
+
+                      onTap: () {
+                        // Seleciona todo o conteúdo ao focar no campo
+                        _textEditingControllerEditItem.selection = TextSelection(
+                          baseOffset: 0,
+                          extentOffset:
+                              _textEditingControllerEditItem.text.length,
+                        );
+                      },
                     ),
                   ),
                   Padding(
@@ -74,6 +85,7 @@ Future<Produto> confirmEditItemScreen(
                       children: [
                         Expanded(
                           child: TextField(
+                            //focusNode: _focusNodeQuant,
                             inputFormatters: [
                               FilteringTextInputFormatter.allow(
                                   RegExp(r'[0-9\.,]')),
@@ -82,24 +94,33 @@ Future<Produto> confirmEditItemScreen(
                             controller: _textEditingControllerEditItemQuant,
                             textAlign: TextAlign.center,
                             onChanged: (text) {
-                              setState(
-                                () {
-                                  isButtonEnabled =
-                                      _textEditingControllerEditItem
-                                              .text.isNotEmpty &&
-                                          _textEditingControllerEditItemQuant
-                                              .text.isNotEmpty;
-                                  selectedCategory =
-                                      Categorias.defineCategoriaAuto(
-                                          _textEditingControllerEditItem.text);
-                                },
-                              );
+                              setState(() {
+                                isButtonEnabled = _textEditingControllerEditItem
+                                        .text.isNotEmpty &&
+                                    _textEditingControllerEditItemQuant
+                                        .text.isNotEmpty;
+                                selectedCategory =
+                                    Categorias.defineCategoriaAuto(
+                                        _textEditingControllerEditItem.text);
+                              });
                             },
                             decoration: const InputDecoration(
                               labelText: 'Quantidade',
                             ),
+
+                            onTap: () {
+                              // Seleciona todo o conteúdo ao focar no campo
+                              _textEditingControllerEditItemQuant.selection =
+                                  TextSelection(
+                                baseOffset: 0,
+                                extentOffset:
+                                    _textEditingControllerEditItemQuant
+                                        .text.length,
+                              );
+                            },
                           ),
                         ),
+
                         const SizedBox(width: 10), // Espaço entre os campos
                         Expanded(
                           child: TextField(
@@ -252,6 +273,6 @@ Future<Produto> confirmEditItemScreen(
       );
     },
   );
-
+  //_focusNodeQuant.dispose();
   return itemTemp;
 }

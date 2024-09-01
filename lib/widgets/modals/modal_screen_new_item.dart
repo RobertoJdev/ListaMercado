@@ -66,6 +66,14 @@ Future<Produto?> newItemScreen(BuildContext context) async {
                           },
                         );
                       },
+                      onTap: () {
+                        // Seleciona todo o conteúdo ao focar no campo
+                        _textEditingControllerNewItem.selection = TextSelection(
+                          baseOffset: 0,
+                          extentOffset:
+                              _textEditingControllerNewItem.text.length,
+                        );
+                      },
                     ),
                   ),
                   Padding(
@@ -91,15 +99,30 @@ Future<Produto?> newItemScreen(BuildContext context) async {
                                               .text.isNotEmpty &&
                                           _textEditingControllerNewItemQuant
                                               .text.isNotEmpty;
-                                  selectedCategory =
-                                      Categorias.defineCategoriaAuto(
-                                          _textEditingControllerNewItem.text);
+
+                                  if (_textEditingControllerNewItem
+                                      .text.isNotEmpty) {
+                                    selectedCategory =
+                                        Categorias.defineCategoriaAuto(
+                                            _textEditingControllerNewItem.text);
+                                  } else {
+                                    //selectedCategory = Categorias.obterCategoriaAleatoria();
+                                  }
                                 },
                               );
                             },
                             decoration: const InputDecoration(
                               labelText: 'Quantidade',
                             ),
+                            onTap: () {
+                              // Seleciona todo o conteúdo ao focar no campo
+                              _textEditingControllerNewItemQuant.selection =
+                                  TextSelection(
+                                baseOffset: 0,
+                                extentOffset: _textEditingControllerNewItemQuant
+                                    .text.length,
+                              );
+                            },
                           ),
                         ),
                         const SizedBox(width: 10), // Espaço entre os campos
