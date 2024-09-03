@@ -5,6 +5,7 @@ import 'package:lista_mercado/models/categoria.dart';
 import 'package:lista_mercado/models/categorias.dart';
 import 'package:lista_mercado/models/produto.dart';
 import 'package:lista_mercado/my_theme.dart';
+import 'package:lista_mercado/util/decimal_text_input_formatter.dart';
 import 'package:lista_mercado/widgets/botton/custom_buttons%20.dart';
 
 Future<Produto> confirmEditItemScreen(
@@ -64,13 +65,16 @@ Future<Produto> confirmEditItemScreen(
                               _textEditingControllerEditItem.text.isNotEmpty &&
                                   _textEditingControllerEditItemQuant
                                       .text.isNotEmpty;
-                          //selectedCategory = Categoria.obterCategoriaAutomatico('');
+
+                          selectedCategory = Categorias.defineCategoriaAuto(
+                              _textEditingControllerEditItem.text);
                         });
                       },
 
                       onTap: () {
                         // Seleciona todo o conteúdo ao focar no campo
-                        _textEditingControllerEditItem.selection = TextSelection(
+                        _textEditingControllerEditItem.selection =
+                            TextSelection(
                           baseOffset: 0,
                           extentOffset:
                               _textEditingControllerEditItem.text.length,
@@ -85,11 +89,14 @@ Future<Produto> confirmEditItemScreen(
                       children: [
                         Expanded(
                           child: TextField(
-                            //focusNode: _focusNodeQuant,
                             inputFormatters: [
-                              FilteringTextInputFormatter.allow(
-                                  RegExp(r'[0-9\.,]')),
+                              DecimalTextInputFormatter(), // Aplicando o formatador personalizado
                             ],
+                            //focusNode: _focusNodeQuant,
+                            //inputFormatters: [
+                            //  FilteringTextInputFormatter.allow(
+                            //      RegExp(r'[0-9\.,]')),
+                            // ],
                             keyboardType: TextInputType.number,
                             controller: _textEditingControllerEditItemQuant,
                             textAlign: TextAlign.center,
@@ -99,9 +106,6 @@ Future<Produto> confirmEditItemScreen(
                                         .text.isNotEmpty &&
                                     _textEditingControllerEditItemQuant
                                         .text.isNotEmpty;
-                                selectedCategory =
-                                    Categorias.defineCategoriaAuto(
-                                        _textEditingControllerEditItem.text);
                               });
                             },
                             decoration: const InputDecoration(
@@ -125,10 +129,15 @@ Future<Produto> confirmEditItemScreen(
                         Expanded(
                           child: TextField(
                             autofocus: true,
+
                             inputFormatters: [
-                              FilteringTextInputFormatter.allow(
-                                  RegExp(r'[0-9\.,]')),
+                              DecimalTextInputFormatter(), // Aplicando o formatador personalizado
                             ],
+
+                            // inputFormatters: [
+                            //  FilteringTextInputFormatter.allow(
+                            //       RegExp(r'[0-9\.,]')),
+                            //  ],
                             keyboardType: TextInputType.number,
                             controller: _textEditingControllerEditItemValor,
                             textAlign: TextAlign.center,
@@ -143,6 +152,16 @@ Future<Produto> confirmEditItemScreen(
                             decoration: const InputDecoration(
                               labelText: 'Valor',
                             ),
+                            onTap: () {
+                              // Seleciona todo o conteúdo ao focar no campo
+                              _textEditingControllerEditItemValor.selection =
+                                  TextSelection(
+                                baseOffset: 0,
+                                extentOffset:
+                                    _textEditingControllerEditItemValor
+                                        .text.length,
+                              );
+                            },
                           ),
                         ),
                       ],

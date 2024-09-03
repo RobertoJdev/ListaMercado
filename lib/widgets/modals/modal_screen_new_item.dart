@@ -6,6 +6,7 @@ import 'package:lista_mercado/models/categorias.dart';
 import 'package:lista_mercado/models/produto.dart';
 import 'package:intl/intl.dart';
 import 'package:lista_mercado/my_theme.dart';
+import 'package:lista_mercado/util/decimal_text_input_formatter.dart';
 import 'package:path/path.dart';
 
 import '../botton/custom_buttons .dart';
@@ -63,6 +64,9 @@ Future<Produto?> newItemScreen(BuildContext context) async {
                                 _textEditingControllerNewItem.text.isNotEmpty &&
                                     _textEditingControllerNewItemQuant
                                         .text.isNotEmpty;
+
+                            selectedCategory = Categorias.defineCategoriaAuto(
+                                _textEditingControllerNewItem.text);
                           },
                         );
                       },
@@ -84,9 +88,12 @@ Future<Produto?> newItemScreen(BuildContext context) async {
                         Expanded(
                           child: TextField(
                             inputFormatters: [
+                              DecimalTextInputFormatter(), // Aplicando o formatador personalizado
+                            ],
+                            /* inputFormatters: [
                               FilteringTextInputFormatter.allow(
                                   RegExp(r'[0-9\.,]')),
-                            ],
+                            ], */
                             keyboardType: TextInputType.number,
                             controller: _textEditingControllerNewItemQuant,
                             textAlign: TextAlign.center,
@@ -99,15 +106,6 @@ Future<Produto?> newItemScreen(BuildContext context) async {
                                               .text.isNotEmpty &&
                                           _textEditingControllerNewItemQuant
                                               .text.isNotEmpty;
-
-                                  if (_textEditingControllerNewItem
-                                      .text.isNotEmpty) {
-                                    selectedCategory =
-                                        Categorias.defineCategoriaAuto(
-                                            _textEditingControllerNewItem.text);
-                                  } else {
-                                    //selectedCategory = Categorias.obterCategoriaAleatoria();
-                                  }
                                 },
                               );
                             },
@@ -129,9 +127,12 @@ Future<Produto?> newItemScreen(BuildContext context) async {
                         Expanded(
                           child: TextField(
                             inputFormatters: [
+                              DecimalTextInputFormatter(), // Aplicando o formatador personalizado
+                            ],
+                            /* inputFormatters: [
                               FilteringTextInputFormatter.allow(
                                   RegExp(r'[0-9\.,]')),
-                            ],
+                            ], */
                             keyboardType: TextInputType.number,
                             controller: _textEditingControllerNewItemValor,
                             textAlign: TextAlign.center,
@@ -139,6 +140,15 @@ Future<Produto?> newItemScreen(BuildContext context) async {
                             decoration: const InputDecoration(
                               labelText: 'Valor',
                             ),
+                            onTap: () {
+                              // Seleciona todo o conteúdo ao focar no campo
+                              _textEditingControllerNewItemValor.selection =
+                                  TextSelection(
+                                baseOffset: 0,
+                                extentOffset: _textEditingControllerNewItemValor
+                                    .text.length,
+                              );
+                            },
                           ),
                         ),
                       ],
