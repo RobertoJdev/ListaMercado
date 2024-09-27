@@ -224,7 +224,8 @@ class MarketDB {
         print('Preço Atual: ${productInfo[0]['precoAtual']}');
       }
     }
-    print('--------------------------------------------------------------------------------------------------');
+    print(
+        '--------------------------------------------------------------------------------------------------');
   }
 
   Future<bool> getUnfinishedLists() async {
@@ -445,6 +446,25 @@ class MarketDB {
       'ListaMercadoProduto',
       where: 'listaMercadoId = ?',
       whereArgs: [listaMercadoId],
+    );
+  }
+
+  Future<void> deleteProdutoFromLista(
+      ListaMercado listaMercado, Produto produto) async {
+    await openDB();
+
+    // Exclui a associação do produto com a lista de mercado
+    await _database.delete(
+      'ListaMercadoProduto',
+      where: 'listaMercadoId = ? AND produtoId = ?',
+      whereArgs: [listaMercado.id, produto.getId()],
+    );
+
+    // Exclui o produto da tabela de produtos
+    await _database.delete(
+      'Produto',
+      where: 'id = ?',
+      whereArgs: [produto.getId()],
     );
   }
 }

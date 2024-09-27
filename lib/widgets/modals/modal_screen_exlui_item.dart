@@ -9,6 +9,8 @@ Future<bool?> showDeleteItemConfirmationDialog(BuildContext context) async {
   await showModalBottomSheet(
     isScrollControlled: true,
     context: context,
+    isDismissible: false, // Impede o fechamento ao clicar fora do modal
+    enableDrag: false, // Impede o fechamento ao arrastar para baixo
     builder: (BuildContext context) {
       return StatefulBuilder(
         builder: (BuildContext context, StateSetter setState) {
@@ -52,7 +54,10 @@ Future<bool?> showDeleteItemConfirmationDialog(BuildContext context) async {
         },
       );
     },
-  );
+  ).then((value) {
+    // Caso o usuário feche o diálogo sem escolher nada, returna false.
+    return value ?? false;
+  });
 
   return completer.future;
 }

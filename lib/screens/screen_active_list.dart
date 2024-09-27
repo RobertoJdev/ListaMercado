@@ -118,26 +118,29 @@ class _ActiveListState extends State<ScreenActiveList>
                             key: UniqueKey(),
                             confirmDismiss: (direction) async {
                               if (direction == DismissDirection.startToEnd) {
-                                // Lógica para confirmar a ação ao mover para a lista confirmada (opcional)
                                 return true; // ou implemente uma confirmação específica se necessário
                               } else if (direction ==
                                   DismissDirection.endToStart) {
-                                // Confirmação ao tentar excluir o item
-                                return await showDeleteItemConfirmationDialog(
-                                    context);
+                                bool? confirm =
+                                    await showDeleteItemConfirmationDialog(
+                                        context);
+                                setState(() {
+                                  if (confirm!) {
+                                    excluirItem(widget.listaMercado,
+                                        listItensPendent[index]);
+                                  }
+                                });
+                                return false;
                               }
                               return false;
                             },
-                            onDismissed: (direction) {
+                            onDismissed: (direction) async {
                               if (direction == DismissDirection.startToEnd) {
                                 listItensPendent[index].pendente = false;
                                 moveItemToConfirmedList(
                                     listItensPendent[index]);
                               } else if (direction ==
-                                  DismissDirection.endToStart) {
-                                // Lógica ao excluir o item
-                                // Exemplo: listItensPendent.removeAt(index);
-                              }
+                                  DismissDirection.endToStart) {}
                             },
                             // demais propriedades do Dismissible
                             background: Container(
@@ -163,47 +166,6 @@ class _ActiveListState extends State<ScreenActiveList>
                               moveCallback: moveItemToConfirmedList,
                             ),
                           );
-
-/*
-                          
-                          return Dismissible(
-                            key: UniqueKey(),
-                            //direction: DismissDirection.startToEnd,
-                            onDismissed: (direction) {
-                              if (direction == DismissDirection.startToEnd) {
-                                listItensPendent[index].pendente = false;
-                                moveItemToConfirmedList(
-                                    listItensPendent[index]);
-                              } else if (direction ==
-                                  DismissDirection.endToStart) {
-                                //excluirItemPendente(listItensPendent[index]);
-                              }
-                            },
-                            background: Container(
-                              color: Colors.green,
-                              alignment: Alignment.centerLeft,
-                              padding: const EdgeInsets.only(left: 10),
-                              child: const Icon(
-                                Icons.check,
-                                color: Colors.white,
-                              ),
-                            ),
-                            secondaryBackground: Container(
-                              color: Colors.red,
-                              alignment: Alignment.centerRight,
-                              padding: const EdgeInsets.only(right: 10),
-                              child: const Icon(
-                                Icons.delete,
-                                color: Colors.white,
-                              ),
-                            ),
-                            child: ItemListPendent(
-                              item: listItensPendent[index],
-                              moveCallback: moveItemToConfirmedList,
-                            ),
-                          );
-
-*/
                         },
                       ),
                     ),
@@ -225,15 +187,21 @@ class _ActiveListState extends State<ScreenActiveList>
                           return Dismissible(
                             key: UniqueKey(),
                             direction: DismissDirection.horizontal,
-                            onDismissed: (direction) {
+                            onDismissed: (direction) async {
                               if (direction == DismissDirection.startToEnd) {
                                 listItensConfirmed[index].pendente = true;
                                 moveItemToPendentList(
                                     listItensConfirmed[index]);
                               } else if (direction ==
                                   DismissDirection.endToStart) {
+                                bool? confirm =
+                                    await showDeleteItemConfirmationDialog(
+                                        context);
                                 setState(() {
-                                  listItensConfirmed.removeAt(index);
+                                  if (confirm!) {
+                                    excluirItem(widget.listaMercado,
+                                        listItensConfirmed[index]);
+                                  }
                                 });
                               }
                             },
@@ -452,11 +420,15 @@ class _ActiveListState extends State<ScreenActiveList>
     }
   }
 
-  void excluirItemPendente(Produto produto) {
+  void excluirItem(ListaMercado listaMercado, Produto produto) {
     setState(() {
-      listItensPendent.remove(produto);
+      if (produto.pendente) {
+        listItensPendent.remove(produto);
+      } else {
+        listItensConfirmed.remove(produto);
+      }
     });
-    // Adicione aqui a lógica para excluir permanentemente do banco de dados
+    db.deleteProdutoFromLista(listaMercado, produto);
   }
 
   Future adicionarNovoItem() async {
@@ -464,7 +436,7 @@ class _ActiveListState extends State<ScreenActiveList>
     temp = await newItemScreen(context);
     if (temp != null && temp.precoAtual == 0.0) {
       db.insertItem(widget.listaMercado, temp);
-      listItensPendent.add(temp!);
+      listItensPendent.add(temp);
       setState(() {
         listItensPendent = Produto.ordenarItens(listItensPendent);
       });
