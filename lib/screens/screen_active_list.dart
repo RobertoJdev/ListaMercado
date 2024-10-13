@@ -165,6 +165,7 @@ class _ActiveListState extends State<ScreenActiveList>
                               item: listItensPendent[index],
                               moveCallback: moveItemToConfirmedList,
                             ),
+                            
                           );
                         },
                       ),

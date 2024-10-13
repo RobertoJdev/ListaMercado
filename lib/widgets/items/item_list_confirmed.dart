@@ -73,8 +73,35 @@ class ItemListConfirmed extends StatelessWidget {
               ),
             ),
             Padding(
+              padding: MyTheme.myCustomEdgeInsetsItemPriceConfirmed,
+              child: Column(
+                children: [
+                  Text(
+                    "R\$ ${item.historicoPreco[item.historicoPreco.length - 1].toString()}",
+                    style: MyTheme.myTextStylPricePrevious,
+                  ),
+                  Text(
+                    precoController.text,
+                    style: item.precoAtual >=
+                            item.historicoPreco[item.historicoPreco.length - 1]
+                        ? MyTheme.myTextStylePriceUp
+                        : MyTheme.myTextStylePriceDown,
+                  ),
+                ],
+              ),
+            ),
+            Padding(
               padding: MyTheme.myCustomEdgeInsetsItemSpaceInternRight,
-              child: Text(precoController.text),
+              child: item.precoAtual >=
+                      item.historicoPreco[item.historicoPreco.length - 1]
+                  ? const Icon(
+                      Icons.north,
+                      color: Colors.red,
+                    )
+                  : const Icon(
+                      Icons.south,
+                      color: Colors.green,
+                    ),
             ),
             /*
             const Padding(

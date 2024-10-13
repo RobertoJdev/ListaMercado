@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:path/path.dart';
 
 class MyTheme {
   static ThemeData themeData = ThemeData(
@@ -88,9 +89,38 @@ class MyTheme {
     fontWeight: FontWeight.w500,
   );
 
+  // Style utilizado nos valores em ListaMercado e Itens confirmado com valor maior que o histórico.
+  static const TextStyle myTextStylePriceUp = TextStyle(
+    fontWeight: FontWeight.bold,
+    fontSize: 16,
+    color: Colors.red,
+  );
+
+  // Style utilizado nos valores em ListaMercado e Itens confirmado com valor maior que o histórico.
+  static const TextStyle myTextStylePriceDown = TextStyle(
+    fontWeight: FontWeight.bold,
+    fontSize: 16,
+    color: Colors.green,
+  );
+
+  // Style utilizado nos valores em ListaMercado e Itens pendent e confirmado.
+  static const TextStyle myTextStylePriceNotDefined = TextStyle(
+    fontWeight: FontWeight.bold,
+    fontSize: 16,
+    color: Colors.grey,
+  );
+
   // Style utilizado nos valores em ListaMercado e Itens pendent e confirmado.
   static const TextStyle myTextStylePrice = TextStyle(
+    fontWeight: FontWeight.bold,
+    fontSize: 16,
+  );
+
+  // Style utilizado nos histórico dos valores em ListaMercado e Itens pendent e confirmado.
+  static const TextStyle myTextStylPricePrevious = TextStyle(
     fontWeight: FontWeight.normal,
+    fontSize: 12,
+    color: Colors.blue,
   );
 
   // Style utilizado nas datas das listas de mercado.
@@ -122,7 +152,13 @@ class MyTheme {
       EdgeInsets.symmetric(horizontal: 13, vertical: 13);
 
   static const EdgeInsets myCustomEdgeInsetsItemSpaceInternRight =
-      EdgeInsets.only(right: 12);
+      EdgeInsets.only(right: 2);
+
+  static const EdgeInsets myCustomEdgeInsetsItemPrice =
+      EdgeInsets.only(top: 0, bottom: 0, left: 0, right: 12);
+
+  static const EdgeInsets myCustomEdgeInsetsItemPriceConfirmed =
+      EdgeInsets.only(top: 0, bottom: 0, left: 0, right: 5);
 
   static const EdgeInsets myCustomEdgeInsetsItemSpaceInternCategoryProduct =
       EdgeInsets.symmetric(horizontal: 6);

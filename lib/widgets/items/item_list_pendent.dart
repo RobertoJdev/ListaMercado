@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:intl/intl.dart';
@@ -8,6 +10,9 @@ import 'package:lista_mercado/models/categoria.dart';
 import 'package:lista_mercado/widgets/items/item_list_confirmed.dart';
 import 'package:lista_mercado/models/produto.dart';
 import 'package:lista_mercado/util/format_value.dart';
+// Import necessário para gráficos
+import 'package:fl_chart/fl_chart.dart';
+import 'package:lista_mercado/widgets/modals/modal_screen_show_price_history.dart';
 
 class ItemListPendent extends StatelessWidget {
   ItemListPendent({super.key, required this.item, required this.moveCallback});
@@ -31,6 +36,9 @@ class ItemListPendent extends StatelessWidget {
           item.precoAtual = temp.precoAtual;
           moveCallback(item);
         }
+      },
+      onLongPress: () {
+        showPriceHistoryModal(context: context, item: item);
       },
       child: Container(
         margin: MyTheme.myCustomEdgeInsetsSpaceExtern,
@@ -73,14 +81,27 @@ class ItemListPendent extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: MyTheme.myCustomEdgeInsetsItemSpaceInternRight,
-              child: Text(
-                precoController.text == 'R\$ 0,00'
-                    ? 'R\$ --,--'
-                    : precoController.text,
-                style: precoController.text == 'R\$ 0,00'
-                    ? const TextStyle(color: Colors.grey)
-                    : MyTheme.myTextStylePrice,
+              padding: MyTheme.myCustomEdgeInsetsItemPrice,
+              child: Column(
+                children: [
+                  Text(
+                    "R\$ ${item.historicoPreco[item.historicoPreco.length - 1].toString()}",
+                    style: precoController.text ==
+                            FortmatValue.formatDouble(item.historicoPreco[
+                                    item.historicoPreco.length - 1])
+                                .toString()
+                        ? const TextStyle(color: Colors.grey)
+                        : MyTheme.myTextStylPricePrevious,
+                  ),
+                  Text(
+                    precoController.text == 'R\$ 0,00'
+                        ? 'R\$ --,--'
+                        : precoController.text,
+                    style: precoController.text == 'R\$ 0,00'
+                        ? MyTheme.myTextStylePriceNotDefined
+                        : MyTheme.myTextStylePrice,
+                  ),
+                ],
               ),
             ),
             /*

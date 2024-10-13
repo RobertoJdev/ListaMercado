@@ -80,11 +80,16 @@ class _listasMercadoState extends State<ScreenListasMercado> {
                             return await showDeleteConfirmationDialog(context);
                           },
                           child: GestureDetector(
-                            onTap: () {
-                              abrirListaMercadoFinalizada(
-                                context,
-                                listasMercado[index],
-                              );
+                            onTap: () async {
+                              bool? reabrirLista =
+                                  await reabrirListaScreen(context: context);
+                              if (reabrirLista!) {
+                                reutilizarListaMercadoFinalizada(
+                                    listasMercado[index]);
+                              } else {
+                                abrirListaMercadoFinalizada(
+                                    listasMercado[index]);
+                              }
                             },
                             child: ItemListCompras(
                               listaMercado: listasMercado[index],
@@ -184,50 +189,41 @@ class _listasMercadoState extends State<ScreenListasMercado> {
     );
   }
 
-  void abrirListaMercadoFinalizada(
-      BuildContext context, ListaMercado listaMercado) async {
-    bool? reabrirLista = await reabrirListaScreen(context: context);
+  void abrirListaMercadoFinalizada(ListaMercado listaMercado) async {
+    // bool? reabrirLista = await reabrirListaScreen(context: context);
     int temp = listaMercado.id!;
     ListaMercado? tempLista = await db.searchListaMercadoById(temp);
 
-    if (reabrirLista!) {
-      if (tempLista != null) {
-        for (var element in tempLista.itens) {
-          element.pendente = true;
-          element.precoAtual = 0;
-        }
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ScreenActiveList(tempLista!),
+      ),
+    );
+  }
 
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => ScreenActiveList(tempLista),
-          ),
-        );
-      } else {
-        showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: const Text('Erro'),
-            content: const Text('Lista de mercado não encontrada.'),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: const Text('OK'),
-              ),
-            ],
-          ),
-        );
-      }
-    } else {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => ScreenActiveList(tempLista!),
-        ),
-      );
+  void reutilizarListaMercadoFinalizada(ListaMercado listaMercado) async {
+    //bool? reabrirLista = await reabrirListaScreen(context: context);
+    int temp = listaMercado.id!;
+    ListaMercado? tempLista = await db.searchListaMercadoById(temp);
+
+    //print('teste de entrada reutilizar mercado finalizado ----------------');
+
+    for (var element in tempLista!.itens) {
+      element.pendente = true;
+      //mudança para exibir histórico ao reaproveitar lista finalizada.
+      element.historicoPreco.add(element.precoAtual);
+      element.precoAtual = 0;
+      //print("Preço no histórico: ${element.historicoPreco[element.historicoPreco.length -1]}");
+      //print("Preço atual: ${element.precoAtual}");
     }
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ScreenActiveList(tempLista),
+      ),
+    );
   }
 
   void abrirListaMercadoNaoFinalizada(
