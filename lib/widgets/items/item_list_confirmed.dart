@@ -7,6 +7,7 @@ import 'package:lista_mercado/models/produto.dart';
 import 'package:lista_mercado/my_theme.dart';
 import 'package:lista_mercado/util/format_value.dart';
 import 'package:lista_mercado/widgets/modals/modal_screen_confirm_item.dart';
+import 'package:lista_mercado/widgets/modals/modal_screen_show_price_history.dart';
 
 class ItemListConfirmed extends StatelessWidget {
   ItemListConfirmed(
@@ -30,6 +31,9 @@ class ItemListConfirmed extends StatelessWidget {
             await confirmEditItemScreen(context: context, itemTemp: item);
         item.precoAtual = temp.precoAtual;
         moveCallback(item);
+      },
+      onLongPress: () {
+        showPriceHistoryModal(context: context, item: item);
       },
       child: Container(
         margin: MyTheme.myCustomEdgeInsetsSpaceExtern,

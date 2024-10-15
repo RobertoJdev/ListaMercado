@@ -145,6 +145,11 @@ class _listasMercadoState extends State<ScreenListasMercado> {
 
     // Após inicializar o banco de dados, chama a função
     _verificarListaNaoFinalizada();
+
+    // Log para verificar se as listas foram recuperadas
+    print('Listas recuperadas: ${listasMercado.length}');
+    print(
+        "===========================================================================================================================");
   }
 
   Future<void> _verificarListaNaoFinalizada() async {
@@ -191,6 +196,8 @@ class _listasMercadoState extends State<ScreenListasMercado> {
 
   void abrirListaMercadoFinalizada(ListaMercado listaMercado) async {
     // bool? reabrirLista = await reabrirListaScreen(context: context);
+    print(
+        "================================================= abertura de lista finalizada ==========================================================================");
     int temp = listaMercado.id!;
     ListaMercado? tempLista = await db.searchListaMercadoById(temp);
 
@@ -203,19 +210,18 @@ class _listasMercadoState extends State<ScreenListasMercado> {
   }
 
   void reutilizarListaMercadoFinalizada(ListaMercado listaMercado) async {
-    //bool? reabrirLista = await reabrirListaScreen(context: context);
     int temp = listaMercado.id!;
     ListaMercado? tempLista = await db.searchListaMercadoById(temp);
 
-    //print('teste de entrada reutilizar mercado finalizado ----------------');
+    print(
+        "========================================== entrada de lista REUTILIZAR =======================================================");
 
     for (var element in tempLista!.itens) {
       element.pendente = true;
-      //mudança para exibir histórico ao reaproveitar lista finalizada.
-      element.historicoPreco.add(element.precoAtual);
+      //element.historicoPreco.add(element.precoAtual);
+      //element.historicoPreco.add(2.2);
+      //element.historicoPreco.add(3.3);
       element.precoAtual = 0;
-      //print("Preço no histórico: ${element.historicoPreco[element.historicoPreco.length -1]}");
-      //print("Preço atual: ${element.precoAtual}");
     }
 
     Navigator.push(

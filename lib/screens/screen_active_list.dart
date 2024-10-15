@@ -50,7 +50,7 @@ class _ActiveListState extends State<ScreenActiveList>
       vsync: this,
       duration: Duration(milliseconds: 100),
     );
-    //testeExibirListaItems();
+    testeExibirListaItems();
     // Inicie com a lista de itens que faltam expandida
     //isListPendentExpanded = true;
     //isListConfirmedExpanded = false;
@@ -165,7 +165,6 @@ class _ActiveListState extends State<ScreenActiveList>
                               item: listItensPendent[index],
                               moveCallback: moveItemToConfirmedList,
                             ),
-                            
                           );
                         },
                       ),
@@ -391,7 +390,7 @@ class _ActiveListState extends State<ScreenActiveList>
         );
       } else {}
 
-      db.novaListaMercado(widget.listaMercado);
+      db.finalizarListaMercado(widget.listaMercado);
 
       Navigator.pushAndRemoveUntil(
         context,
@@ -405,6 +404,10 @@ class _ActiveListState extends State<ScreenActiveList>
     //List<Produto> listaProdutos = lista.itens;
     lista.itens = Produto.ordenarItens(lista.itens);
     for (Produto element in lista.itens) {
+      if (element.historicoPreco.length == 0) {
+        element.historicoPreco.add(0);
+      }
+
       if (element.pendente) {
         listItensPendent.add(element);
       } else {
@@ -417,7 +420,10 @@ class _ActiveListState extends State<ScreenActiveList>
     print(
         '------------------Lista de produtos passados como parametro dentro da chamada. ------------------');
     for (var element in widget.listaMercado.itens) {
-      print(element.descricao);
+      print(
+          "Item: ${element.descricao} ---- Preço: ${element.precoAtual} ---- Histórico de Preço: ${[
+        ...element.historicoPreco
+      ]} ");
     }
   }
 
@@ -484,35 +490,5 @@ class _ActiveListState extends State<ScreenActiveList>
         (route) => false,
       );
     }
-
-/* 
-    listaAberta = widget.listaMercado.finalizada;
-    print(listaAberta);
-
-    try {
-        widget.listaMercado.custoTotal = double.parse(totalValue);
-        widget.listaMercado.itens = listItensPendent + listItensConfirmed;
-        widget.listaMercado.supermercado = 'Lista salva automática.';
-        widget.listaMercado.finalizada = true;
-        widget.listaMercado.data = DataUtil.getCurrentFormattedDate();
-
-        if (!listaAberta) {
-            db.updateListaMercado(widget.listaMercado);
-        } else {
-            db.novaListaMercado(widget.listaMercado);
-        }
-        
-        print('Lista salva com sucesso!');
-        
-        // Realize a navegação para ScreenListasMercado após salvar a lista
-        Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(builder: (context) => const ScreenListasMercado()),
-            (route) => false,
-        );
-    } catch (e) {
-        print('Erro ao salvar a lista: $e');
-    }
-*/
   }
 }

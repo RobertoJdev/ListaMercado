@@ -22,7 +22,7 @@ class ListaMercado {
   static generateListaMercadoExemplo(List<Produto> produtos) {
     ListaMercado listaMercadoTemp = ListaMercado(
       userId: 1,
-      custoTotal: 100.0,
+      custoTotal: 0.0,
       data: '01-01-23',
       supermercado: 'Supermarket Exemplo',
       finalizada: false,
@@ -30,7 +30,7 @@ class ListaMercado {
     );
     return listaMercadoTemp;
   }
-
+/*
   static generateMultiListasMercadoExemplo(List<Produto> produtos) {
     List<ListaMercado> multiListaMercadoTemp = [];
 
@@ -46,4 +46,5 @@ class ListaMercado {
     }
     return multiListaMercadoTemp;
   }
+  */
 }

@@ -49,32 +49,33 @@ class Produto {
       pendente: true,
       precoAtual: 5,
       categoria: Categorias.obterCategoriaAleatoria().nomeFormatado,
-      historicoPreco: [7, 9, 5],
+      historicoPreco: [7, 9, 3],
     );
     return produtoExemplo;
   }
 
   static generateMultiProdutosExemplo() {
     List<Produto> listExemploProdutos = [];
+    
     final nomesProdutos = [
       'Carne',
-      'Frango',
-      'Alface',
-      'Tomate',
+      //'Frango',
+      //'Alface',
+      //'Tomate',
       'Pão de forma',
-      'Pão de queijo',
-      'Queijo coalho',
-      'Queijo prato',
-      'Mortadela',
-      'Salame',
-      'Desinfetante',
-      'Esponja',
-      'Shampoo',
-      'Sabonete',
-      'Rum',
+      //'Pão de queijo',
+      //'Queijo coalho',
+      //'Queijo prato',
+      //'Mortadela',
+      //'Salame',
+      //'Desinfetante',
+      //'Esponja',
+      //'Shampoo',
+      //'Sabonete',
+      //'Rum',
       'Whisky',
-      'Açúcar',
-      'Arroz',
+      //'Açúcar',
+      //'Arroz',
     ];
 
     for (var element in nomesProdutos) {
@@ -85,7 +86,7 @@ class Produto {
         pendente: true,
         precoAtual: 5,
         categoria: Categorias.defineCategoriaAuto(element),
-        historicoPreco: [7, 9, 5],
+        historicoPreco: [7, 9, 3],
       );
       listExemploProdutos.add(produtoTemp);
     }

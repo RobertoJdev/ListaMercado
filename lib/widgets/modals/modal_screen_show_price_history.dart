@@ -13,6 +13,9 @@ Future<void> showPriceHistoryModal({
     builder: (BuildContext context) {
       return StatefulBuilder(
         builder: (BuildContext context, StateSetter setState) {
+          // Obter o preço atual
+          double? precoAtual = item.precoAtual; // Supondo que você tenha uma propriedade precoAtual em Produto
+
           return SingleChildScrollView(
             child: Container(
               color: MyTheme.modalColorBackground,
@@ -42,14 +45,17 @@ Future<void> showPriceHistoryModal({
                           ),
                           lineBarsData: [
                             LineChartBarData(
-                              spots: item.historicoPreco
-                                  .asMap()
-                                  .entries
-                                  .map((entry) {
-                                int index = entry.key;
-                                double preco = entry.value;
-                                return FlSpot(index.toDouble(), preco);
-                              }).toList(),
+                              spots: [
+                                // Adiciona pontos históricos
+                                ...item.historicoPreco.asMap().entries.map((entry) {
+                                  int index = entry.key;
+                                  double preco = entry.value;
+                                  return FlSpot(index.toDouble(), preco);
+                                }).toList(),
+                                // Adiciona o preço atual
+                                if (precoAtual != null && precoAtual > 0)
+                                  FlSpot(item.historicoPreco.length.toDouble(), precoAtual)
+                              ],
                               isCurved: true,
                               color: Colors.blue, // Cor da linha
                               dotData: FlDotData(show: true),
