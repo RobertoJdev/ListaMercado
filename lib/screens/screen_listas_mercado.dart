@@ -213,6 +213,8 @@ class _listasMercadoState extends State<ScreenListasMercado> {
     int temp = listaMercado.id!;
     ListaMercado? tempLista = await db.searchListaMercadoById(temp);
 
+    MarketDB.printListaMercadoInfo(tempLista!);
+
     print(
         "========================================== entrada de lista REUTILIZAR =======================================================");
 

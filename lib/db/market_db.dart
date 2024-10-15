@@ -599,9 +599,6 @@ class MarketDB {
   }
 
   Future<int> finalizarListaMercado(ListaMercado listaMercado) async {
-    for (var element in listaMercado.itens) {
-      element.historicoPreco.add(5);
-    }
     printListaMercadoInfo(listaMercado);
 
     await initDB();
@@ -637,21 +634,20 @@ class MarketDB {
       int produtoId = await _database.insert('Produto', produtoMap);
 
       //teste para inserir os valores já existentes no historico.
-      for (var element in listaMercado.itens) {
-        for (int i = 0; i < element.historicoPreco.length - 1; i++) {
-          await _database.insert(
-            'HistoricoPreco',
-            {
-              'produtoId': produtoId,
-              'preco': element.historicoPreco[i],
-              'data': DateTime.now().toIso8601String(),
-            },
-          );
-        }
+
+      for (int i = 0; i < produto.historicoPreco.length; i++) {
+        await _database.insert(
+          'HistoricoPreco',
+          {
+            'produtoId': produtoId,
+            'preco': produto.historicoPreco[i],
+            'data': DateTime.now().toIso8601String(),
+          },
+        );
       }
 
       // Insere o preço atual no histórico, independentemente de ser igual ao anterior
-      if (produto.precoAtual != null && produto.precoAtual > 0) {
+      if (produto.precoAtual != null) {
         await _database.insert(
           'HistoricoPreco',
           {
@@ -698,7 +694,7 @@ class MarketDB {
     }
   }
 
-  void printListaMercadoInfo(ListaMercado listaMercado) {
+  static void printListaMercadoInfo(ListaMercado listaMercado) {
     print(
         ' -------------------------- Informações da Lista de Mercado: -------------------------- ');
 
