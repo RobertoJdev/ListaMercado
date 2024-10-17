@@ -22,10 +22,17 @@ class MarketDB {
     _database = await openDatabase(
       join(path, 'listMarket.db'),
       onCreate: (db, version) async {
+        // Criação inicial do banco de dados
         await _createTables(db);
         await _insertTestMarketData(db);
       },
-      version: 1,
+      version: 2,
+      onUpgrade: (db, oldVersion, newVersion) async {
+        if (oldVersion < 2) {
+          // Atualização da versão 1 para a versão 2
+          await _upgradeToVersion2(db);
+        }
+      },
     );
 
     await openDB();
@@ -74,6 +81,20 @@ class MarketDB {
         FOREIGN KEY (produtoId) REFERENCES Produto(id)
       )
     ''');
+  }
+
+  // Função para migrar o banco de dados da versão 1 para a versão 2
+  Future<void> _upgradeToVersion2(Database db) async {
+    // Criação da nova tabela HistoricoPreco
+    await db.execute('''
+    CREATE TABLE HistoricoPreco (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      produtoId INTEGER NOT NULL,
+      preco REAL NOT NULL,
+      data TEXT NOT NULL,
+      FOREIGN KEY (produtoId) REFERENCES Produto(id) ON DELETE CASCADE
+    )
+  ''');
   }
 
   Future<void> _insertTestMarketData(Database db) async {
@@ -249,45 +270,6 @@ class MarketDB {
       INNER JOIN ListaMercadoProduto ON Produto.id = ListaMercadoProduto.produtoId
       INNER JOIN ListaMercado ON ListaMercadoProduto.listaMercadoId = ListaMercado.id
     ''');
-  }
-
-  Future<void> printAllItems() async {
-    print(
-        '********************------------------Teste chamada printAllItens------------------********************');
-    final items = await getAllItems();
-    print(items);
-
-    for (var item in items) {
-      print('ID: ${item['id']}');
-      print('User ID: ${item['userId']}');
-      print('Total Cost: ${item['custoTotal']}');
-      print('Data: ${item['data']}');
-      print('Supermarket: ${item['supermercado']}');
-      print('Finished: ${item['finalizada']}');
-
-      final products = await _database.query(
-        'ListaMercadoProduto',
-        where: 'listaMercadoId = ?',
-        whereArgs: [item['id']],
-      );
-
-      for (var product in products) {
-        final productInfo = await _database.query(
-          'Produto',
-          where: 'id = ?',
-          whereArgs: [product['produtoId']],
-        );
-
-        print('Produto ID: ${productInfo[0]['id']}');
-        print('Descrição: ${productInfo[0]['descricao']}');
-        print('Barras: ${productInfo[0]['barras']}');
-        print('Quantidade: ${productInfo[0]['quantidade']}');
-        print('Pendente: ${productInfo[0]['pendente']}');
-        print('Preço Atual: ${productInfo[0]['precoAtual']}');
-      }
-    }
-    print(
-        '--------------------------------------------------------------------------------------------------');
   }
 
   Future<bool> getUnfinishedLists() async {
@@ -566,8 +548,7 @@ class MarketDB {
     );
   }
 
-  Future<void> deleteProdutoFromLista(
-      ListaMercado listaMercado, Produto produto) async {
+  Future<void> deleteProdutoFromLista(ListaMercado listaMercado, Produto produto) async {
     await openDB();
 
     // Exclui a associação do produto com a lista de mercado
@@ -583,19 +564,6 @@ class MarketDB {
       where: 'id = ?',
       whereArgs: [produto.getId()],
     );
-  }
-
-  Future<void> printHistoricoPreco(Produto produto, String nomeFuncao) async {
-// Imprimir o histórico de preços do produto
-
-    print(
-        '++++++++++++++++++++++++++++ $nomeFuncao ++++++++++++++++++++++++++++');
-
-    print('Histórico de Preços para o produto ${produto.descricao}:');
-
-    for (var price in produto.historicoPreco) {
-      print('Preço: $price');
-    }
   }
 
   Future<int> finalizarListaMercado(ListaMercado listaMercado) async {
@@ -705,5 +673,57 @@ class MarketDB {
         ]}',
       );
     }
+  }
+
+  Future<void> printHistoricoPreco(Produto produto, String nomeFuncao) async {
+// Imprimir o histórico de preços do produto
+
+    print(
+        '++++++++++++++++++++++++++++ $nomeFuncao ++++++++++++++++++++++++++++');
+
+    print('Histórico de Preços para o produto ${produto.descricao}:');
+
+    for (var price in produto.historicoPreco) {
+      print('Preço: $price');
+    }
+  }
+
+  Future<void> printAllItems() async {
+    print(
+        '********************------------------Teste chamada printAllItens------------------********************');
+    final items = await getAllItems();
+    print(items);
+
+    for (var item in items) {
+      print('ID: ${item['id']}');
+      print('User ID: ${item['userId']}');
+      print('Total Cost: ${item['custoTotal']}');
+      print('Data: ${item['data']}');
+      print('Supermarket: ${item['supermercado']}');
+      print('Finished: ${item['finalizada']}');
+
+      final products = await _database.query(
+        'ListaMercadoProduto',
+        where: 'listaMercadoId = ?',
+        whereArgs: [item['id']],
+      );
+
+      for (var product in products) {
+        final productInfo = await _database.query(
+          'Produto',
+          where: 'id = ?',
+          whereArgs: [product['produtoId']],
+        );
+
+        print('Produto ID: ${productInfo[0]['id']}');
+        print('Descrição: ${productInfo[0]['descricao']}');
+        print('Barras: ${productInfo[0]['barras']}');
+        print('Quantidade: ${productInfo[0]['quantidade']}');
+        print('Pendente: ${productInfo[0]['pendente']}');
+        print('Preço Atual: ${productInfo[0]['precoAtual']}');
+      }
+    }
+    print(
+        '--------------------------------------------------------------------------------------------------');
   }
 }

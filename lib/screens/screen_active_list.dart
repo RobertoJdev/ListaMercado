@@ -14,6 +14,8 @@ import 'package:lista_mercado/util/data_util.dart';
 import 'package:lista_mercado/widgets/custom_app_bar.dart.dart';
 import 'package:flutter/services.dart';
 
+import '../widgets/alerts/confirm_exit_list.dart';
+
 class ScreenActiveList extends StatefulWidget {
   ScreenActiveList(this.listaMercado, {Key? key})
       : super(key: key ?? activeListKey);
@@ -73,250 +75,273 @@ class _ActiveListState extends State<ScreenActiveList>
       appBar: const CustomAppBar(
         screenReturn: true,
       ),
-      body: Stack(
-        children: [
-          SingleChildScrollView(
-            padding: EdgeInsets.only(
-              bottom: MediaQuery.of(context).viewInsets.bottom + 60,
-            ),
-            child: Column(
-              children: [
-                ExpansionPanelList(
-                  //dividerColor: Colors.amber,
-                  materialGapSize: 0,
-                  //elevation: 1,
-                  expandedHeaderPadding: const EdgeInsets.all(0),
-                  animationDuration: const Duration(milliseconds: 100),
-                  expansionCallback: (panelIndex, isExpanded) {
-                    setState(() {
-                      if (panelIndex == 0) {
-                        isListPendentExpanded = isExpanded;
-                        isListConfirmedExpanded = !isExpanded;
-                      } else {
-                        isListPendentExpanded = !isExpanded;
-                        isListConfirmedExpanded = isExpanded;
-                      }
-                    });
-                  },
-                  children: [
-                    ExpansionPanel(
-                      canTapOnHeader: true,
-                      isExpanded: isListPendentExpanded,
-                      headerBuilder: (context, isExpanded) {
-                        return const ListTile(
-                          leading: Icon(Icons.checklist),
-                          title: Text('Itens que faltam'),
-                        );
-                      },
-                      body: ListView.builder(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                        itemCount: listItensPendent.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return Dismissible(
-                            key: UniqueKey(),
-                            confirmDismiss: (direction) async {
-                              if (direction == DismissDirection.startToEnd) {
-                                return true; // ou implemente uma confirmação específica se necessário
-                              } else if (direction ==
-                                  DismissDirection.endToStart) {
-                                bool? confirm =
-                                    await showDeleteItemConfirmationDialog(
-                                        context);
-                                setState(() {
-                                  if (confirm!) {
-                                    excluirItem(widget.listaMercado,
-                                        listItensPendent[index]);
-                                  }
-                                });
-                                return false;
-                              }
-                              return false;
-                            },
-                            onDismissed: (direction) async {
-                              if (direction == DismissDirection.startToEnd) {
-                                listItensPendent[index].pendente = false;
-                                moveItemToConfirmedList(
-                                    listItensPendent[index]);
-                              } else if (direction ==
-                                  DismissDirection.endToStart) {}
-                            },
-                            // demais propriedades do Dismissible
-                            background: Container(
-                              color: Colors.green,
-                              alignment: Alignment.centerLeft,
-                              padding: const EdgeInsets.only(left: 10),
-                              child: const Icon(
-                                Icons.check,
-                                color: Colors.white,
-                              ),
-                            ),
-                            secondaryBackground: Container(
-                              color: Colors.red,
-                              alignment: Alignment.centerRight,
-                              padding: const EdgeInsets.only(right: 10),
-                              child: const Icon(
-                                Icons.delete,
-                                color: Colors.white,
-                              ),
-                            ),
-                            child: ItemListPendent(
-                              item: listItensPendent[index],
-                              moveCallback: moveItemToConfirmedList,
-                            ),
+
+      body: PopScope(
+        canPop: false,
+        onPopInvoked: (bool didPop) async {
+          // Chama o diálogo e aguarda a resposta
+          final shouldSave = await showDialog<bool>(
+            context: context,
+            builder: (context) => const ConfirmExitDialog(),
+          );
+
+          /*// Lógica com base no retorno do diálogo
+          if (shouldSave == true) {
+            if (activeListKey.currentState != null) {
+              activeListKey.currentState!.salvarListaTemp();
+              return;
+            } else {
+              print('activeListKey.currentState is null');
+            }
+          } else {
+            //return; // Retorna o resultado para a navegação
+          } */
+        },
+        child: Stack(
+          children: [
+            SingleChildScrollView(
+              padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom + 60,
+              ),
+              child: Column(
+                children: [
+                  ExpansionPanelList(
+                    //dividerColor: Colors.amber,
+                    materialGapSize: 0,
+                    //elevation: 1,
+                    expandedHeaderPadding: const EdgeInsets.all(0),
+                    animationDuration: const Duration(milliseconds: 100),
+                    expansionCallback: (panelIndex, isExpanded) {
+                      setState(() {
+                        if (panelIndex == 0) {
+                          isListPendentExpanded = isExpanded;
+                          isListConfirmedExpanded = !isExpanded;
+                        } else {
+                          isListPendentExpanded = !isExpanded;
+                          isListConfirmedExpanded = isExpanded;
+                        }
+                      });
+                    },
+                    children: [
+                      ExpansionPanel(
+                        canTapOnHeader: true,
+                        isExpanded: isListPendentExpanded,
+                        headerBuilder: (context, isExpanded) {
+                          return const ListTile(
+                            leading: Icon(Icons.checklist),
+                            title: Text('Itens que faltam'),
                           );
                         },
+                        body: ListView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                          itemCount: listItensPendent.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return Dismissible(
+                              key: UniqueKey(),
+                              confirmDismiss: (direction) async {
+                                if (direction == DismissDirection.startToEnd) {
+                                  return true; // ou implemente uma confirmação específica se necessário
+                                } else if (direction ==
+                                    DismissDirection.endToStart) {
+                                  bool? confirm =
+                                      await showDeleteItemConfirmationDialog(
+                                          context);
+                                  setState(() {
+                                    if (confirm!) {
+                                      excluirItem(widget.listaMercado,
+                                          listItensPendent[index]);
+                                    }
+                                  });
+                                  return false;
+                                }
+                                return false;
+                              },
+                              onDismissed: (direction) async {
+                                if (direction == DismissDirection.startToEnd) {
+                                  listItensPendent[index].pendente = false;
+                                  moveItemToConfirmedList(
+                                      listItensPendent[index]);
+                                } else if (direction ==
+                                    DismissDirection.endToStart) {}
+                              },
+                              // demais propriedades do Dismissible
+                              background: Container(
+                                color: Colors.green,
+                                alignment: Alignment.centerLeft,
+                                padding: const EdgeInsets.only(left: 10),
+                                child: const Icon(
+                                  Icons.check,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              secondaryBackground: Container(
+                                color: Colors.red,
+                                alignment: Alignment.centerRight,
+                                padding: const EdgeInsets.only(right: 10),
+                                child: const Icon(
+                                  Icons.delete,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              child: ItemListPendent(
+                                item: listItensPendent[index],
+                                moveCallback: moveItemToConfirmedList,
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                      ExpansionPanel(
+                        canTapOnHeader: true,
+                        isExpanded: isListConfirmedExpanded,
+                        headerBuilder: (context, isExpanded) {
+                          return const ListTile(
+                            leading: Icon(Icons.playlist_add_check),
+                            title: Text('Itens adicionados ao carrinho'),
+                          );
+                        },
+                        body: ListView.builder(
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                          itemCount: listItensConfirmed.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return Dismissible(
+                              key: UniqueKey(),
+                              direction: DismissDirection.horizontal,
+                              onDismissed: (direction) async {
+                                if (direction == DismissDirection.startToEnd) {
+                                  listItensConfirmed[index].pendente = true;
+                                  moveItemToPendentList(
+                                      listItensConfirmed[index]);
+                                } else if (direction ==
+                                    DismissDirection.endToStart) {
+                                  bool? confirm =
+                                      await showDeleteItemConfirmationDialog(
+                                          context);
+                                  setState(() {
+                                    if (confirm!) {
+                                      excluirItem(widget.listaMercado,
+                                          listItensConfirmed[index]);
+                                    }
+                                  });
+                                }
+                              },
+                              background: Container(
+                                color: Colors.blueAccent,
+                                alignment: Alignment.centerLeft,
+                                padding: const EdgeInsets.only(left: 10),
+                                child: const Icon(
+                                  Icons.unarchive_outlined,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              secondaryBackground: Container(
+                                color: Colors.red,
+                                alignment: Alignment.centerRight,
+                                padding: const EdgeInsets.only(right: 10),
+                                child: const Icon(
+                                  Icons.delete,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              child: ItemListConfirmed(
+                                item: listItensConfirmed[index],
+                                moveCallback: moveItemToPendentList,
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            ///////////////////////////////////////////////////// verificar mudança de inclusão dentro de proprio widget
+            //////////////////////////////////////////////////////////////////////////////////
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Container(
+                padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
+                decoration: BoxDecoration(
+                  color: isContainerPressed
+                      ? Colors.deepPurple.withOpacity(0.5)
+                      : Colors.deepPurple,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.5),
+                      spreadRadius: 5,
+                      blurRadius: 7,
+                      offset: const Offset(0, 3),
+                    ),
+                  ],
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    GestureDetector(
+                      onTap: finalizarListCompras,
+                      child: Row(
+                        children: [
+                          const Icon(
+                            Icons.check,
+                            color: Colors.white,
+                          ),
+                          const SizedBox(width: 5),
+                          const Padding(
+                            padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
+                            child: Text(
+                              'Finalizar: ',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(0, 20, 0, 20),
+                            child: Text(
+                              'R\$ $totalValue',
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    ExpansionPanel(
-                      canTapOnHeader: true,
-                      isExpanded: isListConfirmedExpanded,
-                      headerBuilder: (context, isExpanded) {
-                        return const ListTile(
-                          leading: Icon(Icons.playlist_add_check),
-                          title: Text('Itens adicionados ao carrinho'),
-                        );
-                      },
-                      body: ListView.builder(
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                        padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                        itemCount: listItensConfirmed.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return Dismissible(
-                            key: UniqueKey(),
-                            direction: DismissDirection.horizontal,
-                            onDismissed: (direction) async {
-                              if (direction == DismissDirection.startToEnd) {
-                                listItensConfirmed[index].pendente = true;
-                                moveItemToPendentList(
-                                    listItensConfirmed[index]);
-                              } else if (direction ==
-                                  DismissDirection.endToStart) {
-                                bool? confirm =
-                                    await showDeleteItemConfirmationDialog(
-                                        context);
-                                setState(() {
-                                  if (confirm!) {
-                                    excluirItem(widget.listaMercado,
-                                        listItensConfirmed[index]);
-                                  }
-                                });
-                              }
-                            },
-                            background: Container(
-                              color: Colors.blueAccent,
-                              alignment: Alignment.centerLeft,
-                              padding: const EdgeInsets.only(left: 10),
-                              child: const Icon(
-                                Icons.unarchive_outlined,
+                    GestureDetector(
+                      onTap: adicionarNovoItem,
+                      child: const Row(
+                        children: [
+                          Icon(
+                            Icons.add,
+                            color: Colors.white,
+                          ),
+                          SizedBox(width: 5),
+                          Padding(
+                            padding: EdgeInsets.fromLTRB(0, 0, 5, 0),
+                            child: Text(
+                              'Adicionar Item',
+                              style: TextStyle(
                                 color: Colors.white,
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
-                            secondaryBackground: Container(
-                              color: Colors.red,
-                              alignment: Alignment.centerRight,
-                              padding: const EdgeInsets.only(right: 10),
-                              child: const Icon(
-                                Icons.delete,
-                                color: Colors.white,
-                              ),
-                            ),
-                            child: ItemListConfirmed(
-                              item: listItensConfirmed[index],
-                              moveCallback: moveItemToPendentList,
-                            ),
-                          );
-                        },
+                          ),
+                        ],
                       ),
                     ),
                   ],
                 ),
-              ],
-            ),
-          ),
-          ///////////////////////////////////////////////////// verificar mudança de inclusão dentro de proprio widget
-          //////////////////////////////////////////////////////////////////////////////////
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Container(
-              padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
-              decoration: BoxDecoration(
-                color: isContainerPressed
-                    ? Colors.deepPurple.withOpacity(0.5)
-                    : Colors.deepPurple,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.5),
-                    spreadRadius: 5,
-                    blurRadius: 7,
-                    offset: const Offset(0, 3),
-                  ),
-                ],
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  GestureDetector(
-                    onTap: finalizarListCompras,
-                    child: Row(
-                      children: [
-                        const Icon(
-                          Icons.check,
-                          color: Colors.white,
-                        ),
-                        const SizedBox(width: 5),
-                        const Padding(
-                          padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
-                          child: Text(
-                            'Finalizar: ',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w400,
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(0, 20, 0, 20),
-                          child: Text(
-                            'R\$ $totalValue',
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: adicionarNovoItem,
-                    child: const Row(
-                      children: [
-                        Icon(
-                          Icons.add,
-                          color: Colors.white,
-                        ),
-                        SizedBox(width: 5),
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(0, 0, 5, 0),
-                          child: Text(
-                            'Adicionar Item',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -457,9 +482,6 @@ class _ActiveListState extends State<ScreenActiveList>
   }
 
   void salvarListaTemp() async {
-    print(
-        '***************** teste de chamada salvar lista **********************************');
-
     //void finalizarListCompras() async {
     String? nomeMercado = 'Lista salva automática.';
 

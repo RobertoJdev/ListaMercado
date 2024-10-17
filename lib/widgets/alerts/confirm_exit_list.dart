@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lista_mercado/screens/screen_active_list.dart';
+import 'package:lista_mercado/screens/screen_listas_mercado.dart';
 
 import '../botton/custom_buttons .dart';
 
@@ -16,39 +17,49 @@ class ConfirmExitDialog extends StatelessWidget {
       backgroundColor: Colors.white,
       alignment: Alignment.center,
       title: const Text(
-        'Confirmar saída',
+        'Lista não finalizada',
         textAlign: TextAlign.center,
         style: TextStyle(fontWeight: FontWeight.bold),
       ),
       content: const Text(
-        'Tem certeza de que deseja sair?',
+        'Deseja salvar a lista não finalizada?',
         textAlign: TextAlign.center,
       ),
       actionsAlignment: MainAxisAlignment.center,
       actions: [
-        TextButton(
+        ElevatedButton(
           onPressed: () {
-            Navigator.of(context).pop();
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => const ScreenListasMercado()),
+              (route) => false,
+            );
           },
-          child: const Text(
-            '    Cancelar    ',
-            style: TextStyle(color: Colors.red),
+          style: ButtonStyle(
+              backgroundColor:
+                  MaterialStateProperty.all(Colors.deepPurple[100]),
+              foregroundColor: MaterialStateProperty.all(Colors.deepPurple)),
+          child: const Padding(
+            padding: EdgeInsets.all(10.0),
+            child: Text('  Não  '),
           ),
         ),
-        TextButton(
+        ElevatedButton(
           onPressed: () {
             if (activeListKey.currentState != null) {
               activeListKey.currentState!.salvarListaTemp();
             } else {
               print('activeListKey.currentState is null');
             }
-            // activeListKey.currentState?.salvarListaTemp();
-            //Navigator.of(context).pop();
-            //Navigator.of(context).pop();            
           },
-          child: const Text(
-            'Salvar e Sair',
-            style: TextStyle(color: Colors.deepPurple),
+          style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.all(Colors.deepPurple),
+            foregroundColor: MaterialStateProperty.all(Colors.white),
+          ),
+          child: const Padding(
+            padding: EdgeInsets.all(10.0),
+            child: Text('Salvar'),
           ),
         ),
       ],
