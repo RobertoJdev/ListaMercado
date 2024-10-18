@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lista_mercado/screens/screen_active_list.dart';
 import 'package:lista_mercado/screens/screen_listas_mercado.dart';
 
-import '../botton/custom_buttons .dart';
+import '../button/custom_buttons.dart';
 
 class ConfirmExitDialog extends StatelessWidget {
   //final VoidCallback onSaveAndExit;

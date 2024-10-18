@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:lista_mercado/my_theme.dart';
 import 'dart:async';
 
-import 'package:lista_mercado/widgets/botton/custom_buttons%20.dart';
+import 'package:lista_mercado/widgets/button/custom_buttons.dart';
 
 Future<String?> confirmMercadoScreen({BuildContext? context}) async {
   TextEditingController _textEditingController = TextEditingController();

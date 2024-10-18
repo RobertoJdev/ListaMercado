@@ -198,18 +198,4 @@ class CustomButtons {
       ),
     );
   }
-
-  static Widget buttomNao2() {
-    return ElevatedButton(
-      onPressed: () {},
-      style: ButtonStyle(
-        backgroundColor: MaterialStateProperty.all(Colors.deepPurple),
-        foregroundColor: MaterialStateProperty.all(Colors.white),
-      ),
-      child: const Padding(
-        padding: EdgeInsets.all(10.0),
-        child: Text(' Não '),
-      ),
-    );
-  }
 }

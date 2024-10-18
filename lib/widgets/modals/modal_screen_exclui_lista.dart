@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:lista_mercado/my_theme.dart';
-import 'package:lista_mercado/widgets/botton/custom_buttons%20.dart';
+import 'package:lista_mercado/widgets/button/custom_buttons.dart';
 
 Future<bool?> showDeleteConfirmationDialog(BuildContext context) async {
   Completer<bool?> completer = Completer();
