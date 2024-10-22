@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:lista_mercado/screens/email_screen.dart';
 import 'package:lista_mercado/util/app_info.dart';
 import 'package:lista_mercado/widgets/alerts/donation_alert.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class Menu extends StatefulWidget {
-  const Menu({super.key});
+  final String userEmail; // Adicionando uma variável para o e-mail do usuário
+  const Menu({Key? key, required this.userEmail}) : super(key: key);
 
   @override
   State<Menu> createState() => _MenuState();
@@ -59,6 +61,31 @@ class _MenuState extends State<Menu> {
                   ),
                 ),
               ],
+            ),
+          ),
+          // Adicionando o ListTile para exibir o e-mail do usuário
+          Padding(
+            padding: const EdgeInsets.only(top: 10.0),
+            child: ListTile(
+              leading: const Icon(
+                Icons.email,
+                color: Colors.blue,
+              ),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        EmailScreen(), // Navega para a tela de e-mail
+                  ),
+                );
+              },
+              title: Text(
+                '${widget.userEmail}',
+                style: TextStyle(
+                  fontWeight: FontWeight.normal,
+                ),
+              ),
             ),
           ),
           ListTile(

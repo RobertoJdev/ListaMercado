@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lista_mercado/screens/email_screen.dart';
 import 'package:lista_mercado/widgets/decoration_list_bar.dart';
 import 'package:lista_mercado/widgets/items/item_list_compra.dart';
 import 'package:lista_mercado/widgets/items/item_list_compra_nao_finalizada.dart';
@@ -12,6 +13,7 @@ import 'package:lista_mercado/widgets/modals/modal_screen_exclui_lista.dart';
 import 'package:lista_mercado/widgets/modals/modal_screen_reabrir_lista.dart';
 import 'package:lista_mercado/screens/screen_active_list.dart';
 import 'package:lista_mercado/widgets/custom_app_bar.dart.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ScreenListasMercado extends StatefulWidget {
   const ScreenListasMercado({Key? key}) : super(key: key);
@@ -25,17 +27,46 @@ class _listasMercadoState extends State<ScreenListasMercado> {
   ListaMercado? listaNaoFinaliza;
   final MarketDB db = MarketDB();
 
+  String email = ''; // Variável para armazenar o email
+
   @override
   void initState() {
     super.initState();
+    _checkEmail(); // Verifica o e-mail quando a tela é iniciada
     _initializeDB();
     db.getUnfinishedLists();
+    _loadEmail(); // Chamar o método para carregar o e-mail
+  }
+
+  // Função para verificar se o e-mail do usuário já está salvo
+  Future<void> _checkEmail() async {
+    final prefs = await SharedPreferences.getInstance();
+    final email = prefs.getString('user_email');
+
+    if (email == null || email.isEmpty) {
+      // Se o e-mail não estiver salvo, redireciona para a tela de inserir e-mail
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => EmailScreen()),
+      );
+    } else {
+      // Caso contrário, continue com a lógica da tela
+      // Você pode carregar a lista de mercado aqui ou outra lógica
+    }
+  }
+
+  Future<void> _loadEmail() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      email = prefs.getString('user_email') ??
+          ''; // Lê o e-mail das SharedPreferences
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: const Menu(),
+      drawer: Menu(userEmail: email), // Passa o e-mail para o Menu
       appBar: const CustomAppBar(screenReturn: false),
       body: Column(
         children: [
