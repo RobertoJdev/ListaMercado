@@ -29,6 +29,7 @@ class _EmailScreenState extends State<EmailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final bool isKeyboardOpen = MediaQuery.of(context).viewInsets.bottom > 0;
     return Scaffold(
       /*
       appBar: AppBar(
@@ -37,69 +38,92 @@ class _EmailScreenState extends State<EmailScreen> {
             : const Text('Modifique seu E-mail'),
       ),
       */
-      body: Container(
-        decoration: const BoxDecoration(
-            gradient: LinearGradient(
-          colors: [
-            Colors.deepPurple, // Cor inicial
-            Colors.white, // Cor final
-          ],
-          begin: Alignment.topLeft, // Ponto de início do gradiente
-          end: Alignment.bottomRight, // Ponto de término do gradiente
-        )),
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(15),
-                child: Image.asset('assets/images/compartilhar.png',
-                    width: 200, height: 200),
-              ),
-              const Padding(
-                padding: EdgeInsets.all(15.0),
-                child: Text(
-                  'Compartilhe suas listas de mercado com outros usuários.\n Por favor, insira seu e-mail:',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 18, color: Colors.white),
-                ),
-              ),
-              const SizedBox(height: 20),
-              Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: Form(
-                  key: _formKey,
-                  child: TextFormField(
-                    controller: _emailController,
-                    decoration: const InputDecoration(
-                      labelText: 'E-mail: ',
-                      border: OutlineInputBorder(),
-                      prefixIcon: Icon(Icons.email),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Por favor, insira um e-mail';
-                      }
-                      final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+');
-                      if (!emailRegex.hasMatch(value)) {
-                        return 'Por favor, insira um e-mail válido';
-                      }
-                      return null;
-                    },
+      resizeToAvoidBottomInset: true,
+      body: SafeArea(
+        child: Container(
+          decoration: const BoxDecoration(
+              gradient: LinearGradient(
+            colors: [
+              Colors.deepPurple, // Cor inicial
+              Colors.white, // Cor final
+            ],
+            begin: Alignment.topLeft, // Ponto de início do gradiente
+            end: Alignment.center, // Ponto de término do gradiente
+          )),
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(16, 20, 16, 20),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+                  child: Image.asset(
+                    'assets/images/compartilhar.png',
+                    width: isKeyboardOpen
+                        ? 150
+                        : 200, // Reduz o tamanho se o teclado estiver aberto
+                    height: isKeyboardOpen
+                        ? 150
+                        : 200, // Reduz o tamanho se o teclado estiver aberto
                   ),
                 ),
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(Colors.deepPurple),
-                  foregroundColor: MaterialStateProperty.all(Colors.white),
+                const Padding(
+                  padding: EdgeInsets.fromLTRB(15, 10, 15, 10),
+                  child: Text(
+                    'Compartilhe suas listas de mercado com outros usuários.\n Por favor, insira seu e-mail:',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 18, color: Colors.deepPurple),
+                  ),
                 ),
-                onPressed: _saveEmail,
-                child: const Text('Salvar E-mail'),
-              ),
-            ],
+                const SizedBox(height: 20),
+                Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Form(
+                    key: _formKey,
+                    child: TextFormField(
+                      textAlign: TextAlign.center,
+                      controller: _emailController,
+                      decoration: const InputDecoration(
+                        labelText: 'E-mail:',
+                        border: OutlineInputBorder(),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Colors.deepPurple, width: 2.0),
+                        ),
+                        //prefixIcon: Icon(Icons.email),
+                        //suffixIcon: Icon(Icons.email),
+                        suffixIconColor: Colors.deepPurple,
+                        prefixIconColor: Colors.deepPurple,
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Por favor, insira um e-mail';
+                        }
+                        final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+');
+                        if (!emailRegex.hasMatch(value)) {
+                          return 'Por favor, insira um e-mail válido';
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                ElevatedButton(
+                  style: ButtonStyle(
+                    backgroundColor:
+                        MaterialStateProperty.all(Colors.deepPurple),
+                    foregroundColor: MaterialStateProperty.all(Colors.white),
+                  ),
+                  onPressed: _saveEmail,
+                  child: const Padding(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 15.0, vertical: 10),
+                    child: Text('Salvar E-mail'),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

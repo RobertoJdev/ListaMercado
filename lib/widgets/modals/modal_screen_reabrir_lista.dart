@@ -13,7 +13,17 @@ Future<bool?> reabrirListaScreen({BuildContext? context}) async {
         builder: (BuildContext context, StateSetter setState) {
           return SingleChildScrollView(
             child: Container(
-              color: MyTheme.modalColorBackground,
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    Colors.white,
+                    Colors.deepPurple
+                  ], // Defina as cores do gradiente aqui
+                  begin: Alignment.center, // Ponto inicial do gradiente
+                  end: Alignment.bottomCenter, // Ponto final do gradiente
+                ),
+              ),
+              //color: MyTheme.modalColorBackground,
               padding: EdgeInsets.only(
                 bottom: MediaQuery.of(context).viewInsets.bottom,
               ),

@@ -44,7 +44,7 @@ class ItemListCompras extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: MyTheme.myCustomEdgeInsetsItemSpaceInternRight,
+            padding: MyTheme.myCustomEdgeInsetsItemSpaceInternRight2,
             child: Text(
               formatCurrency(listaMercado.custoTotal),
               style: MyTheme.myTextStylePrice,

@@ -16,50 +16,62 @@ class ConfirmExitDialog extends StatelessWidget {
     return AlertDialog(
       backgroundColor: Colors.white,
       alignment: Alignment.center,
-      title: const Text(
-        'Lista não finalizada',
-        textAlign: TextAlign.center,
-        style: TextStyle(fontWeight: FontWeight.bold),
+      title: const Padding(
+        padding: EdgeInsets.all(10.0),
+        child: Text(
+          'Lista não finalizada',
+          textAlign: TextAlign.center,
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
       ),
-      content: const Text(
-        'Deseja salvar a lista não finalizada?',
-        textAlign: TextAlign.center,
+      content: const Padding(
+        padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 0.0),
+        child: Text(
+          'Deseja salvar a lista não finalizada?',
+          textAlign: TextAlign.center,
+        ),
       ),
       actionsAlignment: MainAxisAlignment.center,
       actions: [
-        ElevatedButton(
-          onPressed: () {
-            Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => const ScreenListasMercado()),
-              (route) => false,
-            );
-          },
-          style: ButtonStyle(
-              backgroundColor:
-                  MaterialStateProperty.all(Colors.deepPurple[100]),
-              foregroundColor: MaterialStateProperty.all(Colors.deepPurple)),
-          child: const Padding(
-            padding: EdgeInsets.all(10.0),
-            child: Text('  Não  '),
+        Padding(
+          padding: const EdgeInsets.only(bottom: 10),
+          child: ElevatedButton(
+            onPressed: () {
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const ScreenListasMercado()),
+                (route) => false,
+              );
+            },
+            style: ButtonStyle(
+                backgroundColor:
+                    MaterialStateProperty.all(Colors.deepPurple[100]),
+                foregroundColor: MaterialStateProperty.all(Colors.deepPurple)),
+            child: const Padding(
+              padding: EdgeInsets.all(10.0),
+              child: Text('  Não  '),
+            ),
           ),
         ),
-        ElevatedButton(
-          onPressed: () {
-            if (activeListKey.currentState != null) {
-              activeListKey.currentState!.salvarListaTemp();
-            } else {
-              print('activeListKey.currentState is null');
-            }
-          },
-          style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all(Colors.deepPurple),
-            foregroundColor: MaterialStateProperty.all(Colors.white),
-          ),
-          child: const Padding(
-            padding: EdgeInsets.all(10.0),
-            child: Text('Salvar'),
+        Padding(
+          padding: const EdgeInsets.only(bottom: 10),
+          child: ElevatedButton(
+            onPressed: () {
+              if (activeListKey.currentState != null) {
+                activeListKey.currentState!.salvarListaTemp();
+              } else {
+                print('activeListKey.currentState is null');
+              }
+            },
+            style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all(Colors.deepPurple),
+              foregroundColor: MaterialStateProperty.all(Colors.white),
+            ),
+            child: const Padding(
+              padding: EdgeInsets.all(10.0),
+              child: Text('Salvar'),
+            ),
           ),
         ),
       ],
