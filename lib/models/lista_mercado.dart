@@ -1,6 +1,7 @@
 import 'package:lista_mercado/models/produto.dart';
+import 'package:lista_mercado/util/generate_item_list_mixin.dart';
 
-class ListaMercado {
+class ListaMercado with GenerateItemListMixin {
   late int? id;
   late int userId;
   late double custoTotal;
@@ -19,7 +20,7 @@ class ListaMercado {
     required this.itens,
   });
 
-  static generateListaMercadoExemplo(List<Produto> produtos) {
+/*   static generateListaMercadoExemplo(List<Produto> produtos) {
     ListaMercado listaMercadoTemp = ListaMercado(
       userId: 1,
       custoTotal: 0.0,
@@ -29,22 +30,5 @@ class ListaMercado {
       itens: produtos,
     );
     return listaMercadoTemp;
-  }
-/*
-  static generateMultiListasMercadoExemplo(List<Produto> produtos) {
-    List<ListaMercado> multiListaMercadoTemp = [];
-
-    for (var i = 0; i < 5; i++) {
-      multiListaMercadoTemp.add(ListaMercado(
-        userId: 1,
-        custoTotal: 100.0,
-        data: '01-01-23',
-        supermercado: 'Supermarket Exemplo',
-        finalizada: false,
-        itens: produtos,
-      ));
-    }
-    return multiListaMercadoTemp;
-  }
-  */
+  } */
 }

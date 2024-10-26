@@ -41,7 +41,7 @@ class Produto {
     _id = const Uuid().v4();
   }
 
-  static generateProdutoExemplo() {
+/*   static generateProdutoExemplo() {
     Produto produtoExemplo = Produto(
       descricao: 'Arroz',
       barras: '0123456789',
@@ -52,8 +52,8 @@ class Produto {
       historicoPreco: [7, 9, 3],
     );
     return produtoExemplo;
-  }
-
+  } */
+/* 
   static generateMultiProdutosExemplo() {
     List<Produto> listExemploProdutos = [];
     
@@ -93,7 +93,7 @@ class Produto {
 
     return listExemploProdutos;
   }
-
+ */
   static List<Produto> ordenarItens(List<Produto> listaProdutos) {
     return listaProdutos
       ..sort((a, b) {

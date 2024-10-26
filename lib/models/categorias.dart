@@ -88,10 +88,7 @@ class Categorias {
   }
 
   static String defineCategoriaAuto(String nomeProduto) {
-    //print(nomeProduto);
-    //print('********************************************************');
     nomeProduto = nomeProduto.trim();
-    //print(nomeProduto);
 
     List<String> carnes = [
       'alcatra',
@@ -928,7 +925,7 @@ class Categorias {
       'biscoito de arroz',
       'biscoito doce',
       'biscoito de doce',
-      'biscoito de maizena', 'biscoito de maisena',// Com e sem acento
+      'biscoito de maizena', 'biscoito de maisena', // Com e sem acento
       'biscoito maizena',
       'biscoito de polvilho',
       'biscoito de queijo',

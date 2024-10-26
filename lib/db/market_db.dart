@@ -1,9 +1,11 @@
+import 'package:lista_mercado/util/generate_item_list_mixin.dart';
+
 import '/models/lista_mercado.dart';
 import '/models/produto.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
-class MarketDB {
+class MarketDB with GenerateItemListMixin {
   late Database _database;
 
   static void populateDB(ListaMercado listaMercado) {
@@ -98,64 +100,12 @@ class MarketDB {
   }
 
   Future<void> _insertTestMarketData(Database db) async {
-    List<Produto> itensMercado = Produto.generateMultiProdutosExemplo();
-    ListaMercado lista = ListaMercado.generateListaMercadoExemplo(itensMercado);
-    final userId = 1;
-
-    for (var element in lista.itens) {
-      lista.custoTotal += element.precoAtual;
-    }
-
-    // Inserindo uma lista de mercado de teste associada ao usuário
-    final listaMercadoId = await db.insert(
-      'ListaMercado',
-      {
-        'userId': userId,
-        'custoTotal': lista.custoTotal,
-        'data': lista.data,
-        'supermercado': lista.supermercado,
-        'finalizada': 1,
-      },
-    );
-
-    for (var element in itensMercado) {
-      // Inserindo um produto de teste associado à lista de mercado
-      final produtoId = await db.insert(
-        'Produto',
-        {
-          'descricao': element.descricao,
-          'barras': element.barras,
-          'quantidade': element.quantidade,
-          'pendente': element.pendente ? 1 : 0, // Convertendo para inteiro
-          'precoAtual': element.precoAtual,
-          'categoria': element.categoria,
-        },
-      );
-
-      // Associando o produto à lista de mercado
-      await db.insert(
-        'ListaMercadoProduto',
-        {
-          'listaMercadoId': listaMercadoId,
-          'produtoId': produtoId,
-        },
-      );
-
-      // Inserindo o histórico de preços para cada produto
-      // Aqui você pode adicionar uma lógica para definir o histórico
-      // de preços, assumindo que você tem algum histórico padrão.
-      // Neste exemplo, estamos apenas inserindo o preço atual no histórico.
-      if (element.precoAtual != null && element.precoAtual > 0) {
-        await db.insert(
-          'HistoricoPreco',
-          {
-            'produtoId': produtoId,
-            'preco': element.precoAtual,
-            'data': DateTime.now().toIso8601String(), // Armazena a data atual
-          },
-        );
-      }
-    }
+    //List<Produto> itensMercado = GenerateItemListMixin.generateMultiProdutosExemplo();
+    //List<Produto> itensMercado = Produto.generateMultiProdutosExemplo();
+    ListaMercado lista = GenerateItemListMixin.generateListaMercadoExemplo();
+    //ListaMercado lista = ListaMercado.generateListaMercadoExemplo(itensMercado);
+    //const userId = 1;
+    finalizarListaMercado(lista);
   }
 
   Future<void> insertItem(ListaMercado listaMercado, Produto produto) async {
@@ -198,8 +148,6 @@ class MarketDB {
   }
 
   Future<int> novaListaMercado(ListaMercado listaMercado) async {
-    print(
-        "============================================= CHAMADA NOVA LISTA MERCADO ==============================================================================");
     await initDB();
     await openDB();
 
@@ -465,8 +413,6 @@ class MarketDB {
   }
 
   Future<void> updateListaMercado(ListaMercado listaMercado) async {
-    print(
-        "%%%%%%%%%%%%%%%%%%%%%% teste de updade lista mercado %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
     await openDB();
     await _database.transaction((txn) async {
       // Atualiza os dados da ListaMercado
@@ -508,11 +454,11 @@ class MarketDB {
         // Insere o preço atual no histórico de preços
         if (produto.precoAtual != null && produto.precoAtual > 0) {
           await txn.insert(
-            'HistoricoPreco', // Supondo que você tenha uma tabela de histórico de preços
+            'HistoricoPreco',
             {
               'produtoId': produtoId,
               'preco': produto.precoAtual,
-              'data': DateTime.now().toIso8601String(), // Armazena a data atual
+              'data': DateTime.now().toIso8601String(),
             },
           );
         }
@@ -548,7 +494,8 @@ class MarketDB {
     );
   }
 
-  Future<void> deleteProdutoFromLista(ListaMercado listaMercado, Produto produto) async {
+  Future<void> deleteProdutoFromLista(
+      ListaMercado listaMercado, Produto produto) async {
     await openDB();
 
     // Exclui a associação do produto com a lista de mercado
@@ -649,7 +596,7 @@ class MarketDB {
       'HistoricoPreco',
       where: 'produtoId = ?',
       whereArgs: [produtoId],
-      orderBy: 'data ASC', // Ordena os resultados pela data de inserção
+      orderBy: 'data ASC',
     );
 
     if (historico.isNotEmpty) {
@@ -690,7 +637,7 @@ class MarketDB {
 
   Future<void> printAllItems() async {
     print(
-        '********************------------------Teste chamada printAllItens------------------********************');
+        '********************------------------ PrintAllItens------------------********************');
     final items = await getAllItems();
     print(items);
 
