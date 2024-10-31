@@ -128,8 +128,13 @@ class _ActiveListState extends State<ScreenActiveList>
                         isExpanded: isListPendentExpanded,
                         headerBuilder: (context, isExpanded) {
                           return const ListTile(
-                            leading: Icon(Icons.checklist),
-                            title: Text('Itens que faltam'),
+                            leading: Icon(Icons.checklist,
+                                color: Color.fromARGB(255, 202, 13, 0)),
+                            title: Text(
+                              'Itens que faltam',
+                              style: TextStyle(
+                                  color: Color.fromARGB(255, 202, 13, 0)),
+                            ),
                           );
                         },
                         body: ListView.builder(
@@ -198,8 +203,16 @@ class _ActiveListState extends State<ScreenActiveList>
                         isExpanded: isListConfirmedExpanded,
                         headerBuilder: (context, isExpanded) {
                           return const ListTile(
-                            leading: Icon(Icons.playlist_add_check),
-                            title: Text('Itens adicionados ao carrinho'),
+                            leading: Icon(
+                              Icons.playlist_add_check,
+                              color: Color.fromARGB(255, 0, 141, 5),
+                            ),
+                            title: Text(
+                              'Itens adicionados ao carrinho',
+                              style: TextStyle(
+                                  //fontWeight: FontWeight.bold,
+                                  color: Color.fromARGB(255, 0, 141, 5)),
+                            ),
                           );
                         },
                         body: ListView.builder(
@@ -267,12 +280,13 @@ class _ActiveListState extends State<ScreenActiveList>
               child: Container(
                 padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
                 decoration: BoxDecoration(
-                  color: isContainerPressed
-                      ? Colors.deepPurple.withOpacity(0.5)
-                      : Colors.deepPurple,
+                  gradient: const LinearGradient(
+                      colors: [Colors.deepPurpleAccent, Colors.deepPurple],
+                      begin: Alignment.topCenter,
+                      end: Alignment.center),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
+                      color: Colors.deepPurple.withOpacity(0.5),
                       spreadRadius: 5,
                       blurRadius: 7,
                       offset: const Offset(0, 3),

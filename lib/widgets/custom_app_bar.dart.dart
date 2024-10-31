@@ -20,91 +20,63 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   }) : super(key: key);
 
   @override
-  Size get preferredSize => Size.fromHeight(kToolbarHeight);
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 
   get context => null;
-
   @override
   Widget build(BuildContext context) {
-    return AppBar(
-      foregroundColor: Colors.white,
-      backgroundColor: Colors.deepPurple,
-      centerTitle: true,
-      leading: screenReturn
-          ? IconButton(
-              icon: const Icon(Icons.arrow_back),
-              onPressed: () {
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return ConfirmExitDialog(
-                    );
-                  },
-                );
-              },
-            )
-          : null,
-      title: title != null
-          ? Text(
-              title!,
-              textAlign: TextAlign.center,
-              style: const TextStyle(color: Colors.white),
-            )
-          : Text(
-              defaultTitle,
-              textAlign: TextAlign.center,
-              style: const TextStyle(color: Colors.white),
-            ),
-      actions: [
-        IconButton(
-          onPressed: () {
-            calculator(context);
-          },
-          icon: const Icon(
-            Icons.calculate_outlined,
-          ),
+    return Container(
+      //height: kToolbarHeight, // Definindo a altura da AppBar
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            Colors.deepPurple,
+            Colors.deepPurpleAccent,
+          ],
+          begin: Alignment.center,
+          end: Alignment.bottomCenter,
         ),
-      ],
-
-/*
-        GestureDetector(
-          onTap: () {
-            calculator(context);
-          },
-          child: const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 15),
-            child: Icon(
+      ),
+      child: AppBar(
+        backgroundColor: Colors.transparent,
+        foregroundColor: Colors.white,
+        centerTitle: true,
+        leading: screenReturn
+            ? IconButton(
+                icon: const Icon(Icons.arrow_back),
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return const ConfirmExitDialog();
+                    },
+                  );
+                },
+              )
+            : null,
+        title: title != null
+            ? Text(
+                title!,
+                textAlign: TextAlign.center,
+                style: const TextStyle(color: Colors.white),
+              )
+            : Text(
+                defaultTitle,
+                textAlign: TextAlign.center,
+                style: const TextStyle(color: Colors.white),
+              ),
+        actions: [
+          IconButton(
+            padding: const EdgeInsets.only(right: 10),
+            onPressed: () {
+              calculator(context);
+            },
+            icon: const Icon(
               Icons.calculate_outlined,
             ),
           ),
-        )
-*/
-      /*actions: [
-          const Icon(
-            Icons.bar_chart_outlined,
-            color: Colors.grey,
-          ),
-          GestureDetector(
-            child: const Icon(
-              Icons.share,
-              color: Colors.grey,
-            ),
-            onTap: () {
-              //PopUpItemConfirm.showAlertDialog(context);
-            },
-          ),
-          const Padding(padding: EdgeInsets.only(right: 10))
-        ],*/
+        ],
+      ),
     );
   }
-
-/*
-  static Future<void> _openCalculator() async {
-    try {
-      await platform.invokeMethod('open');
-    } on PlatformException catch (e) {
-      print("Erro ao abrir a calculadora: '${e.message}'.");
-    }
-  }
-  */
 }

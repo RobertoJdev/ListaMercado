@@ -79,7 +79,8 @@ class _listasMercadoState extends State<ScreenListasMercado> {
                   const Padding(
                     padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
                     child: Text(
-                      'Listas de compras finalizadas',
+                      'Listas de compras',
+                      style: TextStyle(color: Colors.deepPurple),
                     ),
                   ),
                   Expanded(
@@ -133,25 +134,48 @@ class _listasMercadoState extends State<ScreenListasMercado> {
                   Container(
                     alignment: Alignment.bottomRight,
                     padding: const EdgeInsets.all(10),
-                    child: ElevatedButton(
-                      onPressed: () {
-                        criarNovaListaMercado(context);
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.deepPurple,
-                        elevation: 5,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15.0),
+                    child: Container(
+                      decoration: const BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(20)),
+                        gradient: LinearGradient(
+                          colors: [
+                            Colors.deepPurpleAccent,
+                            Colors.deepPurple, // Cor final do degradê
+                          ],
+                          begin: Alignment.center, // Início do gradiente
+                          end: Alignment.bottomCenter, // Fim do gradiente
                         ),
                       ),
-                      child: const Padding(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: 10.0, vertical: 12),
-                        child: Text(
-                          'Nova lista',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          criarNovaListaMercado(context);
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.transparent,
+                          elevation: 5,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15.0),
+                          ),
+                        ),
+                        child: const Padding(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 5.0, vertical: 12),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Icon(
+                                Icons.add,
+                                color: Colors.white,
+                              ),
+                              Text(
+                                'Criar nova lista',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ),

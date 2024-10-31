@@ -43,77 +43,88 @@ class ItemListPendent extends StatelessWidget {
       child: Container(
         margin: MyTheme.myCustomEdgeInsetsSpaceExtern,
         color: Categorias.obterCorPorDescricao(item.categoria),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            RotatedBox(
-              quarterTurns: 3,
-              child: Container(
-                alignment: Alignment.center,
-                padding:
-                    MyTheme.myCustomEdgeInsetsItemSpaceInternCategoryProduct,
-                color:
-                    Categorias.obterCorSecundariaPorDescricao(item.categoria),
-                child: Center(
-                  // Alinhe o texto ao centro
-                  child: Text(Categorias.abreviarCategoria(item.categoria),
-                      style: MyTheme.myTextStyleCategoryProduct),
-                ),
-              ),
+        child: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                Colors.white,
+                Color.fromARGB(0, 255, 255, 255),
+              ],
+              begin: Alignment.centerLeft, // Início do gradiente
+              end: Alignment.center, // Fim do gradiente
             ),
-            Container(
-              color: Colors.amber,
-              child: Padding(
-                padding: MyTheme.myCustomEdgeInsetsItemSpaceIntern,
-                child: Text(
-                  FortmatValue.formatDouble(item.quantidade),
-                  style: MyTheme.myTextStyleDescriptionItem,
-                ),
-              ),
-            ),
-            Expanded(
-              child: Padding(
-                padding: MyTheme.myCustomEdgeInsetsItemSpaceIntern,
-                child: Text(
-                  item.descricao,
-                  style: MyTheme.myTextStyleDescriptionItem,
-                ),
-              ),
-            ),
-            Padding(
-              padding: MyTheme.myCustomEdgeInsetsItemPrice,
-              child: Column(
-                children: [
-                  Text(
-                    "R\$ ${item.historicoPreco[item.historicoPreco.length - 1].toString()}",
-                    style: precoController.text ==
-                            FortmatValue.formatDouble(item.historicoPreco[
-                                    item.historicoPreco.length - 1])
-                                .toString()
-                        ? const TextStyle(color: Colors.grey)
-                        : MyTheme.myTextStylPricePrevious,
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              RotatedBox(
+                quarterTurns: 3,
+                child: Container(
+                  alignment: Alignment.center,
+                  padding:
+                      MyTheme.myCustomEdgeInsetsItemSpaceInternCategoryProduct,
+                  color:
+                      Categorias.obterCorSecundariaPorDescricao(item.categoria),
+                  child: Center(
+                    child: Text(Categorias.abreviarCategoria(item.categoria),
+                        style: MyTheme.myTextStyleCategoryProduct),
                   ),
-                  Text(
-                    precoController.text == 'R\$ 0,00'
-                        ? 'R\$ --,--'
-                        : precoController.text,
-                    style: precoController.text == 'R\$ 0,00'
-                        ? MyTheme.myTextStylePriceNotDefined
-                        : MyTheme.myTextStylePrice,
+                ),
+              ),
+              Container(
+                color: Colors.amber,
+                child: Padding(
+                  padding: MyTheme.myCustomEdgeInsetsItemSpaceIntern,
+                  child: Text(
+                    FortmatValue.formatDouble(item.quantidade),
+                    style: MyTheme.myTextStyleDescriptionItem,
                   ),
-                ],
+                ),
               ),
-            ),
-            /*
-            const Padding(
-              padding: EdgeInsets.only(right: 10.0),
-              child: Icon(
-                Icons.query_stats_outlined,
-                color: Colors.grey,
+              Expanded(
+                child: Padding(
+                  padding: MyTheme.myCustomEdgeInsetsItemSpaceIntern,
+                  child: Text(
+                    item.descricao,
+                    style: MyTheme.myTextStyleDescriptionItem,
+                  ),
+                ),
               ),
-            ),
-            */
-          ],
+              Padding(
+                padding: MyTheme.myCustomEdgeInsetsItemPrice,
+                child: Column(
+                  children: [
+                    Text(
+                      "R\$ ${item.historicoPreco[item.historicoPreco.length - 1].toString()}",
+                      style: precoController.text ==
+                              FortmatValue.formatDouble(item.historicoPreco[
+                                      item.historicoPreco.length - 1])
+                                  .toString()
+                          ? const TextStyle(color: Colors.grey)
+                          : MyTheme.myTextStylPricePrevious,
+                    ),
+                    Text(
+                      precoController.text == 'R\$ 0,00'
+                          ? 'R\$ --,--'
+                          : precoController.text,
+                      style: precoController.text == 'R\$ 0,00'
+                          ? MyTheme.myTextStylePriceNotDefined
+                          : MyTheme.myTextStylePrice,
+                    ),
+                  ],
+                ),
+              ),
+              /*
+              const Padding(
+                padding: EdgeInsets.only(right: 10.0),
+                child: Icon(
+                  Icons.query_stats_outlined,
+                  color: Colors.grey,
+                ),
+              ),
+              */
+            ],
+          ),
         ),
       ),
     );

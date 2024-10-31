@@ -38,85 +38,98 @@ class ItemListConfirmed extends StatelessWidget {
       child: Container(
         margin: MyTheme.myCustomEdgeInsetsSpaceExtern,
         color: Colors.green[50],
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            RotatedBox(
-              quarterTurns: 3,
-              child: Container(
-                alignment: Alignment.center,
-                padding:
-                    MyTheme.myCustomEdgeInsetsItemSpaceInternCategoryProduct,
-                color:
-                    Categorias.obterCorSecundariaPorDescricao(item.categoria),
-                child: Center(
-                  child: Text(
-                    Categorias.abreviarCategoria(item.categoria),
-                    style: MyTheme.myTextStyleCategoryProduct,
-                  ),
-                ),
-              ),
+        child: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                Colors.white,
+                Color.fromARGB(0, 255, 255, 255),
+              ],
+              begin: Alignment.centerLeft, // Início do gradiente
+              end: Alignment.center, // Fim do gradiente
             ),
-            Container(
-              color: Colors.green,
-              child: Padding(
-                padding: MyTheme.myCustomEdgeInsetsItemSpaceIntern,
-                child: Text(
-                  FortmatValue.formatDouble(item.quantidade),
-                  style: MyTheme.myTextStyleQuantItem,
-                ),
-              ),
-            ),
-            Expanded(
-              child: Padding(
-                padding: MyTheme.myCustomEdgeInsetsItemSpaceIntern,
-                child: Text(
-                  item.descricao,
-                  style: MyTheme.myTextStyleDescriptionItem,
-                ),
-              ),
-            ),
-            Padding(
-              padding: MyTheme.myCustomEdgeInsetsItemPriceConfirmed,
-              child: Column(
-                children: [
-                  Text(
-                    "R\$ ${item.historicoPreco[item.historicoPreco.length - 1].toString()}",
-                    style: MyTheme.myTextStylPricePrevious,
-                  ),
-                  Text(
-                    precoController.text,
-                    style: item.precoAtual >=
-                            item.historicoPreco[item.historicoPreco.length - 1]
-                        ? MyTheme.myTextStylePriceUp
-                        : MyTheme.myTextStylePriceDown,
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: MyTheme.myCustomEdgeInsetsItemSpaceInternRight,
-              child: item.precoAtual >=
-                      item.historicoPreco[item.historicoPreco.length - 1]
-                  ? const Icon(
-                      Icons.north,
-                      color: Colors.red,
-                    )
-                  : const Icon(
-                      Icons.south,
-                      color: Colors.green,
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              RotatedBox(
+                quarterTurns: 3,
+                child: Container(
+                  alignment: Alignment.center,
+                  padding:
+                      MyTheme.myCustomEdgeInsetsItemSpaceInternCategoryProduct,
+                  color:
+                      Categorias.obterCorSecundariaPorDescricao(item.categoria),
+                  child: Center(
+                    child: Text(
+                      Categorias.abreviarCategoria(item.categoria),
+                      style: MyTheme.myTextStyleCategoryProduct,
                     ),
-            ),
-            /*
-            const Padding(
-              padding: EdgeInsets.only(right: 10.0),
-              child: Icon(
-                Icons.query_stats_outlined,
-                color: Colors.grey,
+                  ),
+                ),
               ),
-            ),
-            */
-          ],
+              Container(
+                color: Colors.green,
+                child: Padding(
+                  padding: MyTheme.myCustomEdgeInsetsItemSpaceIntern,
+                  child: Text(
+                    FortmatValue.formatDouble(item.quantidade),
+                    style: MyTheme.myTextStyleQuantItem,
+                  ),
+                ),
+              ),
+              Expanded(
+                child: Padding(
+                  padding: MyTheme.myCustomEdgeInsetsItemSpaceIntern,
+                  child: Text(
+                    item.descricao,
+                    style: MyTheme.myTextStyleDescriptionItem,
+                  ),
+                ),
+              ),
+              Padding(
+                padding: MyTheme.myCustomEdgeInsetsItemPriceConfirmed,
+                child: Column(
+                  children: [
+                    Text(
+                      "R\$ ${item.historicoPreco[item.historicoPreco.length - 1].toString()}",
+                      style: MyTheme.myTextStylPricePrevious,
+                    ),
+                    Text(
+                      precoController.text,
+                      style: item.precoAtual >=
+                              item.historicoPreco[
+                                  item.historicoPreco.length - 1]
+                          ? MyTheme.myTextStylePriceUp
+                          : MyTheme.myTextStylePriceDown,
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: MyTheme.myCustomEdgeInsetsItemSpaceInternRight,
+                child: item.precoAtual >=
+                        item.historicoPreco[item.historicoPreco.length - 1]
+                    ? const Icon(
+                        Icons.north,
+                        color: Colors.red,
+                      )
+                    : const Icon(
+                        Icons.south,
+                        color: Colors.green,
+                      ),
+              ),
+              /*
+              const Padding(
+                padding: EdgeInsets.only(right: 10.0),
+                child: Icon(
+                  Icons.query_stats_outlined,
+                  color: Colors.grey,
+                ),
+              ),
+              */
+            ],
+          ),
         ),
       ),
     );

@@ -17,11 +17,23 @@ class ConfirmExitDialog extends StatelessWidget {
       backgroundColor: Colors.white,
       alignment: Alignment.center,
       title: const Padding(
-        padding: EdgeInsets.all(10.0),
-        child: Text(
-          'Lista não finalizada',
-          textAlign: TextAlign.center,
-          style: TextStyle(fontWeight: FontWeight.bold),
+        padding: EdgeInsets.only(top: 0, left: 10, right: 10, bottom: 0),
+        child: Column(
+          children: [
+            Padding(
+              padding: EdgeInsets.all(10.0),
+              child: Icon(
+                Icons.warning_outlined,
+                color: Colors.red,
+                size: 50,
+              ),
+            ),
+            Text(
+              'Lista não finalizada!',
+              textAlign: TextAlign.center,
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ],
         ),
       ),
       content: const Padding(

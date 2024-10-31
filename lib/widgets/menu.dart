@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:lista_mercado/screens/email_screen.dart';
 import 'package:lista_mercado/util/app_info.dart';
@@ -27,8 +29,18 @@ class _MenuState extends State<Menu> {
         //padding: EdgeInsets.zero,
         children: [
           Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  Colors.deepPurple,
+                  Colors.deepPurpleAccent, // Cor final do degradê
+                ],
+                begin: Alignment.center, // Início do gradiente
+                end: Alignment.bottomCenter, // Fim do gradiente
+              ),
+            ),
             alignment: Alignment.center,
-            color: Colors.deepPurple,
+            //color: Color(),
             height: 200,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -66,26 +78,40 @@ class _MenuState extends State<Menu> {
           // Adicionando o ListTile para exibir o e-mail do usuário
           Padding(
             padding: const EdgeInsets.only(top: 10.0),
-            child: ListTile(
-              leading: const Icon(
-                Icons.email,
-                color: Colors.blue,
-              ),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) =>
-                        EmailScreen(), // Navega para a tela de e-mail
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Padding(
+                  padding: EdgeInsets.only(left: 20),
+                  child: Text(
+                    'E-mail usuário:',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                );
-              },
-              title: Text(
-                '${widget.userEmail}',
-                style: TextStyle(
-                  fontWeight: FontWeight.normal,
                 ),
-              ),
+                ListTile(
+                  leading: const Icon(
+                    Icons.email,
+                    color: Colors.blue,
+                  ),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            EmailScreen(), // Navega para a tela de e-mail
+                      ),
+                    );
+                  },
+                  title: Text(
+                    widget.userEmail,
+                    style: const TextStyle(
+                        fontWeight: FontWeight.normal,
+                        fontStyle: FontStyle.italic),
+                  ),
+                ),
+              ],
             ),
           ),
           ListTile(
