@@ -14,27 +14,24 @@ class ConfirmExitDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
+      
+      buttonPadding: EdgeInsets.all(0),
+      //iconPadding: EdgeInsets.all(10),
+      titlePadding:
+          const EdgeInsets.only(top: 0, left: 10, right: 10, bottom: 0),
+      icon: const Icon(
+        Icons.warning_outlined,
+        color: Colors.red,
+        size: 50,
+      ),
+      shadowColor: Colors.deepPurple,
+      surfaceTintColor: Colors.white,
       backgroundColor: Colors.white,
       alignment: Alignment.center,
-      title: const Padding(
-        padding: EdgeInsets.only(top: 0, left: 10, right: 10, bottom: 0),
-        child: Column(
-          children: [
-            Padding(
-              padding: EdgeInsets.all(10.0),
-              child: Icon(
-                Icons.warning_outlined,
-                color: Colors.red,
-                size: 50,
-              ),
-            ),
-            Text(
-              'Lista não finalizada!',
-              textAlign: TextAlign.center,
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-          ],
-        ),
+      title: const Text(
+        'Lista não finalizada!',
+        textAlign: TextAlign.center,
+        style: TextStyle(fontWeight: FontWeight.bold, color: Colors.red),
       ),
       content: const Padding(
         padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 0.0),
