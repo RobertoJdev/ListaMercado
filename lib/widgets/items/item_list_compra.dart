@@ -23,43 +23,55 @@ class ItemListCompras extends StatelessWidget {
     return Container(
       margin: MyTheme.myCustomEdgeInsetsSpaceExtern,
       color: Colors.grey[200],
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Container(
-            padding: MyTheme.myCustomEdgeInsetsItemSpaceIntern,
-            color: Colors.deepPurple[100],
-            child: Text(
-              listaMercado.data,
-              style: MyTheme.myTextStyleDateListMarket,
-            ),
+      child: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Colors.white,
+              Color.fromARGB(0, 255, 255, 255),
+            ],
+            begin: Alignment.centerLeft, // Início do gradiente
+            end: Alignment.center, // Fim do gradiente
           ),
-          Expanded(
-            child: Padding(
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Container(
               padding: MyTheme.myCustomEdgeInsetsItemSpaceIntern,
+              color: Colors.deepPurple[100],
               child: Text(
-                listaMercado.supermercado,
-                style: MyTheme.myTextStyleDescriptionItem,
+                listaMercado.data,
+                style: MyTheme.myTextStyleDateListMarket,
               ),
             ),
-          ),
-          Padding(
-            padding: MyTheme.myCustomEdgeInsetsItemSpaceInternRight2,
-            child: Text(
-              formatCurrency(listaMercado.custoTotal),
-              style: MyTheme.myTextStylePrice,
+            Expanded(
+              child: Padding(
+                padding: MyTheme.myCustomEdgeInsetsItemSpaceIntern,
+                child: Text(
+                  listaMercado.supermercado,
+                  style: MyTheme.myTextStyleDescriptionItem,
+                ),
+              ),
             ),
-          ),
-          /*
-          const Padding(
-            padding: EdgeInsets.only(right: 12),
-            child: Icon(
-              Icons.query_stats_outlined,
-              color: Colors.grey,
+            Padding(
+              padding: MyTheme.myCustomEdgeInsetsItemSpaceInternRight2,
+              child: Text(
+                formatCurrency(listaMercado.custoTotal),
+                style: MyTheme.myTextStylePrice,
+              ),
             ),
-          ),
-            */
-        ],
+            /*
+            const Padding(
+              padding: EdgeInsets.only(right: 12),
+              child: Icon(
+                Icons.query_stats_outlined,
+                color: Colors.grey,
+              ),
+            ),
+              */
+          ],
+        ),
       ),
     );
   }
