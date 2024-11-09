@@ -3,7 +3,10 @@ import 'package:lista_mercado/util/generate_item_list_mixin.dart';
 
 class ListaMercado with GenerateItemListMixin {
   late int? id;
-  late int userId;
+  late String userId;
+  late String userEmail;
+  bool isShared;
+  String? sharedWithEmail;
   late double custoTotal;
   late String data;
   late String supermercado;
@@ -13,22 +16,13 @@ class ListaMercado with GenerateItemListMixin {
   ListaMercado({
     this.id,
     required this.userId,
+    required this.userEmail,
+    this.isShared = false,
+    this.sharedWithEmail,
     required this.custoTotal,
     required this.data,
     required this.supermercado,
     required this.finalizada,
     required this.itens,
   });
-
-/*   static generateListaMercadoExemplo(List<Produto> produtos) {
-    ListaMercado listaMercadoTemp = ListaMercado(
-      userId: 1,
-      custoTotal: 0.0,
-      data: '01-01-23',
-      supermercado: 'Supermarket Exemplo',
-      finalizada: false,
-      itens: produtos,
-    );
-    return listaMercadoTemp;
-  } */
 }

@@ -30,6 +30,8 @@ class _EmailScreenState extends State<EmailScreen> {
   @override
   Widget build(BuildContext context) {
     final bool isKeyboardOpen = MediaQuery.of(context).viewInsets.bottom > 0;
+    //excluir antes de publicar
+    _emailController.text = 'teste@gmail.com';
     return Scaffold(
       /*
       appBar: AppBar(

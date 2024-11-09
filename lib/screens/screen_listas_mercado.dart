@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lista_mercado/screens/email_screen.dart';
+import 'package:lista_mercado/util/teste_print.dart';
 import 'package:lista_mercado/widgets/decoration_list_bar.dart';
 import 'package:lista_mercado/widgets/items/item_list_compra.dart';
 import 'package:lista_mercado/widgets/items/item_list_compra_nao_finalizada.dart';
@@ -14,6 +15,7 @@ import 'package:lista_mercado/widgets/modals/modal_screen_reabrir_lista.dart';
 import 'package:lista_mercado/screens/screen_active_list.dart';
 import 'package:lista_mercado/widgets/custom_app_bar.dart.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:uuid/uuid.dart';
 
 class ScreenListasMercado extends StatefulWidget {
   const ScreenListasMercado({Key? key}) : super(key: key);
@@ -61,6 +63,23 @@ class _listasMercadoState extends State<ScreenListasMercado> {
       email = prefs.getString('user_email') ??
           ''; // Lê o e-mail das SharedPreferences
     });
+  }
+
+// Método para verificar e carregar ou gerar o userId
+  Future<String> getUserId() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    // Verifica se o userId existe nas preferências
+    if (prefs.containsKey('userId')) {
+      return prefs.getString('userId')!;
+    } else {
+      // Gera um novo userId e salva nas preferências
+      String newUserId =
+          Uuid().v4().substring(0, 8); // UUID curto (8 caracteres)
+      await prefs.setString('userId', newUserId);
+      print("Retorno do valor do ID do usuário: ========== $newUserId");
+      return newUserId;
+    }
   }
 
   @override
@@ -194,6 +213,8 @@ class _listasMercadoState extends State<ScreenListasMercado> {
     await db.initDB();
     await db.openDB();
     listasMercado = await db.getAllListasMercado();
+    //TestePrintMixin.printAllItemsBD(listasMercado);
+
     setState(() {
       //itemMarketDB;
     });
@@ -225,17 +246,19 @@ class _listasMercadoState extends State<ScreenListasMercado> {
   }
 
   void criarNovaListaMercado(BuildContext context) async {
-    int idNovaLista = await db.salvarListaMercadoVazia(0);
+    int idNovaLista = await db.salvarListaMercadoVazia(getUserId().toString());
 
     ListaMercado novaListaMercado = ListaMercado(
       id: idNovaLista,
-      userId: 0,
+      userId: getUserId().toString(),
+      userEmail: email,
       custoTotal: 0,
       data: DataUtil.getCurrentFormattedDate(),
       supermercado: '',
       finalizada: false,
       itens: [],
     );
+
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -259,8 +282,6 @@ class _listasMercadoState extends State<ScreenListasMercado> {
   void reutilizarListaMercadoFinalizada(ListaMercado listaMercado) async {
     int temp = listaMercado.id!;
     ListaMercado? tempLista = await db.searchListaMercadoById(temp);
-
-    //MarketDB.printListaMercadoInfo(tempLista!);
 
     for (var element in tempLista!.itens) {
       element.pendente = true;

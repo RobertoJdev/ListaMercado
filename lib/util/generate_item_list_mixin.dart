@@ -23,9 +23,12 @@ mixin GenerateItemListMixin {
     }
 
     ListaMercado listaMercadoTemp = ListaMercado(
-      userId: 1,
+      userId: '99List99',
+      userEmail: 'email.teste@email.com',
+      isShared: false,
+      sharedWithEmail: '',
       custoTotal: valorTotal,
-      data: '01-01-23',
+      data: '01-01-24',
       supermercado: 'Supermarket Exemplo',
       finalizada: false,
       itens: produtos!,

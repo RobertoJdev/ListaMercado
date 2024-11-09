@@ -464,6 +464,7 @@ class _ActiveListState extends State<ScreenActiveList>
         ...element.historicoPreco
       ]} ");
     }
+    print(widget.listaMercado.userId + "---------" + widget.listaMercado.userEmail);
   }
 
   void excluirItem(ListaMercado listaMercado, Produto produto) {
@@ -518,7 +519,7 @@ class _ActiveListState extends State<ScreenActiveList>
         );
       } else {}
 
-      db.novaListaMercado(widget.listaMercado);
+      db.newListMarket(widget.listaMercado);
 
       Navigator.pushAndRemoveUntil(
         context,

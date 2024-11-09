@@ -274,8 +274,6 @@ Future<Produto> confirmEditItemScreen(
 
                                       itemTemp.pendente = false;
 
-                                      //print('${valor} ***************************');
-
                                       Navigator.of(context).pop(itemTemp);
                                     }
                                   }
