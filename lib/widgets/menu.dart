@@ -167,7 +167,18 @@ class _MenuState extends State<Menu> {
               onTap: () {
                 abrirUrl(urlDesenvolvedor);
               },
-              title: const Text('Dev. por: Roberto de Jesus'),
+              title: const Text.rich(
+                TextSpan(
+                  text: 'Dev. por: ',
+                  style: TextStyle(fontSize: 16),
+                  children: [
+                    TextSpan(
+                      text: 'Roberto J.',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+              ),
             ),
           ),
         ],

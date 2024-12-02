@@ -5,10 +5,19 @@ import 'package:lista_mercado/models/categoria.dart';
 import 'package:lista_mercado/models/categorias.dart';
 import 'package:lista_mercado/models/lista_mercado.dart';
 import 'package:lista_mercado/models/produto.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 mixin GenerateItemListMixin {
   static generateListaMercadoExemplo([List<Produto>? produtos]) {
     produtos ??= generateMultiProdutosExemplo();
+
+    String? emailUser;
+
+    Future<void> _loadEmail() async {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+
+      emailUser = prefs.getString('user_email');
+    }
 
     if (produtos!.isEmpty) {
       produtos = generateMultiProdutosExemplo();
@@ -24,7 +33,7 @@ mixin GenerateItemListMixin {
 
     ListaMercado listaMercadoTemp = ListaMercado(
       userId: '99List99',
-      userEmail: 'email.teste@email.com',
+      userEmail: emailUser ?? 'email.exemplo@email.com',
       isShared: false,
       sharedWithEmail: '',
       custoTotal: valorTotal,

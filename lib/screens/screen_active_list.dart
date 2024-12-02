@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:lista_mercado/firebase/enviar_lista_firestore.dart';
 import 'package:lista_mercado/widgets/decoration_list_bar.dart';
 import 'package:lista_mercado/widgets/items/item_list_pendent.dart';
 import 'package:lista_mercado/widgets/items/item_list_confirmed.dart';
-import 'package:lista_mercado/widgets/modals/modal_screen_confirm_item.dart';
+import 'package:lista_mercado/widgets/modals/confirm_edit_item_screen.dart';
 import 'package:lista_mercado/db/market_db.dart';
 import 'package:lista_mercado/models/lista_mercado.dart';
 import 'package:lista_mercado/models/produto.dart';
-import 'package:lista_mercado/widgets/modals/modal_screen_confirm_mercado.dart';
-import 'package:lista_mercado/widgets/modals/modal_screen_exlui_item.dart';
-import 'package:lista_mercado/widgets/modals/modal_screen_new_item.dart';
+import 'package:lista_mercado/widgets/modals/confirm_mercado_screen.dart';
+import 'package:lista_mercado/widgets/modals/confirm_delete_item_list_screen.dart';
+import 'package:lista_mercado/widgets/modals/confirm_share_email_screen.dart';
+import 'package:lista_mercado/widgets/modals/new_item_screen.dart';
 import 'package:lista_mercado/screens/screen_listas_mercado.dart';
 import 'package:lista_mercado/util/data_util.dart';
 import 'package:lista_mercado/widgets/custom_app_bar.dart.dart';
@@ -72,8 +74,11 @@ class _ActiveListState extends State<ScreenActiveList>
 
     return Scaffold(
       //key: activeListKey,
-      appBar: const CustomAppBar(
+      appBar: CustomAppBar(
+        title: 'Itens da Lista',
         screenReturn: true,
+        showShareButton: true,
+        onSharePressed: compartilharLista,
       ),
 
       body: PopScope(
@@ -151,8 +156,7 @@ class _ActiveListState extends State<ScreenActiveList>
                                 } else if (direction ==
                                     DismissDirection.endToStart) {
                                   bool? confirm =
-                                      await showDeleteItemConfirmationDialog(
-                                          context);
+                                      await confirmDeleteItemList(context);
                                   setState(() {
                                     if (confirm!) {
                                       excluirItem(widget.listaMercado,
@@ -232,8 +236,7 @@ class _ActiveListState extends State<ScreenActiveList>
                                 } else if (direction ==
                                     DismissDirection.endToStart) {
                                   bool? confirm =
-                                      await showDeleteItemConfirmationDialog(
-                                          context);
+                                      await confirmDeleteItemList(context);
                                   setState(() {
                                     if (confirm!) {
                                       excluirItem(widget.listaMercado,
@@ -464,7 +467,9 @@ class _ActiveListState extends State<ScreenActiveList>
         ...element.historicoPreco
       ]} ");
     }
-    print(widget.listaMercado.userId + "---------" + widget.listaMercado.userEmail);
+    print(widget.listaMercado.userId +
+        "---------" +
+        widget.listaMercado.userEmail);
   }
 
   void excluirItem(ListaMercado listaMercado, Produto produto) {
@@ -526,6 +531,27 @@ class _ActiveListState extends State<ScreenActiveList>
         MaterialPageRoute(builder: (context) => const ScreenListasMercado()),
         (route) => false,
       );
+    }
+  }
+
+  void compartilharLista() async {
+    String? shareEmail = await _abrirModalCompartilharEmail(context);
+    if (shareEmail!.isNotEmpty) {
+      widget.listaMercado.sharedWithEmail = shareEmail;
+      try {
+        // Chama a função para enviar os dados ao Firestore
+        await enviarListaParaFirestore(widget.listaMercado);
+        print("Lista enviada com sucesso!");
+      } catch (e) {
+        print("Erro ao compartilhar lista: $e");
+      }
+    }
+  }
+
+  _abrirModalCompartilharEmail(BuildContext context) async {
+    final email = await confirmShareEmailScreen(context: context);
+    if (email != null) {
+      return email;
     }
   }
 }

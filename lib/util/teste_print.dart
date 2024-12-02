@@ -70,6 +70,46 @@ mixin TestePrintMixin {
     print(
         "*******************************************************************");
   }
+
+  static returnFireBase(dynamic snapshot) {
+    // Verificar se algum documento foi retornado
+    if (snapshot.docs.isNotEmpty) {
+      // Iterar sobre os documentos e imprimir seus dados
+      snapshot.docs.forEach((doc) {
+        // Obter os dados do documento
+        var data = doc.data();
+
+        print("userId: ${data['userId']}");
+        print("userEmail: ${data['userEmail']}");
+        print("isShared: ${data['isShared']}");
+        print("custoTotal: ${data['custoTotal']}");
+        print("supermercado: ${data['supermercado']}");
+        print("finalizada: ${data['finalizada']}");
+        print("createdAt: ${data['createdAt']}");
+        print("updatedAt: ${data['updatedAt']}");
+        print("isSynced: ${data['isSynced']}");
+
+        // Verificar se a lista de itens existe e não é null
+        if (data['itens'] != null && data['itens'] is List) {
+          // Iterar sobre os itens e imprimir seus dados
+          print("Itens da lista:");
+          data['itens'].forEach((item) {
+            // Aqui, assumimos que cada item é um Map que pode ser convertido para Produto
+            //print("Produto ID: ${item['id']}");
+            print("Produto Descrição: ${item['descricao']}");
+            print("Produto Preço Atual: ${item['precoAtual']}");
+            print("Produto Quantidade: ${item['quantidade']}");
+            // Adicione outras propriedades do produto conforme necessário
+          });
+        } else {
+          print("Nenhum item encontrado para essa lista.");
+        }
+      });
+    } else {
+      print("Nenhuma lista compartilhada encontrada.");
+    }
+  }
+
 /*
   Future<void> printAllItems(List<Map<String, dynamic>> items) async {
   print(

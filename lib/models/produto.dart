@@ -1,6 +1,4 @@
 import 'dart:math';
-import 'package:lista_mercado/models/categoria.dart';
-import 'package:lista_mercado/models/categorias.dart';
 import 'package:uuid/uuid.dart';
 
 class Produto {
@@ -25,13 +23,13 @@ class Produto {
     gerarId();
   }
 
-  Produto.newItemList(
-      {required this.descricao,
-      required this.quantidade,
-      this.pendente = true,
-      this.precoAtual = 0,
-      required this.categoria})
-      : historicoPreco = [] {
+  Produto.newItemList({
+    required this.descricao,
+    required this.quantidade,
+    this.pendente = true,
+    this.precoAtual = 0,
+    required this.categoria,
+  }) : historicoPreco = [] {
     gerarId();
   }
 
@@ -41,59 +39,35 @@ class Produto {
     _id = const Uuid().v4();
   }
 
-/*   static generateProdutoExemplo() {
-    Produto produtoExemplo = Produto(
-      descricao: 'Arroz',
-      barras: '0123456789',
-      quantidade: 10,
-      pendente: true,
-      precoAtual: 5,
-      categoria: Categorias.obterCategoriaAleatoria().nomeFormatado,
-      historicoPreco: [7, 9, 3],
-    );
-    return produtoExemplo;
-  } */
-/* 
-  static generateMultiProdutosExemplo() {
-    List<Produto> listExemploProdutos = [];
-    
-    final nomesProdutos = [
-      'Carne',
-      //'Frango',
-      //'Alface',
-      //'Tomate',
-      'Pão de forma',
-      //'Pão de queijo',
-      //'Queijo coalho',
-      //'Queijo prato',
-      //'Mortadela',
-      //'Salame',
-      //'Desinfetante',
-      //'Esponja',
-      //'Shampoo',
-      //'Sabonete',
-      //'Rum',
-      'Whisky',
-      //'Açúcar',
-      //'Arroz',
-    ];
-
-    for (var element in nomesProdutos) {
-      Produto produtoTemp = Produto(
-        descricao: element,
-        barras: '0123456789',
-        quantidade: Random().nextInt(10) + 1,
-        pendente: true,
-        precoAtual: 5,
-        categoria: Categorias.defineCategoriaAuto(element),
-        historicoPreco: [7, 9, 3],
-      );
-      listExemploProdutos.add(produtoTemp);
-    }
-
-    return listExemploProdutos;
+  /// Converte Produto para Map<String, dynamic> (para Firestore)
+  Map<String, dynamic> toMap() {
+    return {
+      'id': _id,
+      'descricao': descricao,
+      'barras': barras,
+      'quantidade': quantidade,
+      'pendente': pendente,
+      'precoAtual': precoAtual,
+      'categoria': categoria,
+      'historicoPreco': historicoPreco, // Lista de preços será armazenada
+    };
   }
- */
+
+  /// Cria um Produto a partir de Map<String, dynamic> (para Firestore)
+  factory Produto.fromMap(Map<String, dynamic> map) {
+    return Produto(
+      descricao: map['descricao'] as String,
+      barras: map['barras'] as String,
+      quantidade: (map['quantidade'] as num).toDouble(),
+      pendente: map['pendente'] as bool,
+      precoAtual: (map['precoAtual'] as num).toDouble(),
+      categoria: map['categoria'] as String,
+      historicoPreco: (map['historicoPreco'] as List<dynamic>)
+          .map((e) => (e as num).toDouble())
+          .toList(), // Converte a lista de preços
+    ).._id = map['id'] as String?; // Restaura o ID
+  }
+
   static List<Produto> ordenarItens(List<Produto> listaProdutos) {
     return listaProdutos
       ..sort((a, b) {

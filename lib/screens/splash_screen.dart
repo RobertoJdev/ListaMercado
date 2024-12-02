@@ -65,7 +65,7 @@ class _SplashScreenState extends State<SplashScreen> {
                         color: Colors.grey, fontWeight: FontWeight.w300),
                   ),
                   Text(
-                    'Roberto de Jesus',
+                    'Roberto J.',
                     style: TextStyle(
                         color: Colors.grey, fontWeight: FontWeight.normal),
                   ),

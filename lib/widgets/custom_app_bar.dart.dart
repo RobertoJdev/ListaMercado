@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_simple_calculator/flutter_simple_calculator.dart';
+import 'package:lista_mercado/firebase/teste_envio_lista.dart';
 import 'package:lista_mercado/widgets/alerts/confirm_exit_list.dart';
 import 'package:lista_mercado/widgets/calculator.dart';
 
@@ -9,24 +9,24 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String? title;
   final String defaultTitle;
   final bool screenReturn;
-
-  //final Function salvarListaTemp;
+  final bool showShareButton;
+  final Function()? onSharePressed;
 
   const CustomAppBar({
     Key? key,
     this.title,
     this.defaultTitle = 'Lista de Mercado',
     this.screenReturn = false,
+    this.showShareButton = true,
+    this.onSharePressed,
   }) : super(key: key);
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 
-  get context => null;
   @override
   Widget build(BuildContext context) {
     return Container(
-      //height: kToolbarHeight, // Definindo a altura da AppBar
       decoration: const BoxDecoration(
         gradient: LinearGradient(
           colors: [
@@ -66,6 +66,11 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                 style: const TextStyle(color: Colors.white),
               ),
         actions: [
+          if (showShareButton)
+            IconButton(
+              onPressed: onSharePressed,
+              icon: const Icon(Icons.share),
+            ),
           IconButton(
             padding: const EdgeInsets.only(right: 10),
             onPressed: () {

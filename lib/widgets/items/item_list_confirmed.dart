@@ -6,8 +6,8 @@ import 'package:lista_mercado/models/categorias.dart';
 import 'package:lista_mercado/models/produto.dart';
 import 'package:lista_mercado/my_theme.dart';
 import 'package:lista_mercado/util/format_value.dart';
-import 'package:lista_mercado/widgets/modals/modal_screen_confirm_item.dart';
-import 'package:lista_mercado/widgets/modals/modal_screen_show_price_history.dart';
+import 'package:lista_mercado/widgets/modals/confirm_edit_item_screen.dart';
+import 'package:lista_mercado/widgets/modals/show_price_history_modal.dart';
 
 class ItemListConfirmed extends StatelessWidget {
   ItemListConfirmed(

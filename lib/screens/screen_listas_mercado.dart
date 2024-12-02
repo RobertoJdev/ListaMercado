@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:lista_mercado/screens/email_screen.dart';
 import 'package:lista_mercado/util/teste_print.dart';
@@ -6,12 +7,12 @@ import 'package:lista_mercado/widgets/items/item_list_compra.dart';
 import 'package:lista_mercado/widgets/items/item_list_compra_nao_finalizada.dart';
 import 'package:lista_mercado/db/market_db.dart';
 import 'package:lista_mercado/widgets/menu.dart';
-import 'package:lista_mercado/widgets/modals/modal_screen_lista_nao_finalizada.dart';
+import 'package:lista_mercado/widgets/modals/open_list_unfinished_list.dart';
 import 'package:lista_mercado/util/data_util.dart';
 import 'package:lista_mercado/models/lista_mercado.dart';
 import 'package:lista_mercado/models/produto.dart';
-import 'package:lista_mercado/widgets/modals/modal_screen_exclui_lista.dart';
-import 'package:lista_mercado/widgets/modals/modal_screen_reabrir_lista.dart';
+import 'package:lista_mercado/widgets/modals/confirm_delete_list_screen.dart';
+import 'package:lista_mercado/widgets/modals/reopen_list_screen.dart';
 import 'package:lista_mercado/screens/screen_active_list.dart';
 import 'package:lista_mercado/widgets/custom_app_bar.dart.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -29,6 +30,9 @@ class _listasMercadoState extends State<ScreenListasMercado> {
   ListaMercado? listaNaoFinaliza;
   final MarketDB db = MarketDB();
 
+  List<Map<String, dynamic>> listas = [];
+  bool isLoading = true;
+
   String email = ''; // Variável para armazenar o email
 
   @override
@@ -38,6 +42,7 @@ class _listasMercadoState extends State<ScreenListasMercado> {
     _initializeDB();
     db.getUnfinishedLists();
     _loadEmail(); // Chamar o método para carregar o e-mail
+    _carregarListasCompartilhadas();
   }
 
   // Função para verificar se o e-mail do usuário já está salvo
@@ -82,11 +87,54 @@ class _listasMercadoState extends State<ScreenListasMercado> {
     }
   }
 
+  Future<void> _carregarListasCompartilhadas() async {
+    final prefs = await SharedPreferences.getInstance();
+    final email = prefs.getString('preferredEmail');
+
+    if (email != null) {
+      try {
+        // Consultar o Firestore para listas compartilhadas
+        final snapshot = await FirebaseFirestore.instance
+            .collection('listasMercado')
+            .where('sharedWithEmail', isEqualTo: email)
+            .get();
+
+        List<ListaMercado?> listasCompartilhadas = snapshot.docs
+            .map((doc) {
+              try {
+                return ListaMercado.fromMap(doc.data() as Map<String, dynamic>);
+              } catch (e) {
+                print("Erro ao carregar listas compartilhadas: $e");
+                return null; // ou pode optar por retornar um objeto default
+              }
+            })
+            .where((element) => element != null)
+            .toList(); // Filtra os valores nulos, se houver
+
+       // setState(() {
+      //    listasMercado.addAll(
+       //       listasCompartilhadas as Iterable<ListaMercado>); // Adiciona as listas compartilhadas à lista local
+      //    isLoading = false;
+      //  });
+
+        
+
+        TestePrintMixin.returnFireBase(snapshot);
+      } catch (e) {
+        print("Erro ao carregar listas compartilhadas: $e");
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: Menu(userEmail: email), // Passa o e-mail para o Menu
-      appBar: const CustomAppBar(screenReturn: false),
+      appBar: const CustomAppBar(
+        title: 'Minhas Listas',
+        showShareButton: false,
+        screenReturn: false,
+      ),
       body: Column(
         children: [
           //const DecorationListBar(isListMercado: true),
@@ -128,12 +176,12 @@ class _listasMercadoState extends State<ScreenListasMercado> {
                             excluirLista(listasMercado[index]);
                           },
                           confirmDismiss: (direction) async {
-                            return await showDeleteConfirmationDialog(context);
+                            return await confirmDeleteList(context);
                           },
                           child: GestureDetector(
                             onTap: () async {
                               bool? reabrirLista =
-                                  await reabrirListaScreen(context: context);
+                                  await reopenList(context: context);
                               if (reabrirLista!) {
                                 reutilizarListaMercadoFinalizada(
                                     listasMercado[index]);
@@ -216,7 +264,8 @@ class _listasMercadoState extends State<ScreenListasMercado> {
     //TestePrintMixin.printAllItemsBD(listasMercado);
 
     setState(() {
-      //itemMarketDB;
+      isLoading = false;
+      // Atualiza o estado para indicar que o carregamento terminou
     });
 
     // Após inicializar o banco de dados, chama a função
@@ -232,7 +281,7 @@ class _listasMercadoState extends State<ScreenListasMercado> {
     }
 
     if (listaNaoFinaliza != null) {
-      bool? resultado = await abrirListaNaoFinalizada(context);
+      bool? resultado = await openListUnfinishedList(context);
 
       if (resultado != null) {
         if (resultado) {
@@ -287,6 +336,8 @@ class _listasMercadoState extends State<ScreenListasMercado> {
       element.pendente = true;
       element.precoAtual = 0;
     }
+
+    tempLista.userEmail = email;
 
     Navigator.push(
       context,

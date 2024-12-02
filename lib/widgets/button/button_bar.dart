@@ -4,10 +4,10 @@ import 'package:lista_mercado/models/lista_mercado.dart';
 import 'package:lista_mercado/models/produto.dart';
 import 'package:lista_mercado/screens/screen_listas_mercado.dart';
 import 'package:lista_mercado/util/data_util.dart';
-import 'package:lista_mercado/widgets/modals/modal_screen_confirm_mercado.dart';
-import 'package:lista_mercado/widgets/modals/modal_screen_new_item.dart';
+import 'package:lista_mercado/widgets/modals/confirm_mercado_screen.dart';
+import 'package:lista_mercado/widgets/modals/new_item_screen.dart';
 
-class BottomBar extends StatefulWidget {
+class ButtomBar extends StatefulWidget {
   //final Function finalizarListCompras;
   //final Function adicionarItem;
   String totalValue;
@@ -16,7 +16,7 @@ class BottomBar extends StatefulWidget {
   ListaMercado listaMercado;
   late bool listaAberta;
 
-  BottomBar({
+  ButtomBar({
     Key? key,
     // required this.finalizarListCompras,
     //required this.adicionarItem,
@@ -27,10 +27,10 @@ class BottomBar extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<BottomBar> createState() => _BottomBarState();
+  State<ButtomBar> createState() => _BottomBarState();
 }
 
-class _BottomBarState extends State<BottomBar> {
+class _BottomBarState extends State<ButtomBar> {
   final MarketDB db = MarketDB();
 
   @override

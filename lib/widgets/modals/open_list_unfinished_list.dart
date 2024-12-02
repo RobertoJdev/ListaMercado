@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:lista_mercado/my_theme.dart';
 import 'package:lista_mercado/widgets/button/custom_buttons.dart';
 
-Future<bool?> abrirListaNaoFinalizada(BuildContext? context) async {
+Future<bool?> openListUnfinishedList(BuildContext? context) async {
   Completer<bool?> completer = Completer();
 
   showModalBottomSheet(

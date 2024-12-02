@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "279777111702",
+    "project_id": "listademercado-b300e",
+    "storage_bucket": "listademercado-b300e.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:279777111702:android:a59de1eee045391f995cb7",
+        "android_client_info": {
+          "package_name": "com.robertodev.listamercado"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "279777111702-8993hrttskm3neo5i8hbrl7k3ul1d2ic.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCg4dnaM93uaf6xuXSb8MdrDcxN0_C0P1U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "279777111702-8993hrttskm3neo5i8hbrl7k3ul1d2ic.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
