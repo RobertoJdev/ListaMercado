@@ -1,4 +1,5 @@
 import 'package:lista_mercado/models/produto.dart';
+import 'package:uuid/uuid.dart';
 
 class ListaMercado {
   late int? id;
@@ -14,6 +15,7 @@ class ListaMercado {
   late String createdAt;
   late String updatedAt;
   bool isSynced;
+  late String uniqueKey;
 
   ListaMercado({
     this.id,
@@ -29,25 +31,28 @@ class ListaMercado {
     String? createdAt,
     String? updatedAt,
     this.isSynced = false,
+    String? uniqueKey,
   })  : createdAt = createdAt ?? DateTime.now().toIso8601String(),
-        updatedAt = updatedAt ?? DateTime.now().toIso8601String();
+        updatedAt = updatedAt ?? DateTime.now().toIso8601String(),
+        uniqueKey = uniqueKey ?? const Uuid().v4().substring(0, 8);
 
   // Método para converter ListaMercado em Map<String, dynamic>
   Map<String, dynamic> toMap() {
     try {
       return {
-        'id': id,
+        'id': id ?? 0,
         'userId': userId,
         'userEmail': userEmail,
-        'isShared': isShared,
+        'isShared': isShared ? 1 : 0,
         'sharedWithEmail': sharedWithEmail,
         'custoTotal': custoTotal,
         'data': data,
         'supermercado': supermercado,
-        'finalizada': finalizada,
+        'finalizada': finalizada ? 1 : 0,
         'createdAt': createdAt,
         'updatedAt': updatedAt,
-        'isSynced': isSynced,
+        'isSynced': isSynced ? 1 : 0,
+        'uniqueKey': uniqueKey,
         'itens': itens.map((produto) => produto.toMap()).toList(),
       };
     } catch (e) {
@@ -62,21 +67,27 @@ class ListaMercado {
         id: map['id'] as int?,
         userId: map['userId'] as String,
         userEmail: map['userEmail'] as String,
-        isShared: map['isShared'] as bool? ?? false,
+        isShared: (map['isShared'] is int)
+            ? map['isShared'] == 1
+            : (map['isShared'] as bool? ?? false),
         sharedWithEmail: map['sharedWithEmail'] as String?,
         custoTotal: (map['custoTotal'] as num).toDouble(),
         data: map['data'] as String,
         supermercado: map['supermercado'] as String,
-        finalizada: map['finalizada'] as bool? ?? false,
-        // Verifica se o campo 'itens' existe e não é null
+        finalizada: (map['finalizada'] is int)
+            ? map['finalizada'] == 1
+            : (map['finalizada'] as bool? ?? false),
+        createdAt: map['createdAt'] as String,
+        updatedAt: map['updatedAt'] as String,
+        isSynced: (map['isSynced'] is int)
+            ? map['isSynced'] == 1
+            : (map['isSynced'] as bool? ?? false),
+        uniqueKey: map['uniqueKey'] as String,
         itens: map['itens'] != null && map['itens'] is List
             ? (map['itens'] as List)
                 .map((item) => Produto.fromMap(item as Map<String, dynamic>))
                 .toList()
-            : [], // Se 'itens' for null ou não for uma lista, retorna uma lista vazia
-        createdAt: map['createdAt'] as String,
-        updatedAt: map['updatedAt'] as String,
-        isSynced: map['isSynced'] as bool? ?? false,
+            : [],
       );
     } catch (e) {
       throw Exception("Erro ao criar ListaMercado a partir de Map: $e");

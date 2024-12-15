@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:lista_mercado/screens/email_screen.dart';
-import 'package:lista_mercado/util/teste_print.dart';
+import 'package:lista_mercado/util/teste_print_mixin.dart';
 import 'package:lista_mercado/widgets/decoration_list_bar.dart';
 import 'package:lista_mercado/widgets/items/item_list_compra.dart';
 import 'package:lista_mercado/widgets/items/item_list_compra_nao_finalizada.dart';
@@ -89,20 +89,23 @@ class _listasMercadoState extends State<ScreenListasMercado> {
 
   Future<void> _carregarListasCompartilhadas() async {
     final prefs = await SharedPreferences.getInstance();
-    final email = prefs.getString('preferredEmail');
+    final email = prefs.getString('user_email');
 
     if (email != null) {
       try {
-        // Consultar o Firestore para listas compartilhadas
         final snapshot = await FirebaseFirestore.instance
             .collection('listasMercado')
             .where('sharedWithEmail', isEqualTo: email)
             .get();
 
+        //TestePrintMixin.returnFireBase(snapshot);
+
         List<ListaMercado?> listasCompartilhadas = snapshot.docs
             .map((doc) {
               try {
-                return ListaMercado.fromMap(doc.data() as Map<String, dynamic>);
+                ListaMercado temp = ListaMercado.fromMap(doc.data());
+                TestePrintMixin.printListaMercadoInfo(temp);
+                return temp;
               } catch (e) {
                 print("Erro ao carregar listas compartilhadas: $e");
                 return null; // ou pode optar por retornar um objeto default
@@ -111,17 +114,30 @@ class _listasMercadoState extends State<ScreenListasMercado> {
             .where((element) => element != null)
             .toList(); // Filtra os valores nulos, se houver
 
-       // setState(() {
-      //    listasMercado.addAll(
-       //       listasCompartilhadas as Iterable<ListaMercado>); // Adiciona as listas compartilhadas à lista local
-      //    isLoading = false;
-      //  });
-
-        
+        setState(() async {
+          //print(listasCompartilhadas.length);
+          bool addList = false;
+          for (var element in listasCompartilhadas) {
+            for (var i = 0; i < listasMercado.length; i++) {
+              //print(addList);
+              //print(element?.uniqueKey);
+              print(listasMercado[i].uniqueKey);
+              if (element?.uniqueKey != listasMercado[i].uniqueKey) {
+                addList = true;
+              }
+            }
+            if (addList) {
+              //print('valor do unic do elemento ${element?.uniqueKey}');
+              await db.newListaMercado(element!);
+            }
+          }
+          //listasMercado.addAll(listasCompartilhadas as Iterable<ListaMercado>);
+          isLoading = false;
+        });
 
         TestePrintMixin.returnFireBase(snapshot);
       } catch (e) {
-        print("Erro ao carregar listas compartilhadas: $e");
+        print("Erro ao carregar listas compartilhadas:: $e");
       }
     }
   }
@@ -190,6 +206,9 @@ class _listasMercadoState extends State<ScreenListasMercado> {
                                     listasMercado[index]);
                               }
                             },
+                            /* onLongPress: () {
+                              
+                            }, */
                             child: ItemListCompras(
                               listaMercado: listasMercado[index],
                             ),
@@ -295,7 +314,7 @@ class _listasMercadoState extends State<ScreenListasMercado> {
   }
 
   void criarNovaListaMercado(BuildContext context) async {
-    int idNovaLista = await db.salvarListaMercadoVazia(getUserId().toString());
+    int idNovaLista = await db.saveEmptyListaMercado(getUserId().toString());
 
     ListaMercado novaListaMercado = ListaMercado(
       id: idNovaLista,

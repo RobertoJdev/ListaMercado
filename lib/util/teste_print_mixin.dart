@@ -6,9 +6,18 @@ mixin TestePrintMixin {
     print(
         ' ---------------- Informações da Lista de Mercado: ----------------- ');
 
+    print(listaMercado.id);
     print(listaMercado.userEmail);
     print(listaMercado.isShared);
     print(listaMercado.sharedWithEmail);
+    print(listaMercado.custoTotal);
+    print(listaMercado.data);
+    print(listaMercado.supermercado);
+    print(listaMercado.finalizada);
+    print(listaMercado.createdAt);
+    print(listaMercado.updatedAt);
+    print(listaMercado.isSynced);
+    print(listaMercado.uniqueKey);
 
     for (var produto in listaMercado.itens) {
       print(
@@ -82,12 +91,15 @@ mixin TestePrintMixin {
         print("userId: ${data['userId']}");
         print("userEmail: ${data['userEmail']}");
         print("isShared: ${data['isShared']}");
+        print("sharedWithEmail: ${data['sharedWithEmail']}");
         print("custoTotal: ${data['custoTotal']}");
+        print("data: ${data['data']}");
         print("supermercado: ${data['supermercado']}");
         print("finalizada: ${data['finalizada']}");
         print("createdAt: ${data['createdAt']}");
         print("updatedAt: ${data['updatedAt']}");
         print("isSynced: ${data['isSynced']}");
+        print("uniqueKey: ${data['uniqueKey']}");
 
         // Verificar se a lista de itens existe e não é null
         if (data['itens'] != null && data['itens'] is List) {

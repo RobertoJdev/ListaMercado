@@ -132,7 +132,7 @@ class _BottomBarState extends State<ButtomBar> {
         );
       } else {}
 
-      db.newListMarket(widget.listaMercado);
+      db.newListaMercado(widget.listaMercado);
 
       Navigator.pushAndRemoveUntil(
         context,

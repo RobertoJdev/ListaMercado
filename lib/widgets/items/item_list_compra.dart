@@ -22,7 +22,7 @@ class ItemListCompras extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: MyTheme.myCustomEdgeInsetsSpaceExtern,
-      color: Colors.grey[200],
+      color: listaMercado.isShared ? Colors.yellow[200] : Colors.grey[200],
       child: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
@@ -61,6 +61,9 @@ class ItemListCompras extends StatelessWidget {
                 style: MyTheme.myTextStylePrice,
               ),
             ),
+            /*  Padding(
+                padding: MyTheme.myCustomEdgeInsetsItemSpaceInternRight2,
+                child: Icon(Icons.share)), */
             /*
             const Padding(
               padding: EdgeInsets.only(right: 12),

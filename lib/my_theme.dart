@@ -149,7 +149,7 @@ class MyTheme {
       EdgeInsets.only(bottom: 5);
 
   static const EdgeInsets myCustomEdgeInsetsItemSpaceIntern =
-      EdgeInsets.symmetric(horizontal: 12, vertical: 13);
+      EdgeInsets.symmetric(horizontal: 10, vertical: 13);
 
   static const EdgeInsets myCustomEdgeInsetsItemSpaceInternRight =
       EdgeInsets.only(right: 2);

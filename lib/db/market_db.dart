@@ -1,5 +1,6 @@
+import 'package:lista_mercado/db/database_utils.dart';
 import 'package:lista_mercado/util/generate_item_list_mixin.dart';
-import 'package:lista_mercado/util/teste_print.dart';
+import 'package:lista_mercado/util/teste_print_mixin.dart';
 
 import '/models/lista_mercado.dart';
 import '/models/produto.dart';
@@ -11,7 +12,7 @@ class MarketDB with GenerateItemListMixin, TestePrintMixin {
 
   static void populateDB(ListaMercado listaMercado) {
     MarketDB itemMarketDB = MarketDB();
-    itemMarketDB.newListMarket(listaMercado);
+    itemMarketDB.newListaMercado(listaMercado);
   }
 
   Future<void> openDB() async {
@@ -24,7 +25,7 @@ class MarketDB with GenerateItemListMixin, TestePrintMixin {
     final path = await getDatabasesPath();
     _database = await openDatabase(
       join(path, 'listMarket.db'),
-      version: 3, // Atualize para versão 3
+      version: 4, // Atualize para versão 4
       onCreate: (db, version) async {
         // Criação inicial do banco de dados
         await _createTables(db);
@@ -39,6 +40,14 @@ class MarketDB with GenerateItemListMixin, TestePrintMixin {
           // Atualização da versão 2 para a versão 3
           await _upgradeToVersion3(db);
         }
+        if (oldVersion < 4) {
+          // Atualização da versão 3 para a versão 4
+          await _upgradeToVersion4(db);
+        }
+      },
+      onOpen: (db) async {
+        // Verifica a estrutura da tabela "ListaMercado"
+        await DatabaseUtils.verificarEstruturaTabela(db, 'ListaMercado');
       },
     );
     await openDB();
@@ -90,6 +99,7 @@ class MarketDB with GenerateItemListMixin, TestePrintMixin {
         FOREIGN KEY (produtoId) REFERENCES Produto(id)
       )
     ''');
+    print("********************* create tables *********************");
   }
 
   // Função para migrar o banco de dados da versão 1 para a versão 2
@@ -104,6 +114,8 @@ class MarketDB with GenerateItemListMixin, TestePrintMixin {
       FOREIGN KEY (produtoId) REFERENCES Produto(id) ON DELETE CASCADE
     )
   ''');
+    print(
+        "********************* Executada a conversão da base de dados para ver. 2 *********************");
   }
 
   // Função para migrar o banco de dados da versão 2 para a versão 3
@@ -154,13 +166,52 @@ class MarketDB with GenerateItemListMixin, TestePrintMixin {
         "********************* Executada a conversão da base de dados para ver. 3 *********************");
   }
 
+// Função para migrar o banco de dados da versão 2 para a versão 4
+  Future<void> _upgradeToVersion4(Database db) async {
+    // Cria uma nova tabela com a estrutura desejada, incluindo o campo uniqueKey com UNIQUE e NOT NULL
+    await db.execute('''
+  CREATE TABLE ListaMercado_New (
+    id TEXT PRIMARY KEY,
+    userId TEXT NOT NULL,
+    userEmail TEXT NOT NULL,
+    isShared INTEGER NOT NULL,
+    sharedWithEmail TEXT,
+    custoTotal REAL NOT NULL,
+    data TEXT NOT NULL,
+    supermercado TEXT NOT NULL,
+    finalizada INTEGER NOT NULL,
+    isSynced INTEGER NOT NULL,
+    uniqueKey TEXT NOT NULL UNIQUE
+  );
+  ''');
+
+    // Copia os dados da tabela antiga para a nova
+    await db.execute('''
+  INSERT INTO ListaMercado_New (
+    id, userId, userEmail, isShared, sharedWithEmail, custoTotal, data, supermercado, finalizada, isSynced, uniqueKey
+  )
+  SELECT 
+    id, userId, userEmail, isShared, sharedWithEmail, custoTotal, data, supermercado, finalizada, isSynced, randomblob(16)
+  FROM ListaMercado;
+  ''');
+
+    // Remove a tabela antiga
+    await db.execute('DROP TABLE ListaMercado;');
+
+    // Renomeia a nova tabela para o nome original
+    await db.execute('ALTER TABLE ListaMercado_New RENAME TO ListaMercado;');
+
+    print(
+        "********************* Executada a conversão da base de dados para ver. 4 *********************");
+  }
+
   Future<void> _insertTestMarketData(Database db) async {
     //List<Produto> itensMercado = GenerateItemListMixin.generateMultiProdutosExemplo();
     //List<Produto> itensMercado = Produto.generateMultiProdutosExemplo();
     ListaMercado lista = GenerateItemListMixin.generateListaMercadoExemplo();
     //ListaMercado lista = ListaMercado.generateListaMercadoExemplo(itensMercado);
     //const userId = 1;
-    finalizarListaMercado(lista);
+    finishListaMercado(lista);
   }
 
   Future<void> insertItem(ListaMercado listaMercado, Produto produto) async {
@@ -202,12 +253,12 @@ class MarketDB with GenerateItemListMixin, TestePrintMixin {
     });
   }
 
-  Future<int> newListMarket(ListaMercado listaMercado) async {
+  Future<int> newListaMercado(ListaMercado listaMercado) async {
     await initDB();
     await openDB();
-
     listaMercado.finalizada = true;
 
+    //final listaMercadoMap = listaMercado.toMap();
     // Cria um mapa com os valores da ListaMercado
     final listaMercadoMap = {
       'userId': listaMercado.userId,
@@ -218,6 +269,8 @@ class MarketDB with GenerateItemListMixin, TestePrintMixin {
       'data': listaMercado.data,
       'supermercado': listaMercado.supermercado,
       'finalizada': listaMercado.finalizada,
+      'isSynced': listaMercado.isSynced,
+      'uniqueKey': listaMercado.uniqueKey,
     };
 
     int listaMercadoId =
@@ -448,7 +501,7 @@ class MarketDB with GenerateItemListMixin, TestePrintMixin {
     return result;
   }
 
-  Future<int> salvarListaMercadoVazia(String userId) async {
+  Future<int> saveEmptyListaMercado(String userId) async {
     await openDB();
 
     // Exclui todas as listas de mercado não finalizadas do usuário
@@ -575,7 +628,7 @@ class MarketDB with GenerateItemListMixin, TestePrintMixin {
     );
   }
 
-  Future<int> finalizarListaMercado(ListaMercado listaMercado) async {
+  Future<int> finishListaMercado(ListaMercado listaMercado) async {
     await initDB();
     await openDB();
 
@@ -643,13 +696,13 @@ class MarketDB with GenerateItemListMixin, TestePrintMixin {
         },
       );
       // Verificar os preços no histórico após a inserção
-      await pesquisarHistoricoPreco(produtoId);
+      await searchHistoryPrice(produtoId);
     }
 
     return listaMercadoId;
   }
 
-  Future<void> pesquisarHistoricoPreco(int produtoId) async {
+  Future<void> searchHistoryPrice(int produtoId) async {
     await openDB();
 
     // Consulta o histórico de preços para o produto especificado

@@ -62,8 +62,8 @@ class Produto {
       pendente: map['pendente'] as bool,
       precoAtual: (map['precoAtual'] as num).toDouble(),
       categoria: map['categoria'] as String,
-      historicoPreco: (map['historicoPreco'] as List<dynamic>)
-          .map((e) => (e as num).toDouble())
+      historicoPreco: (map['historicoPreco'] as List<dynamic>? ?? [])
+          .map((e) => e as double)
           .toList(), // Converte a lista de preços
     ).._id = map['id'] as String?; // Restaura o ID
   }

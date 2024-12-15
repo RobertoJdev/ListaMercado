@@ -432,7 +432,7 @@ class _ActiveListState extends State<ScreenActiveList>
         );
       } else {}
 
-      db.finalizarListaMercado(widget.listaMercado);
+      db.finishListaMercado(widget.listaMercado);
 
       Navigator.pushAndRemoveUntil(
         context,
@@ -467,9 +467,6 @@ class _ActiveListState extends State<ScreenActiveList>
         ...element.historicoPreco
       ]} ");
     }
-    print(widget.listaMercado.userId +
-        "---------" +
-        widget.listaMercado.userEmail);
   }
 
   void excluirItem(ListaMercado listaMercado, Produto produto) {
@@ -524,7 +521,7 @@ class _ActiveListState extends State<ScreenActiveList>
         );
       } else {}
 
-      db.newListMarket(widget.listaMercado);
+      db.newListaMercado(widget.listaMercado);
 
       Navigator.pushAndRemoveUntil(
         context,
@@ -538,6 +535,7 @@ class _ActiveListState extends State<ScreenActiveList>
     String? shareEmail = await _abrirModalCompartilharEmail(context);
     if (shareEmail!.isNotEmpty) {
       widget.listaMercado.sharedWithEmail = shareEmail;
+      widget.listaMercado.isShared = true;
       try {
         // Chama a função para enviar os dados ao Firestore
         await enviarListaParaFirestore(widget.listaMercado);
