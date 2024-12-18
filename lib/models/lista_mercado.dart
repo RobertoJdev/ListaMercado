@@ -60,6 +60,25 @@ class ListaMercado {
     }
   }
 
+  Map<String, dynamic> toMapSql() {
+    try {
+      return {
+        'userId': userId ?? '',
+        'userEmail': userEmail ?? '',
+        'isShared': (isShared ?? false) ? 1 : 0,
+        'sharedWithEmail': sharedWithEmail ?? '',
+        'custoTotal': custoTotal ?? 0.0,
+        'data': data ?? '',
+        'supermercado': supermercado ?? '',
+        'finalizada': (finalizada ?? false) ? 1 : 0,
+        'isSynced': (isSynced ?? false) ? 1 : 0,
+        'uniqueKey': uniqueKey ?? '',
+      };
+    } catch (e) {
+      throw Exception("Erro ao converter ListaMercado para Map: $e");
+    }
+  }
+
   // Método para criar ListaMercado a partir de Map<String, dynamic>
   factory ListaMercado.fromMap(Map<String, dynamic> map) {
     try {

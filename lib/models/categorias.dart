@@ -452,6 +452,7 @@ class Categorias {
       'creme de leite fresco',
       'requeijao',
       'requeijão',
+      'queijo cheddar',
       'queijo minas',
       'queijo coalho',
       'queijo prato',
@@ -528,7 +529,8 @@ class Categorias {
       'queijo de cabra fresco',
       'queijo de cabra curado',
       'queijo cottage com ervas',
-      'queijo cottage com frutas'
+      'queijo cottage com frutas',
+      'requeijão cheddar', 'requeijao cheddar'
     ];
 
     List<String> frios = [
@@ -668,6 +670,7 @@ class Categorias {
       'pano multiuso',
       'papel higiênico',
       'papel higienico',
+      'papel filme',
       'polidor de metais',
       'polidor de móveis',
       'polidor de moveis',
@@ -742,6 +745,7 @@ class Categorias {
       'descolorante',
       'desodorante',
       'desodorante aerossol',
+      'desodorante spray',
       'desodorante em bastão', 'desodorante em bastao', // Com e sem acento
       'desodorante em creme',
       'desodorante em gel',
@@ -752,8 +756,11 @@ class Categorias {
       'escova dental',
       'esfoliante corporal',
       'esfoliante facial',
+      'escova de dente',
+      'escova dental',
       'esmalte de unhas',
       'espuma de barbear',
+      'fralda',
       'fio dental',
       'fralda descartável', 'fralda descartavel', // Com e sem acento
       'gel antibacteriano',
@@ -920,11 +927,14 @@ class Categorias {
       'bacon em cubos',
       'bacon em tiras',
       'barras de cereal',
+      'batata palha',
       'biscoito',
       'biscoito amanteigado',
       'biscoito de arroz',
       'biscoito doce',
       'biscoito de doce',
+      'biscoito manteiga',
+      'biscoito de manteiga',
       'biscoito de maizena', 'biscoito de maisena', // Com e sem acento
       'biscoito maizena',
       'biscoito de polvilho',
@@ -1005,6 +1015,7 @@ class Categorias {
       'geleia de pêssego', 'geleia de pessego', // Com e sem acento
       'geleia de uva',
       'granola',
+      'macarrão parafuso', 'macarrao parafuso', // Com e sem acento
       'macarrão', 'macarrao', // Com e sem acento
       'maionese',
       'margarina',
@@ -1016,10 +1027,18 @@ class Categorias {
       'mel de flores',
       'mel de laranjeira',
       'mel de eucalipto',
+      'milho',
+      'milho de pipoca',
+      'milho de canjica',
+      'milho canjica',
+      'miojo',
+      'macarrão estantâneo', 'macarrao estantaneo',
       'molho barbecue',
       'molho inglês',
       'molho de soja',
       'molho shoyu',
+      'molho oriental',
+      'mostarda',
       'óleo', 'oleo', // Com e sem acento
       'pasta de dente', 'pasta de dentes', // Adicional
       'pipoca',
@@ -1072,7 +1091,8 @@ class Categorias {
       'polvilho para bolos',
       'vinagre de maçã orgânico',
       'vinagre de maca organico', // Com e sem acento
-      'xarope de agave orgânico'
+      'xarope de agave orgânico',
+      'rosquinha'
     ];
 
     // Verificar o produto

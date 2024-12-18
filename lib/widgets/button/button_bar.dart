@@ -123,7 +123,7 @@ class _BottomBarState extends State<ButtomBar> {
       widget.listaMercado.data = DataUtil.getCurrentFormattedDate();
 
       if (!listaAberta) {
-        db.updateListaMercado(widget.listaMercado);
+        db.atualizarListaMercado(widget.listaMercado);
 
         Navigator.pushAndRemoveUntil(
           context,
@@ -132,7 +132,7 @@ class _BottomBarState extends State<ButtomBar> {
         );
       } else {}
 
-      db.newListaMercado(widget.listaMercado);
+      db.novaListaMercado(widget.listaMercado);
 
       Navigator.pushAndRemoveUntil(
         context,
@@ -146,13 +146,13 @@ class _BottomBarState extends State<ButtomBar> {
     Produto? temp;
     temp = await newItemScreen(context);
     if (temp != null && temp.precoAtual == 0.0) {
-      db.insertItem(widget.listaMercado, temp);
+      db.inserirItem(widget.listaMercado, temp);
       widget.listPendentItens.add(temp!);
       setState(() {
         widget.listPendentItens = Produto.ordenarItens(widget.listPendentItens);
       });
     } else if (temp?.precoAtual != 0.0) {
-      db.insertItem(widget.listaMercado, temp!);
+      db.inserirItem(widget.listaMercado, temp!);
       widget.listConfirmedItens.add(temp);
       setState(() {
         widget.listConfirmedItens =

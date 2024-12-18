@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:lista_mercado/db/market_db.dart';
 import 'package:lista_mercado/screens/screen_listas_mercado.dart';
 import 'package:lista_mercado/screens/splash_screen.dart';
 import 'package:lista_mercado/my_theme.dart';
@@ -7,6 +8,10 @@ import 'package:lista_mercado/my_theme.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  final MarketDB db = MarketDB();
+  bool isLoading = true;
+  await db.initDB();
+  await db.openDB();
 
   runApp(const MyApp());
 }

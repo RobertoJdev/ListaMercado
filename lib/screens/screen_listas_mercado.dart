@@ -33,14 +33,14 @@ class _listasMercadoState extends State<ScreenListasMercado> {
   List<Map<String, dynamic>> listas = [];
   bool isLoading = true;
 
-  String email = ''; // Variável para armazenar o email
+  String email = '';
 
   @override
   void initState() {
     super.initState();
     _checkEmail(); // Verifica o e-mail quando a tela é iniciada
     _initializeDB();
-    db.getUnfinishedLists();
+    db.getListasNaoFinalizadas();
     _loadEmail(); // Chamar o método para carregar o e-mail
     _carregarListasCompartilhadas();
   }
@@ -98,16 +98,13 @@ class _listasMercadoState extends State<ScreenListasMercado> {
             .where('sharedWithEmail', isEqualTo: email)
             .get();
 
-        //TestePrintMixin.returnFireBase(snapshot);
-
         List<ListaMercado?> listasCompartilhadas = snapshot.docs
             .map((doc) {
               try {
                 ListaMercado temp = ListaMercado.fromMap(doc.data());
-                TestePrintMixin.printListaMercadoInfo(temp);
                 return temp;
               } catch (e) {
-                print("Erro ao carregar listas compartilhadas: $e");
+                print("Erro ao carregar listas compartilhadas no map: $e");
                 return null; // ou pode optar por retornar um objeto default
               }
             })
@@ -115,23 +112,27 @@ class _listasMercadoState extends State<ScreenListasMercado> {
             .toList(); // Filtra os valores nulos, se houver
 
         setState(() async {
-          //print(listasCompartilhadas.length);
-          bool addList = false;
+          bool addList;
           for (var element in listasCompartilhadas) {
+            addList = true;
+            print('Key do Firebase: ${element?.uniqueKey}');
+
             for (var i = 0; i < listasMercado.length; i++) {
-              //print(addList);
-              //print(element?.uniqueKey);
-              print(listasMercado[i].uniqueKey);
-              if (element?.uniqueKey != listasMercado[i].uniqueKey) {
-                addList = true;
+              print('Keys retornadas da Base:  ${listasMercado[i].uniqueKey}');
+              if (element?.uniqueKey == listasMercado[i].uniqueKey) {
+                print('A lista já existe na base.');
+                addList = false;
+                break;
               }
             }
-            if (addList) {
-              //print('valor do unic do elemento ${element?.uniqueKey}');
-              await db.newListaMercado(element!);
+
+            if (addList && element != null) {
+              element.id = element.id! + 99; // Altera o ID para evitar conflito
+              print('Adicionado:  ${element.uniqueKey}');
+              TestePrintMixin.printListaMercadoInfo(element);
+              await db.salvarListaMercado(element);
             }
           }
-          //listasMercado.addAll(listasCompartilhadas as Iterable<ListaMercado>);
           isLoading = false;
         });
 
@@ -279,7 +280,7 @@ class _listasMercadoState extends State<ScreenListasMercado> {
   Future<void> _initializeDB() async {
     await db.initDB();
     await db.openDB();
-    listasMercado = await db.getAllListasMercado();
+    listasMercado = await db.getTodasListasMercado();
     //TestePrintMixin.printAllItemsBD(listasMercado);
 
     setState(() {
@@ -305,7 +306,7 @@ class _listasMercadoState extends State<ScreenListasMercado> {
       if (resultado != null) {
         if (resultado) {
           // O usuário escolheu excluir
-          db.deleteListaMercado(listaNaoFinaliza!);
+          db.apagarListaMercado(listaNaoFinaliza!);
         } else {
           abrirListaMercadoNaoFinalizada(context, listaNaoFinaliza!);
         }
@@ -314,7 +315,7 @@ class _listasMercadoState extends State<ScreenListasMercado> {
   }
 
   void criarNovaListaMercado(BuildContext context) async {
-    int idNovaLista = await db.saveEmptyListaMercado(getUserId().toString());
+    int idNovaLista = await db.salvarListaMercadoVazia(getUserId().toString());
 
     ListaMercado novaListaMercado = ListaMercado(
       id: idNovaLista,
@@ -337,7 +338,7 @@ class _listasMercadoState extends State<ScreenListasMercado> {
 
   void abrirListaMercadoFinalizada(ListaMercado listaMercado) async {
     int temp = listaMercado.id!;
-    ListaMercado? tempLista = await db.searchListaMercadoById(temp);
+    ListaMercado? tempLista = await db.buscarListaMercadoById(temp);
 
     Navigator.push(
       context,
@@ -349,7 +350,7 @@ class _listasMercadoState extends State<ScreenListasMercado> {
 
   void reutilizarListaMercadoFinalizada(ListaMercado listaMercado) async {
     int temp = listaMercado.id!;
-    ListaMercado? tempLista = await db.searchListaMercadoById(temp);
+    ListaMercado? tempLista = await db.buscarListaMercadoById(temp);
 
     for (var element in tempLista!.itens) {
       element.pendente = true;
@@ -380,7 +381,7 @@ class _listasMercadoState extends State<ScreenListasMercado> {
     setState(() {
       listasMercado.remove(lista);
     });
-    db.deleteListaMercado(lista);
+    db.apagarListaMercado(lista);
     // Adicione aqui a lógica para excluir permanentemente do banco de dados
   }
 }

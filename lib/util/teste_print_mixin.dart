@@ -6,18 +6,18 @@ mixin TestePrintMixin {
     print(
         ' ---------------- Informações da Lista de Mercado: ----------------- ');
 
-    print(listaMercado.id);
-    print(listaMercado.userEmail);
-    print(listaMercado.isShared);
-    print(listaMercado.sharedWithEmail);
-    print(listaMercado.custoTotal);
-    print(listaMercado.data);
-    print(listaMercado.supermercado);
-    print(listaMercado.finalizada);
-    print(listaMercado.createdAt);
-    print(listaMercado.updatedAt);
-    print(listaMercado.isSynced);
-    print(listaMercado.uniqueKey);
+    print("Lista.Id:              ${listaMercado.id}");
+    print("Lista.userEmail:       ${listaMercado.userEmail}");
+    print("Lista.isShared:        ${listaMercado.isShared}");
+    print("Lista.sharedWithEmail: ${listaMercado.sharedWithEmail}");
+    print("Lista.custoTotal:      ${listaMercado.custoTotal}");
+    print("Lista.data:            ${listaMercado.data}");
+    print("Lista.supermercado:    ${listaMercado.supermercado}");
+    print("Lista.finalizada:      ${listaMercado.finalizada}");
+    print("Lista.createdAt:       ${listaMercado.createdAt}");
+    print("Lista.updatedAt:       ${listaMercado.updatedAt}");
+    print("Lista.isSynced:        ${listaMercado.isSynced}");
+    print("Lista.uniqueKey:       ${listaMercado.uniqueKey}");
 
     for (var produto in listaMercado.itens) {
       print(

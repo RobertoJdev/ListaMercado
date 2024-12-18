@@ -423,7 +423,7 @@ class _ActiveListState extends State<ScreenActiveList>
       widget.listaMercado.data = DataUtil.getCurrentFormattedDate();
 
       if (!listaAberta) {
-        db.updateListaMercado(widget.listaMercado);
+        db.atualizarListaMercado(widget.listaMercado);
 
         Navigator.pushAndRemoveUntil(
           context,
@@ -432,7 +432,7 @@ class _ActiveListState extends State<ScreenActiveList>
         );
       } else {}
 
-      db.finishListaMercado(widget.listaMercado);
+      db.salvarListaMercado(widget.listaMercado);
 
       Navigator.pushAndRemoveUntil(
         context,
@@ -477,20 +477,20 @@ class _ActiveListState extends State<ScreenActiveList>
         listItensConfirmed.remove(produto);
       }
     });
-    db.deleteProdutoFromLista(listaMercado, produto);
+    db.apagarProdutoDaLista(listaMercado, produto);
   }
 
   Future adicionarNovoItem() async {
     Produto? temp;
     temp = await newItemScreen(context);
     if (temp != null && temp.precoAtual == 0.0) {
-      db.insertItem(widget.listaMercado, temp);
+      db.inserirItem(widget.listaMercado, temp);
       listItensPendent.add(temp);
       setState(() {
         listItensPendent = Produto.ordenarItens(listItensPendent);
       });
     } else if (temp?.precoAtual != 0.0) {
-      db.insertItem(widget.listaMercado, temp!);
+      db.inserirItem(widget.listaMercado, temp!);
       listItensConfirmed.add(temp);
       setState(() {
         listItensConfirmed = Produto.ordenarItens(listItensConfirmed);
@@ -512,7 +512,7 @@ class _ActiveListState extends State<ScreenActiveList>
       widget.listaMercado.data = DataUtil.getCurrentFormattedDate();
 
       if (!listaAberta) {
-        db.updateListaMercado(widget.listaMercado);
+        db.atualizarListaMercado(widget.listaMercado);
 
         Navigator.pushAndRemoveUntil(
           context,
@@ -521,7 +521,7 @@ class _ActiveListState extends State<ScreenActiveList>
         );
       } else {}
 
-      db.newListaMercado(widget.listaMercado);
+      db.novaListaMercado(widget.listaMercado);
 
       Navigator.pushAndRemoveUntil(
         context,

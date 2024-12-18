@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:lista_mercado/models/lista_mercado.dart';
 import 'package:uuid/uuid.dart';
 
 class Produto {
