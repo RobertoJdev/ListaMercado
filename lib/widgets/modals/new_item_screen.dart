@@ -14,10 +14,10 @@ import '../button/custom_buttons.dart';
 Future<Produto?> newItemScreen(BuildContext context) async {
   Produto? newItem;
 
-  TextEditingController _textEditingControllerNewItem = TextEditingController();
-  TextEditingController _textEditingControllerNewItemQuant =
+  TextEditingController textEditingControllerNewItem = TextEditingController();
+  TextEditingController textEditingControllerNewItemQuant =
       TextEditingController();
-  TextEditingController _textEditingControllerNewItemValor =
+  TextEditingController textEditingControllerNewItemValor =
       TextEditingController();
 
   Completer<Produto?> completer = Completer();
@@ -51,7 +51,7 @@ Future<Produto?> newItemScreen(BuildContext context) async {
                     child: TextField(
                       autofocus: true,
                       keyboardType: TextInputType.text,
-                      controller: _textEditingControllerNewItem,
+                      controller: textEditingControllerNewItem,
                       textAlign: TextAlign.center,
                       style: const TextStyle(fontSize: 20),
                       decoration: const InputDecoration(
@@ -61,21 +61,21 @@ Future<Produto?> newItemScreen(BuildContext context) async {
                         setState(
                           () {
                             isButtonEnabled =
-                                _textEditingControllerNewItem.text.isNotEmpty &&
-                                    _textEditingControllerNewItemQuant
+                                textEditingControllerNewItem.text.isNotEmpty &&
+                                    textEditingControllerNewItemQuant
                                         .text.isNotEmpty;
 
                             selectedCategory = Categorias.defineCategoriaAuto(
-                                _textEditingControllerNewItem.text);
+                                textEditingControllerNewItem.text);
                           },
                         );
                       },
                       onTap: () {
                         // Seleciona todo o conteúdo ao focar no campo
-                        _textEditingControllerNewItem.selection = TextSelection(
+                        textEditingControllerNewItem.selection = TextSelection(
                           baseOffset: 0,
                           extentOffset:
-                              _textEditingControllerNewItem.text.length,
+                              textEditingControllerNewItem.text.length,
                         );
                       },
                     ),
@@ -95,16 +95,16 @@ Future<Produto?> newItemScreen(BuildContext context) async {
                                   RegExp(r'[0-9\.,]')),
                             ], */
                             keyboardType: TextInputType.number,
-                            controller: _textEditingControllerNewItemQuant,
+                            controller: textEditingControllerNewItemQuant,
                             textAlign: TextAlign.center,
                             style: const TextStyle(fontSize: 20),
                             onChanged: (text) {
                               setState(
                                 () {
                                   isButtonEnabled =
-                                      _textEditingControllerNewItem
+                                      textEditingControllerNewItem
                                               .text.isNotEmpty &&
-                                          _textEditingControllerNewItemQuant
+                                          textEditingControllerNewItemQuant
                                               .text.isNotEmpty;
                                 },
                               );
@@ -114,10 +114,10 @@ Future<Produto?> newItemScreen(BuildContext context) async {
                             ),
                             onTap: () {
                               // Seleciona todo o conteúdo ao focar no campo
-                              _textEditingControllerNewItemQuant.selection =
+                              textEditingControllerNewItemQuant.selection =
                                   TextSelection(
                                 baseOffset: 0,
-                                extentOffset: _textEditingControllerNewItemQuant
+                                extentOffset: textEditingControllerNewItemQuant
                                     .text.length,
                               );
                             },
@@ -134,7 +134,7 @@ Future<Produto?> newItemScreen(BuildContext context) async {
                                   RegExp(r'[0-9\.,]')),
                             ], */
                             keyboardType: TextInputType.number,
-                            controller: _textEditingControllerNewItemValor,
+                            controller: textEditingControllerNewItemValor,
                             textAlign: TextAlign.center,
                             style: const TextStyle(fontSize: 20),
                             decoration: const InputDecoration(
@@ -142,10 +142,10 @@ Future<Produto?> newItemScreen(BuildContext context) async {
                             ),
                             onTap: () {
                               // Seleciona todo o conteúdo ao focar no campo
-                              _textEditingControllerNewItemValor.selection =
+                              textEditingControllerNewItemValor.selection =
                                   TextSelection(
                                 baseOffset: 0,
-                                extentOffset: _textEditingControllerNewItemValor
+                                extentOffset: textEditingControllerNewItemValor
                                     .text.length,
                               );
                             },
@@ -210,25 +210,25 @@ Future<Produto?> newItemScreen(BuildContext context) async {
                       ),
                       ElevatedButton(
                           style: ButtonStyle(
-                            backgroundColor: _textEditingControllerNewItem
+                            backgroundColor: textEditingControllerNewItem
                                         .text.isNotEmpty &&
-                                    _textEditingControllerNewItemQuant
+                                    textEditingControllerNewItemQuant
                                         .text.isNotEmpty
-                                ? MaterialStateProperty.all(Colors.deepPurple)
-                                : MaterialStateProperty.all(
+                                ? WidgetStateProperty.all(Colors.deepPurple)
+                                : WidgetStateProperty.all(
                                     Colors.deepPurple[100]),
                           ),
-                          onPressed: _textEditingControllerNewItem
+                          onPressed: textEditingControllerNewItem
                                       .text.isNotEmpty &&
-                                  _textEditingControllerNewItemQuant
+                                  textEditingControllerNewItemQuant
                                       .text.isNotEmpty
                               ? () {
                                   String descricao =
-                                      _textEditingControllerNewItem.text;
+                                      textEditingControllerNewItem.text;
                                   String quantidadeText =
-                                      _textEditingControllerNewItemQuant.text;
+                                      textEditingControllerNewItemQuant.text;
                                   String valorText =
-                                      _textEditingControllerNewItemValor.text;
+                                      textEditingControllerNewItemValor.text;
 
                                   // Substituir ',' por '.' antes da conversão
                                   quantidadeText =
@@ -247,10 +247,10 @@ Future<Produto?> newItemScreen(BuildContext context) async {
                                       categoria: selectedCategory,
                                     );
 
-                                    _textEditingControllerNewItem.text = '';
-                                    _textEditingControllerNewItemQuant.text =
+                                    textEditingControllerNewItem.text = '';
+                                    textEditingControllerNewItemQuant.text =
                                         '';
-                                    _textEditingControllerNewItemValor.text =
+                                    textEditingControllerNewItemValor.text =
                                         '';
 
                                     completer.complete(newItem);

@@ -8,7 +8,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 class Menu extends StatefulWidget {
   final String userEmail; // Adicionando uma variável para o e-mail do usuário
-  const Menu({Key? key, required this.userEmail}) : super(key: key);
+  const Menu({super.key, required this.userEmail});
 
   @override
   State<Menu> createState() => _MenuState();

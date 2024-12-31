@@ -15,8 +15,8 @@ class CustomButtons {
           Navigator.of(context).pop();
         },
         style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all(Colors.deepPurple[100]),
-            foregroundColor: MaterialStateProperty.all(Colors.deepPurple)),
+            backgroundColor: WidgetStateProperty.all(Colors.deepPurple[100]),
+            foregroundColor: WidgetStateProperty.all(Colors.deepPurple)),
         child: const Padding(
             padding: EdgeInsets.all(10.0), child: Text(' Excluir ')));
   }
@@ -33,8 +33,8 @@ class CustomButtons {
         Navigator.of(context).pop();
       },
       style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all(Colors.deepPurple[100]),
-          foregroundColor: MaterialStateProperty.all(Colors.deepPurple)),
+          backgroundColor: WidgetStateProperty.all(Colors.deepPurple[100]),
+          foregroundColor: WidgetStateProperty.all(Colors.deepPurple)),
       child: const Padding(
         padding: EdgeInsets.all(10.0),
         child: Text('Cancelar'),
@@ -54,8 +54,8 @@ class CustomButtons {
         Navigator.of(context).pop();
       },
       style: ButtonStyle(
-        backgroundColor: MaterialStateProperty.all(Colors.deepPurple),
-        foregroundColor: MaterialStateProperty.all(Colors.white),
+        backgroundColor: WidgetStateProperty.all(Colors.deepPurple),
+        foregroundColor: WidgetStateProperty.all(Colors.white),
       ),
       child: const Padding(
         padding: EdgeInsets.all(10.0),
@@ -82,8 +82,8 @@ class CustomButtons {
         Navigator.of(context).pop();
       },
       style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all(Colors.deepPurple),
-          foregroundColor: MaterialStateProperty.all(Colors.white)),
+          backgroundColor: WidgetStateProperty.all(Colors.deepPurple),
+          foregroundColor: WidgetStateProperty.all(Colors.white)),
       child: const Padding(
         padding: EdgeInsets.all(10),
         child: Text('   Sair   '),
@@ -104,8 +104,8 @@ class CustomButtons {
         Navigator.of(context).pop();
       },
       style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all(Colors.deepPurple[100]),
-          foregroundColor: MaterialStateProperty.all(Colors.deepPurple)),
+          backgroundColor: WidgetStateProperty.all(Colors.deepPurple[100]),
+          foregroundColor: WidgetStateProperty.all(Colors.deepPurple)),
       child: const Padding(
         padding: EdgeInsets.all(10),
         child: Text('    Abrir    '),
@@ -126,8 +126,8 @@ class CustomButtons {
         Navigator.of(context).pop();
       },
       style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all(Colors.deepPurple),
-          foregroundColor: MaterialStateProperty.all(Colors.white)),
+          backgroundColor: WidgetStateProperty.all(Colors.deepPurple),
+          foregroundColor: WidgetStateProperty.all(Colors.white)),
       child: const Padding(
         padding: EdgeInsets.all(10),
         child: Text('    Abrir    '),
@@ -149,8 +149,8 @@ class CustomButtons {
         Navigator.of(context).pop();
       },
       style: ButtonStyle(
-        backgroundColor: MaterialStateProperty.all(Colors.deepPurple),
-        foregroundColor: MaterialStateProperty.all(Colors.white),
+        backgroundColor: WidgetStateProperty.all(Colors.deepPurple),
+        foregroundColor: WidgetStateProperty.all(Colors.white),
       ),
       child: const Padding(
         padding: EdgeInsets.all(10),
@@ -171,8 +171,8 @@ class CustomButtons {
           Navigator.of(context).pop();
         },
         style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all(Colors.deepPurple[100]),
-            foregroundColor: MaterialStateProperty.all(Colors.deepPurple)),
+            backgroundColor: WidgetStateProperty.all(Colors.deepPurple[100]),
+            foregroundColor: WidgetStateProperty.all(Colors.deepPurple)),
         child:
             const Padding(padding: EdgeInsets.all(10.0), child: Text(' Sim ')));
   }
@@ -189,8 +189,8 @@ class CustomButtons {
         Navigator.of(context).pop();
       },
       style: ButtonStyle(
-        backgroundColor: MaterialStateProperty.all(Colors.deepPurple),
-        foregroundColor: MaterialStateProperty.all(Colors.white),
+        backgroundColor: WidgetStateProperty.all(Colors.deepPurple),
+        foregroundColor: WidgetStateProperty.all(Colors.white),
       ),
       child: const Padding(
         padding: EdgeInsets.all(10.0),
@@ -211,8 +211,8 @@ class CustomButtons {
         Navigator.of(context).pop();
       },
       style: ButtonStyle(
-        backgroundColor: MaterialStateProperty.all(Colors.deepPurple),
-        foregroundColor: MaterialStateProperty.all(Colors.white),
+        backgroundColor: WidgetStateProperty.all(Colors.deepPurple),
+        foregroundColor: WidgetStateProperty.all(Colors.white),
       ),
       child: const Padding(
         padding: EdgeInsets.all(10.0),

@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:lista_mercado/models/lista_mercado.dart';
 
 class ItemListComprasNaoFinalizada extends StatelessWidget {
-  ItemListComprasNaoFinalizada({
-    Key? key,
+  const ItemListComprasNaoFinalizada({
+    super.key,
     required this.listaMercado,
     // required this.moveCallback,
-  }) : super(key: key);
+  });
 
   // final Function(Produto) moveCallback;
   final ListaMercado listaMercado;

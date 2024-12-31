@@ -5,7 +5,7 @@ import 'package:lista_mercado/models/produto.dart';
 
 class Populador {
   //List<Produto> produtos = [];
-  bool _isPopulated = false;
+  final bool _isPopulated = false;
 
   // Singleton instance
   static final Populador _singleton = Populador._internal();

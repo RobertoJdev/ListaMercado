@@ -5,26 +5,26 @@ import 'package:lista_mercado/widgets/button/custom_buttons.dart';
 import 'dart:async';
 
 Future<String?> confirmShareEmailScreen({BuildContext? context}) async {
-  TextEditingController _emailController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
   Completer<String?> completer = Completer();
   bool isButtonEnabled = false;
   bool saveAsPreferred = false;
 
-  Future<void> _savePreferredEmail(String email) async {
+  Future<void> savePreferredEmail(String email) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('preferredEmail', email);
   }
 
-  Future<void> _loadPreferredEmail() async {
+  Future<void> loadPreferredEmail() async {
     final prefs = await SharedPreferences.getInstance();
     final preferredEmail = prefs.getString('preferredEmail');
     if (preferredEmail != null) {
-      _emailController.text = preferredEmail;
+      emailController.text = preferredEmail;
       saveAsPreferred = true;
     }
   }
 
-  await _loadPreferredEmail();
+  await loadPreferredEmail();
 
   await showModalBottomSheet(
     isScrollControlled: true,
@@ -51,7 +51,7 @@ Future<String?> confirmShareEmailScreen({BuildContext? context}) async {
                     padding: MyTheme.myCustomEdgeInsetsTextFildItensModal,
                     child: TextField(
                       autofocus: true,
-                      controller: _emailController,
+                      controller: emailController,
                       textAlign: TextAlign.center,
                       keyboardType: TextInputType.emailAddress,
                       decoration: const InputDecoration(
@@ -100,21 +100,21 @@ Future<String?> confirmShareEmailScreen({BuildContext? context}) async {
                         ElevatedButton(
                           style: ButtonStyle(
                             backgroundColor: isButtonEnabled
-                                ? MaterialStateProperty.all(
+                                ? WidgetStateProperty.all(
                                     Colors.deepPurple,
                                   )
-                                : MaterialStateProperty.all(
+                                : WidgetStateProperty.all(
                                     Colors.deepPurple[100],
                                   ),
                           ),
                           onPressed: isButtonEnabled
                               ? () {
-                                  final email = _emailController.text.trim();
+                                  final email = emailController.text.trim();
                                   if (saveAsPreferred) {
-                                    _savePreferredEmail(email);
+                                    savePreferredEmail(email);
                                   }
                                   completer.complete(email);
-                                  _emailController.clear();
+                                  emailController.clear();
                                   Navigator.of(context).pop();
                                 }
                               : null,

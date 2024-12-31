@@ -12,13 +12,9 @@ class MarketDB with GenerateItemListMixin, TestePrintMixin {
   late Database _database;
 
   Future<void> openDB() async {
-    if (_database == null || !(_database?.isOpen ?? false)) {
-      print(
-          'openDB: Banco não está aberto ou inicializado. Chamando initDB...');
+    if (!(_database.isOpen ?? false)) {
+      //TestePrintMixin.openDBPrint(true);
       await initDB();
-      print('openDB: Banco inicializado com sucesso.');
-    } else {
-      print('openDB: Banco já estava aberto.');
     }
   }
 
@@ -133,7 +129,7 @@ class MarketDB with GenerateItemListMixin, TestePrintMixin {
         await _createTables(db);
       },
       onOpen: (db) async {
-        await DatabaseUtils.verificarEstruturaTabela(db, 'ListaMercado');
+        //await DatabaseUtils.verificarEstruturaTabela(db, 'ListaMercado');
         //print(
         //    "--------------- Banco de dados aberto com sucesso. ---------------");
       },
@@ -194,75 +190,23 @@ class MarketDB with GenerateItemListMixin, TestePrintMixin {
     });
   }
 
-  Future<int> novaListaMercado(ListaMercado listaMercado) async {
-    await initDB();
+  Future<void> apagarProdutoDaLista(
+      ListaMercado listaMercado, Produto produto) async {
     await openDB();
-    listaMercado.finalizada = true;
-    //print('chamada de metodo para criar nova lista mercado');
-    //TestePrintMixin.printListaMercadoInfo(listaMercado);
 
-    final listaMercadoMap = listaMercado.toMapSql();
+    // Exclui a associação do produto com a lista de mercado
+    await _database.delete(
+      'ListaMercadoProduto',
+      where: 'listaMercadoId = ? AND produtoId = ?',
+      whereArgs: [listaMercado.id, produto.getId()],
+    );
 
-    //final listaMercadoMap = listaMercado.toMap();
-    // Cria um mapa com os valores da ListaMercado
-/*     final listaMercadoMap = {
-      'userId': listaMercado.userId,
-      'userEmail': listaMercado.userEmail,
-      'isShared': listaMercado.isShared ? 1 : 0,
-      'sharedWithEmail': listaMercado.sharedWithEmail,
-      'custoTotal': listaMercado.custoTotal,
-      'data': listaMercado.data,
-      'supermercado': listaMercado.supermercado,
-      'finalizada': listaMercado.finalizada ? 1 : 0,
-      'isSynced': listaMercado.isSynced ? 1 : 0,
-      'uniqueKey': listaMercado.uniqueKey,
-    }; */
-
-    int listaMercadoId =
-        await _database.insert('ListaMercado', listaMercadoMap);
-
-    // Salva os produtos associados à ListaMercado
-    for (Produto produto in listaMercado.itens) {
-      // Cria um mapa com os valores do Produto
-      final produtoMap = {
-        'descricao': produto.descricao,
-        'barras': produto.barras,
-        'quantidade': produto.quantidade,
-        'pendente':
-            produto.pendente ? 1 : 0, // Ajustando para armazenar como inteiro
-        'precoAtual': produto.precoAtual,
-        'categoria': produto.categoria,
-      };
-
-      // Insere o produto no banco de dados
-      int produtoId = await _database.insert('Produto', produtoMap);
-
-      // Insere o preço atual no histórico de preços
-      if (produto.precoAtual != null && produto.precoAtual > 0) {
-        await _database.insert(
-          'HistoricoPreco', // Supondo que você tenha uma tabela de histórico de preços
-          {
-            'produtoId': produtoId,
-            'preco': produto.precoAtual,
-            'data': DateTime.now().toIso8601String(), // Armazena a data atual
-          },
-        );
-      }
-
-      // Associa o produto à ListaMercado
-      await _database.insert(
-        'ListaMercadoProduto',
-        {
-          'listaMercadoId': listaMercadoId,
-          'produtoId': produtoId,
-        },
-      );
-
-      // Imprimir os preços no histórico
-      TestePrintMixin.printHistoricoPreco(produto, "NOVA LISTA MERCADO");
-    }
-
-    return listaMercadoId;
+    // Exclui o produto da tabela de produtos
+    await _database.delete(
+      'Produto',
+      where: 'id = ?',
+      whereArgs: [produto.getId()],
+    );
   }
 
   Future<List<Map<String, dynamic>>> getTodosItens() async {
@@ -446,47 +390,175 @@ class MarketDB with GenerateItemListMixin, TestePrintMixin {
       }
     }
 
-    TestePrintMixin.printHistoricoPreco(
+    /* TestePrintMixin.printHistoricoPreco(
         result!.itens[0], "searchListaMercadoById");
-
+ */
     return result;
   }
 
-  Future<int> salvarListaMercadoVazia(String userId) async {
+  Future<void> procurarHistoricoDePreco(int produtoId) async {
     await openDB();
 
-    ListaMercado lista = ListaMercado(
-      userId: userId,
-      userEmail: '',
-      custoTotal: 0.0,
-      data: '',
-      supermercado: 'Lista Não Finalizada',
-      finalizada: false,
-      itens: [],
+    // Consulta o histórico de preços para o produto especificado
+    List<Map<String, dynamic>> historico = await _database.query(
+      'HistoricoPreco',
+      where: 'produtoId = ?',
+      whereArgs: [produtoId],
+      orderBy: 'data ASC',
     );
 
-    // Exclui todas as listas de mercado não finalizadas do usuário
+    if (historico.isNotEmpty) {
+      //print("Histórico de preços para o produto $produtoId:");
+      for (var entry in historico) {
+        //print("Preço: ${entry['preco']}, Data: ${entry['data']}");
+      }
+    } else {
+      //print("Nenhum histórico encontrado para o produto $produtoId.");
+    }
+  }
+
+  Future<int> novaListaMercado(ListaMercado listaMercado) async {
+    await initDB();
+    await openDB();
+    listaMercado.finalizada = true;
+    //print('chamada de metodo para criar nova lista mercado');
+    //TestePrintMixin.printListaMercadoInfo(listaMercado);
+
+    final listaMercadoMap = listaMercado.toMapSql();
+
+    int listaMercadoId =
+        await _database.insert('ListaMercado', listaMercadoMap);
+
+    // Salva os produtos associados à ListaMercado
+    for (Produto produto in listaMercado.itens) {
+      // Cria um mapa com os valores do Produto
+      final produtoMap = {
+        'descricao': produto.descricao,
+        'barras': produto.barras,
+        'quantidade': produto.quantidade,
+        'pendente':
+            produto.pendente ? 1 : 0, // Ajustando para armazenar como inteiro
+        'precoAtual': produto.precoAtual,
+        'categoria': produto.categoria,
+      };
+
+      // Insere o produto no banco de dados
+      int produtoId = await _database.insert('Produto', produtoMap);
+
+      // Insere o preço atual no histórico de preços
+      if (produto.precoAtual > 0) {
+        await _database.insert(
+          'HistoricoPreco', // Supondo que você tenha uma tabela de histórico de preços
+          {
+            'produtoId': produtoId,
+            'preco': produto.precoAtual,
+            'data': DateTime.now().toIso8601String(), // Armazena a data atual
+          },
+        );
+      }
+
+      // Associa o produto à ListaMercado
+      await _database.insert(
+        'ListaMercadoProduto',
+        {
+          'listaMercadoId': listaMercadoId,
+          'produtoId': produtoId,
+        },
+      );
+
+      // Imprimir os preços no histórico
+      TestePrintMixin.printHistoricoPreco(produto, "NOVA LISTA MERCADO");
+    }
+
+    return listaMercadoId;
+  }
+
+  Future<int> salvarListaMercadoVazia(ListaMercado novaLista) async {
+    await initDB();
+    await openDB();
+
+    String userId = novaLista.userId;
+    ListaMercado lista = novaLista;
+
+    // Exclui todas as listas de mercado não finalizadas
     await _database.delete(
       'ListaMercado',
-      where: 'userId = ? AND finalizada = 0',
-      whereArgs: [userId],
+      where: 'finalizada = 0',
     );
 
     final listaMercadoMap = lista.toMapSql();
-
-/*     // Cria um mapa com os valores da ListaMercado
-    final listaMercadoMap = {
-      'userId': userId,
-      'custoTotal': 0.0,
-      'data': '',
-      'supermercado': 'Lista Não Finalizada',
-      'finalizada': 0,
-    }; */
 
     // Insere a lista de mercado vazia no banco de dados
     int listaMercadoId =
         await _database.insert('ListaMercado', listaMercadoMap);
 
+    return listaMercadoId;
+  }
+
+  Future<int> salvarListaMercado(ListaMercado listaMercado) async {
+    await initDB();
+    await openDB();
+
+    //listaMercado.finalizada = true;
+    //print('teste interno no save do bd ${listaMercado.uniqueKey}');
+
+    listaMercado.uniqueKey =
+        listaMercado.uniqueKey ?? Uuid().v4().substring(0, 8);
+    //listaMercado.uniqueKey = Uuid().v4().substring(0, 8);
+    final listaMercadoMap = listaMercado.toMapSql();
+
+    int listaMercadoId =
+        await _database.insert('ListaMercado', listaMercadoMap);
+
+    // Salva os produtos associados à ListaMercado
+    for (Produto produto in listaMercado.itens) {
+      // Cria um mapa com os valores do Produto
+      final produtoMap = {
+        'descricao': produto.descricao,
+        'barras': produto.barras,
+        'quantidade': produto.quantidade,
+        'pendente': produto.pendente ? 1 : 0, // Salvando como inteiro
+        'precoAtual': produto.precoAtual,
+        'categoria': produto.categoria,
+      };
+
+      // Insere o produto no banco de dados
+      int produtoId = await _database.insert('Produto', produtoMap);
+
+      //teste para inserir os valores já existentes no historico.
+
+      for (int i = 0; i < produto.historicoPreco.length; i++) {
+        await _database.insert(
+          'HistoricoPreco',
+          {
+            'produtoId': produtoId,
+            'preco': produto.historicoPreco[i],
+            'data': DateTime.now().toIso8601String(),
+          },
+        );
+      }
+
+      // Insere o preço atual no histórico, independentemente de ser igual ao anterior
+      await _database.insert(
+        'HistoricoPreco',
+        {
+          'produtoId': produtoId,
+          'preco': produto.precoAtual,
+          'data': DateTime.now().toIso8601String(),
+        },
+      );
+
+      // Associa o produto à ListaMercado
+      await _database.insert(
+        'ListaMercadoProduto',
+        {
+          'listaMercadoId': listaMercadoId,
+          'produtoId': produtoId,
+        },
+      );
+      // Verificar os preços no histórico após a inserção
+      await procurarHistoricoDePreco(produtoId);
+    }
     return listaMercadoId;
   }
 
@@ -530,7 +602,7 @@ class MarketDB with GenerateItemListMixin, TestePrintMixin {
         );
 
         // Insere o preço atual no histórico de preços
-        if (produto.precoAtual != null && produto.precoAtual > 0) {
+        if (produto.precoAtual > 0) {
           await txn.insert(
             'HistoricoPreco',
             {
@@ -572,127 +644,29 @@ class MarketDB with GenerateItemListMixin, TestePrintMixin {
     );
   }
 
-  Future<void> apagarProdutoDaLista(
-      ListaMercado listaMercado, Produto produto) async {
-    await openDB();
-
-    // Exclui a associação do produto com a lista de mercado
-    await _database.delete(
-      'ListaMercadoProduto',
-      where: 'listaMercadoId = ? AND produtoId = ?',
-      whereArgs: [listaMercado.id, produto.getId()],
-    );
-
-    // Exclui o produto da tabela de produtos
-    await _database.delete(
-      'Produto',
-      where: 'id = ?',
-      whereArgs: [produto.getId()],
-    );
-  }
-
-  Future<int> salvarListaMercado(ListaMercado listaMercado) async {
+  Future<void> apagarListaMercadoNaoFinalizada() async {
     await initDB();
     await openDB();
 
-    listaMercado.finalizada = true;
-
-    print('teste interno no save do bd ${listaMercado.uniqueKey}');
-
-    //listaMercado.uniqueKey = Uuid().v4().substring(0, 8);
-
-    final listaMercadoMap = listaMercado.toMapSql();
-
-/*     // Cria um mapa com os valores da ListaMercado
-    final listaMercadoMap = {
-      'userId': listaMercado.userId,
-      'userEmail': listaMercado.userEmail,
-      'isShared': listaMercado.isShared ? 1 : 0,
-      'sharedWithEmail': listaMercado.sharedWithEmail,
-      'custoTotal': listaMercado.custoTotal,
-      'data': listaMercado.data,
-      'supermercado': listaMercado.supermercado,
-      'finalizada': listaMercado.finalizada ? 1 : 0,
-      'isSynced': listaMercado.isSynced ? 1 : 0,
-      'uniqueKey': listaMercado.uniqueKey,
-    }; */
-
-    int listaMercadoId =
-        await _database.insert('ListaMercado', listaMercadoMap);
-
-    // Salva os produtos associados à ListaMercado
-    for (Produto produto in listaMercado.itens) {
-      // Cria um mapa com os valores do Produto
-      final produtoMap = {
-        'descricao': produto.descricao,
-        'barras': produto.barras,
-        'quantidade': produto.quantidade,
-        'pendente': produto.pendente ? 1 : 0, // Salvando como inteiro
-        'precoAtual': produto.precoAtual,
-        'categoria': produto.categoria,
-      };
-
-      // Insere o produto no banco de dados
-      int produtoId = await _database.insert('Produto', produtoMap);
-
-      //teste para inserir os valores já existentes no historico.
-
-      for (int i = 0; i < produto.historicoPreco.length; i++) {
-        await _database.insert(
-          'HistoricoPreco',
-          {
-            'produtoId': produtoId,
-            'preco': produto.historicoPreco[i],
-            'data': DateTime.now().toIso8601String(),
-          },
-        );
-      }
-
-      // Insere o preço atual no histórico, independentemente de ser igual ao anterior
-      if (produto.precoAtual != null) {
-        await _database.insert(
-          'HistoricoPreco',
-          {
-            'produtoId': produtoId,
-            'preco': produto.precoAtual,
-            'data': DateTime.now().toIso8601String(),
-          },
-        );
-      }
-
-      // Associa o produto à ListaMercado
-      await _database.insert(
-        'ListaMercadoProduto',
-        {
-          'listaMercadoId': listaMercadoId,
-          'produtoId': produtoId,
-        },
-      );
-      // Verificar os preços no histórico após a inserção
-      await procurarHistoricoDePreco(produtoId);
-    }
-
-    return listaMercadoId;
-  }
-
-  Future<void> procurarHistoricoDePreco(int produtoId) async {
-    await openDB();
-
-    // Consulta o histórico de preços para o produto especificado
-    List<Map<String, dynamic>> historico = await _database.query(
-      'HistoricoPreco',
-      where: 'produtoId = ?',
-      whereArgs: [produtoId],
-      orderBy: 'data ASC',
+    await _database.delete(
+      'ListaMercadoProduto',
+      where:
+          'listaMercadoId IN (SELECT id FROM ListaMercado WHERE finalizada = 0)',
     );
 
-    if (historico.isNotEmpty) {
-      //print("Histórico de preços para o produto $produtoId:");
-      for (var entry in historico) {
-        //print("Preço: ${entry['preco']}, Data: ${entry['data']}");
-      }
-    } else {
-      //print("Nenhum histórico encontrado para o produto $produtoId.");
-    }
+    await _database.delete(
+      'HistoricoPreco',
+      where:
+          'produtoId IN (SELECT produtoId FROM ListaMercadoProduto WHERE listaMercadoId IN (SELECT id FROM ListaMercado WHERE finalizada = 0))',
+    );
+    await _database.delete(
+      'Produto',
+      where: 'id NOT IN (SELECT produtoId FROM ListaMercadoProduto)',
+    );
+
+    await _database.delete(
+      'ListaMercado',
+      where: 'finalizada = 0',
+    );
   }
 }

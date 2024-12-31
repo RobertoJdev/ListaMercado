@@ -6,7 +6,7 @@ import 'dart:async';
 import 'package:lista_mercado/widgets/button/custom_buttons.dart';
 
 Future<String?> confirmMercadoScreen({BuildContext? context}) async {
-  TextEditingController _textEditingController = TextEditingController();
+  TextEditingController textEditingController = TextEditingController();
   Completer<String?> completer = Completer();
   bool isButtonEnabled = false;
 
@@ -33,7 +33,7 @@ Future<String?> confirmMercadoScreen({BuildContext? context}) async {
                     padding: MyTheme.myCustomEdgeInsetsTextFildItensModal,
                     child: TextField(
                       autofocus: true,
-                      controller: _textEditingController,
+                      controller: textEditingController,
                       textAlign: TextAlign.center,
                       decoration: const InputDecoration(
                         labelText: 'Supermercado',
@@ -76,18 +76,18 @@ Future<String?> confirmMercadoScreen({BuildContext? context}) async {
                         ElevatedButton(
                           style: ButtonStyle(
                             backgroundColor: isButtonEnabled
-                                ? MaterialStateProperty.all(
+                                ? WidgetStateProperty.all(
                                     Colors.deepPurple,
                                   )
-                                : MaterialStateProperty.all(
+                                : WidgetStateProperty.all(
                                     Colors.deepPurple[100],
                                   ),
                           ),
                           onPressed: isButtonEnabled
                               ? () {
                                   completer
-                                      .complete(_textEditingController.text);
-                                  _textEditingController.text = '';
+                                      .complete(textEditingController.text);
+                                  textEditingController.text = '';
                                   Navigator.of(context).pop();
                                 }
                               : null,

@@ -3,6 +3,8 @@ import 'package:lista_mercado/screens/screen_listas_mercado.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class EmailScreen extends StatefulWidget {
+  const EmailScreen({super.key});
+
   @override
   _EmailScreenState createState() => _EmailScreenState();
 }
@@ -114,8 +116,8 @@ class _EmailScreenState extends State<EmailScreen> {
                 ElevatedButton(
                   style: ButtonStyle(
                     backgroundColor:
-                        MaterialStateProperty.all(Colors.deepPurple),
-                    foregroundColor: MaterialStateProperty.all(Colors.white),
+                        WidgetStateProperty.all(Colors.deepPurple),
+                    foregroundColor: WidgetStateProperty.all(Colors.white),
                   ),
                   onPressed: _saveEmail,
                   child: const Padding(

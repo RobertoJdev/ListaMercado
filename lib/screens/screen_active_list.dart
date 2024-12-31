@@ -15,6 +15,7 @@ import 'package:lista_mercado/screens/screen_listas_mercado.dart';
 import 'package:lista_mercado/util/data_util.dart';
 import 'package:lista_mercado/widgets/custom_app_bar.dart.dart';
 import 'package:flutter/services.dart';
+import 'package:uuid/uuid.dart';
 
 import '../widgets/alerts/confirm_exit_list.dart';
 
@@ -33,11 +34,12 @@ final GlobalKey<_ActiveListState> activeListKey = GlobalKey<_ActiveListState>();
 
 class _ActiveListState extends State<ScreenActiveList>
     with TickerProviderStateMixin {
-  late TextEditingController _textEditingController = TextEditingController();
+  late final TextEditingController _textEditingController =
+      TextEditingController();
   List<Produto> listItensPendent = [];
   List<Produto> listItensConfirmed = [];
   final MarketDB db = MarketDB();
-  late bool listaAberta;
+  //late bool listaAberta;
 
   late String totalValue;
   bool isContainerPressed = false;
@@ -54,7 +56,7 @@ class _ActiveListState extends State<ScreenActiveList>
       vsync: this,
       duration: Duration(milliseconds: 100),
     );
-    testeExibirListaItems();
+    //testeExibirListaItems();
     // Inicie com a lista de itens que faltam expandida
     //isListPendentExpanded = true;
     //isListConfirmedExpanded = false;
@@ -79,27 +81,43 @@ class _ActiveListState extends State<ScreenActiveList>
         screenReturn: true,
         showShareButton: true,
         onSharePressed: compartilharLista,
+        onSave: salvarListaTemp,
       ),
 
       body: PopScope(
         canPop: false,
-        onPopInvoked: (bool didPop) async {
+        onPopInvokedWithResult: (bool didPop, dynamic result) async {
+          //print('onPopInvokedWithResult chamado'); // Confirmação do evento
+
+/*
           // Chama o diálogo e aguarda a resposta
           final shouldSave = await showDialog<bool>(
             context: context,
             builder: (context) => const ConfirmExitDialog(),
           );
 
-          /*// Lógica com base no retorno do diálogo
+           // Lógica com base no retorno do diálogo
           if (shouldSave == true) {
+            print('Salvando lista...');
             if (activeListKey.currentState != null) {
               activeListKey.currentState!.salvarListaTemp();
-              return;
-            } else {
-              print('activeListKey.currentState is null');
             }
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => const ScreenListasMercado()),
+              (route) => false,
+            );
+          } else if (shouldSave == false) {
+            print('Descartando lista e voltando...');
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => const ScreenListasMercado()),
+              (route) => false,
+            );
           } else {
-            //return; // Retorna o resultado para a navegação
+            print('Usuário fechou o diálogo sem ação.');
           } */
         },
         child: Stack(
@@ -300,7 +318,7 @@ class _ActiveListState extends State<ScreenActiveList>
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     GestureDetector(
-                      onTap: finalizarListCompras,
+                      onTap: finalizarListaCompras,
                       child: Row(
                         children: [
                           const Icon(
@@ -384,9 +402,7 @@ class _ActiveListState extends State<ScreenActiveList>
 
   void moveItemToPendentList(Produto item) {
     setState(() {
-      if (item.precoAtual == 0.0 ||
-          item.precoAtual == null ||
-          item.pendente == true) {
+      if (item.precoAtual == 0.0 || item.pendente == true) {
         item.precoAtual = 0.0;
         item.pendente = true;
         listItensConfirmed.remove(item);
@@ -410,10 +426,10 @@ class _ActiveListState extends State<ScreenActiveList>
     return totalList;
   }
 
-  void finalizarListCompras() async {
+  void finalizarListaCompras() async {
     String? nomeMercado = await confirmMercadoScreen(context: context);
 
-    listaAberta = widget.listaMercado.finalizada;
+    bool listaAberta = widget.listaMercado.finalizada;
 
     if (nomeMercado != null) {
       widget.listaMercado.custoTotal = double.parse(totalValue);
@@ -421,8 +437,18 @@ class _ActiveListState extends State<ScreenActiveList>
       widget.listaMercado.supermercado = nomeMercado;
       widget.listaMercado.finalizada = true;
       widget.listaMercado.data = DataUtil.getCurrentFormattedDate();
+      widget.listaMercado.uniqueKey = Uuid().v4().substring(0, 8);
 
-      if (!listaAberta) {
+      await db.salvarListaMercado(widget.listaMercado);
+      await db.apagarListaMercadoNaoFinalizada();
+
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => const ScreenListasMercado()),
+        (route) => false,
+      );
+
+/*       if (!listaAberta) {
         db.atualizarListaMercado(widget.listaMercado);
 
         Navigator.pushAndRemoveUntil(
@@ -430,15 +456,7 @@ class _ActiveListState extends State<ScreenActiveList>
           MaterialPageRoute(builder: (context) => const ScreenListasMercado()),
           (route) => false,
         );
-      } else {}
-
-      db.salvarListaMercado(widget.listaMercado);
-
-      Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (context) => const ScreenListasMercado()),
-        (route) => false,
-      );
+      } */
     }
   }
 
@@ -446,7 +464,7 @@ class _ActiveListState extends State<ScreenActiveList>
     //List<Produto> listaProdutos = lista.itens;
     lista.itens = Produto.ordenarItens(lista.itens);
     for (Produto element in lista.itens) {
-      if (element.historicoPreco.length == 0) {
+      if (element.historicoPreco.isEmpty) {
         element.historicoPreco.add(0);
       }
 
@@ -455,17 +473,6 @@ class _ActiveListState extends State<ScreenActiveList>
       } else {
         listItensConfirmed.add(element);
       }
-    }
-  }
-
-  void testeExibirListaItems() {
-    print(
-        '------------------Lista de produtos passados como parametro dentro da chamada. ------------------');
-    for (var element in widget.listaMercado.itens) {
-      print(
-          "Item: ${element.descricao} ---- Preço: ${element.precoAtual} ---- Histórico de Preço: ${[
-        ...element.historicoPreco
-      ]} ");
     }
   }
 
@@ -498,30 +505,30 @@ class _ActiveListState extends State<ScreenActiveList>
     }
   }
 
-  void salvarListaTemp() async {
-    //void finalizarListCompras() async {
-    String? nomeMercado = 'Lista salva automática.';
+  void salvarListaTemp(bool salvar) async {
+    if (salvar) {
+      String? nomeMercado = 'Lista salva automática.';
 
-    listaAberta = widget.listaMercado.finalizada;
+      //listaAberta = widget.listaMercado.finalizada;
 
-    if (nomeMercado != null) {
-      widget.listaMercado.custoTotal = double.parse(totalValue);
-      widget.listaMercado.itens = listItensPendent + listItensConfirmed;
-      widget.listaMercado.supermercado = nomeMercado;
+      //widget.listaMercado.userId = getUserId().toString();
       widget.listaMercado.finalizada = true;
+      widget.listaMercado.custoTotal = double.parse(totalValue);
       widget.listaMercado.data = DataUtil.getCurrentFormattedDate();
+      widget.listaMercado.supermercado = nomeMercado;
+      widget.listaMercado.uniqueKey = const Uuid().v4().substring(0, 8);
+      widget.listaMercado.itens = listItensPendent + listItensConfirmed;
 
-      if (!listaAberta) {
-        db.atualizarListaMercado(widget.listaMercado);
+      await db.salvarListaMercado(widget.listaMercado);
+      await db.apagarListaMercadoNaoFinalizada();
 
-        Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(builder: (context) => const ScreenListasMercado()),
-          (route) => false,
-        );
-      } else {}
-
-      db.novaListaMercado(widget.listaMercado);
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => const ScreenListasMercado()),
+        (route) => false,
+      );
+    } else {
+      await db.apagarListaMercadoNaoFinalizada();
 
       Navigator.pushAndRemoveUntil(
         context,
@@ -551,5 +558,7 @@ class _ActiveListState extends State<ScreenActiveList>
     if (email != null) {
       return email;
     }
+    print('teste de compartilhamento: valor do compartilhamento');
+    print(widget.listaMercado.isShared);
   }
 }

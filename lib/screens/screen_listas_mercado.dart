@@ -19,7 +19,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 
 class ScreenListasMercado extends StatefulWidget {
-  const ScreenListasMercado({Key? key}) : super(key: key);
+  const ScreenListasMercado({super.key});
 
   @override
   State<ScreenListasMercado> createState() => _listasMercadoState();
@@ -39,10 +39,10 @@ class _listasMercadoState extends State<ScreenListasMercado> {
   void initState() {
     super.initState();
     _checkEmail(); // Verifica o e-mail quando a tela é iniciada
-    _initializeDB();
-    db.getListasNaoFinalizadas();
     _loadEmail(); // Chamar o método para carregar o e-mail
     _carregarListasCompartilhadas();
+    _initializeDB();
+    //db.getListasNaoFinalizadas();
   }
 
   // Função para verificar se o e-mail do usuário já está salvo
@@ -160,13 +160,13 @@ class _listasMercadoState extends State<ScreenListasMercado> {
               padding: const EdgeInsets.all(15.0),
               child: Column(
                 children: [
-                  const Padding(
+                  /* const Padding(
                     padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
                     child: Text(
                       'Listas de compras',
                       style: TextStyle(color: Colors.deepPurple),
                     ),
-                  ),
+                  ), */
                   Expanded(
                     child: ListView.builder(
                       itemCount: listasMercado.length,
@@ -288,7 +288,7 @@ class _listasMercadoState extends State<ScreenListasMercado> {
       // Atualiza o estado para indicar que o carregamento terminou
     });
 
-    // Após inicializar o banco de dados, chama a função
+    // Carrega a lista não finalizada.
     _verificarListaNaoFinalizada();
   }
 
@@ -306,7 +306,7 @@ class _listasMercadoState extends State<ScreenListasMercado> {
       if (resultado != null) {
         if (resultado) {
           // O usuário escolheu excluir
-          db.apagarListaMercado(listaNaoFinaliza!);
+          await db.apagarListaMercado(listaNaoFinaliza!);
         } else {
           abrirListaMercadoNaoFinalizada(context, listaNaoFinaliza!);
         }
@@ -315,18 +315,17 @@ class _listasMercadoState extends State<ScreenListasMercado> {
   }
 
   void criarNovaListaMercado(BuildContext context) async {
-    int idNovaLista = await db.salvarListaMercadoVazia(getUserId().toString());
-
     ListaMercado novaListaMercado = ListaMercado(
-      id: idNovaLista,
       userId: getUserId().toString(),
       userEmail: email,
       custoTotal: 0,
       data: DataUtil.getCurrentFormattedDate(),
-      supermercado: '',
+      supermercado: 'Lista Não Finalizada',
       finalizada: false,
       itens: [],
     );
+
+    int idNovaLista = await db.salvarListaMercadoVazia(novaListaMercado);
 
     Navigator.push(
       context,
@@ -349,15 +348,26 @@ class _listasMercadoState extends State<ScreenListasMercado> {
   }
 
   void reutilizarListaMercadoFinalizada(ListaMercado listaMercado) async {
-    int temp = listaMercado.id!;
-    ListaMercado? tempLista = await db.buscarListaMercadoById(temp);
+    int oldIdList = listaMercado.id!;
+    //int newidLista = db.salvarListaMercadoVazia(listaMercado);
+    ListaMercado? tempLista = await db.buscarListaMercadoById(oldIdList);
+
+    tempLista?.id = null;
 
     for (var element in tempLista!.itens) {
       element.pendente = true;
       element.precoAtual = 0;
     }
 
+    tempLista.userId = getUserId().toString();
     tempLista.userEmail = email;
+    tempLista.finalizada = false;
+    tempLista.custoTotal = 0;
+    tempLista.data = DataUtil.getCurrentFormattedDate();
+    tempLista.supermercado = 'Lista salva automaticamente';
+    tempLista.uniqueKey = const Uuid().v4().substring(0, 8);
+
+    int idLista = await db.salvarListaMercado(tempLista);
 
     Navigator.push(
       context,
@@ -377,11 +387,10 @@ class _listasMercadoState extends State<ScreenListasMercado> {
     );
   }
 
-  void excluirLista(ListaMercado lista) {
+  void excluirLista(ListaMercado lista) async {
     setState(() {
       listasMercado.remove(lista);
     });
-    db.apagarListaMercado(lista);
-    // Adicione aqui a lógica para excluir permanentemente do banco de dados
+    await db.apagarListaMercado(lista);
   }
 }

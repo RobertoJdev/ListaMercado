@@ -1,7 +1,7 @@
 import 'package:package_info_plus/package_info_plus.dart';
 
 class AppInfo {
-  static late String _version = '';
+  static String _version = '';
   static late String _buildNumber;
   static late String _buildSignature;
   static late String _appName;

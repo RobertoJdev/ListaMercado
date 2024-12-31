@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 class DecorationListBar extends StatelessWidget {
   final bool isListMercado;
 
-  const DecorationListBar({Key? key, this.isListMercado = false})
-      : super(key: key);
+  const DecorationListBar({super.key, this.isListMercado = false});
 
   @override
   Widget build(BuildContext context) {

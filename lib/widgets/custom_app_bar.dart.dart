@@ -11,15 +11,16 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool screenReturn;
   final bool showShareButton;
   final Function()? onSharePressed;
+  final Function? onSave; // Callback para salvar a lista
 
-  const CustomAppBar({
-    Key? key,
-    this.title,
-    this.defaultTitle = 'Lista de Mercado',
-    this.screenReturn = false,
-    this.showShareButton = true,
-    this.onSharePressed,
-  }) : super(key: key);
+  const CustomAppBar(
+      {super.key,
+      this.title,
+      this.defaultTitle = 'Lista de Mercado',
+      this.screenReturn = false,
+      this.showShareButton = true,
+      this.onSharePressed,
+      this.onSave});
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
@@ -44,13 +45,22 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         leading: screenReturn
             ? IconButton(
                 icon: const Icon(Icons.arrow_back),
-                onPressed: () {
-                  showDialog(
+                onPressed: () async {
+                  // Aguarda o resultado do diálogo
+                  final shouldSave = await showDialog<bool>(
                     context: context,
                     builder: (BuildContext context) {
                       return const ConfirmExitDialog();
                     },
                   );
+
+                  if (shouldSave == true && onSave != null) {
+                    onSave!(true);
+                  } else {
+                    onSave!(false);
+                  }
+
+                  //Navigator.of(context).pop(); // ou sua lógica específica
                 },
               )
             : null,

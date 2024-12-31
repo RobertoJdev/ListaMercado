@@ -141,8 +141,8 @@ class MyTheme {
   );
 
   static ButtonStyle chavePixButton = ButtonStyle(
-    backgroundColor: MaterialStateProperty.all(Colors.deepPurple),
-    foregroundColor: MaterialStateProperty.all(Colors.white),
+    backgroundColor: WidgetStateProperty.all(Colors.deepPurple),
+    foregroundColor: WidgetStateProperty.all(Colors.white),
   );
 
   static const EdgeInsets myCustomEdgeInsetsSpaceExtern =

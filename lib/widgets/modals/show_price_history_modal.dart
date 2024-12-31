@@ -33,7 +33,7 @@ Future<void> showPriceHistoryModal({
                   ),
                   Padding(
                     padding: MyTheme.myCustomEdgeInsetsTextFildItensModal,
-                    child: Container(
+                    child: SizedBox(
                       height: 300, // Definindo a altura do gráfico
                       child: LineChart(
                         LineChartData(
@@ -51,9 +51,9 @@ Future<void> showPriceHistoryModal({
                                   int index = entry.key;
                                   double preco = entry.value;
                                   return FlSpot(index.toDouble(), preco);
-                                }).toList(),
+                                }),
                                 // Adiciona o preço atual
-                                if (precoAtual != null && precoAtual > 0)
+                                if (precoAtual > 0)
                                   FlSpot(item.historicoPreco.length.toDouble(), precoAtual)
                               ],
                               isCurved: true,
@@ -75,7 +75,7 @@ Future<void> showPriceHistoryModal({
                         ElevatedButton(
                           style: ButtonStyle(
                             backgroundColor:
-                                MaterialStateProperty.all(Colors.deepPurple),
+                                WidgetStateProperty.all(Colors.deepPurple),
                           ),
                           onPressed: () {
                             Navigator.of(context).pop();

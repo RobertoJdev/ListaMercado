@@ -15,7 +15,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:lista_mercado/widgets/modals/show_price_history_modal.dart';
 
 class ItemListPendent extends StatelessWidget {
-  ItemListPendent({super.key, required this.item, required this.moveCallback});
+  const ItemListPendent({super.key, required this.item, required this.moveCallback});
   final Produto item;
   final Function(Produto) moveCallback;
 
@@ -32,11 +32,9 @@ class ItemListPendent extends StatelessWidget {
       onTap: () async {
         Produto temp =
             await confirmEditItemScreen(context: context, itemTemp: item);
-        if (temp.precoAtual != null) {
-          item.precoAtual = temp.precoAtual;
-          moveCallback(item);
-        }
-      },
+        item.precoAtual = temp.precoAtual;
+        moveCallback(item);
+            },
       onLongPress: () {
         showPriceHistoryModal(context: context, item: item);
       },

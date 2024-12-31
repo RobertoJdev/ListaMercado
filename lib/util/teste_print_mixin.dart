@@ -122,6 +122,27 @@ mixin TestePrintMixin {
     }
   }
 
+  void testeExibirListaItems(ListaMercado listaMercado) {
+    print(
+        '------------------Lista de produtos passados como parametro dentro da chamada. ------------------');
+    for (var element in listaMercado.itens) {
+      print(
+          "Item: ${element.descricao} ---- Preço: ${element.precoAtual} ---- Histórico de Preço: ${[
+        ...element.historicoPreco
+      ]} ");
+    }
+  }
+
+  static openDBPrint(bool isOpen) {
+    if (!isOpen) {
+      print(
+          'openDB: Banco não está aberto ou inicializado. Chamando initDB...');
+      print('openDB: Banco inicializado com sucesso.');
+    } else {
+      print('openDB: Banco já estava aberto.');
+    }
+  }
+
 /*
   Future<void> printAllItems(List<Map<String, dynamic>> items) async {
   print(

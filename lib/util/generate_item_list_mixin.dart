@@ -14,7 +14,7 @@ mixin GenerateItemListMixin {
 
     String? emailUser;
 
-    Future<void> _loadEmail() async {
+    Future<void> loadEmail() async {
       SharedPreferences prefs = await SharedPreferences.getInstance();
 
       emailUser = prefs.getString('user_email');
@@ -40,7 +40,7 @@ mixin GenerateItemListMixin {
       custoTotal: valorTotal,
       data: '01-01-24',
       supermercado: 'Supermarket Exemplo',
-      finalizada: false,
+      finalizada: true,
       isSynced: false,
       itens: produtos!,
     );

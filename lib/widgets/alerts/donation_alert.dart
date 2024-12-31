@@ -6,7 +6,7 @@ import 'package:lista_mercado/widgets/button/custom_buttons.dart';
 class DonationAlert extends StatelessWidget {
   final String pixKey;
 
-  DonationAlert({this.pixKey = 'roberto.dev.apps@gmail.com'});
+  const DonationAlert({super.key, this.pixKey = 'roberto.dev.apps@gmail.com'});
 
   @override
   Widget build(BuildContext context) {

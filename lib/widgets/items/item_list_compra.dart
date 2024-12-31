@@ -3,11 +3,11 @@ import 'package:lista_mercado/models/lista_mercado.dart';
 import 'package:lista_mercado/my_theme.dart';
 
 class ItemListCompras extends StatelessWidget {
-  ItemListCompras({
-    Key? key,
+  const ItemListCompras({
+    super.key,
     required this.listaMercado,
     // required this.moveCallback,
-  }) : super(key: key);
+  });
 
   // final Function(Produto) moveCallback;
   final ListaMercado listaMercado;

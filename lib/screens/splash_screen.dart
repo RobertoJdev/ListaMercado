@@ -4,6 +4,8 @@ import 'package:lista_mercado/util/app_info.dart';
 import 'package:path/path.dart';
 
 class SplashScreen extends StatefulWidget {
+  const SplashScreen({super.key});
+
   @override
   _SplashScreenState createState() => _SplashScreenState();
 }

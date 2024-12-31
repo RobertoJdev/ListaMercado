@@ -10,23 +10,23 @@ import 'package:lista_mercado/widgets/button/custom_buttons.dart';
 
 Future<Produto> confirmEditItemScreen(
     {BuildContext? context, required Produto itemTemp}) async {
-  TextEditingController _textEditingControllerEditItem =
+  TextEditingController textEditingControllerEditItem =
       TextEditingController(text: itemTemp.descricao);
-  TextEditingController _textEditingControllerEditItemQuant =
+  TextEditingController textEditingControllerEditItemQuant =
       TextEditingController(text: itemTemp.quantidade.toString());
-  TextEditingController _textEditingControllerEditItemValor =
+  TextEditingController textEditingControllerEditItemValor =
       TextEditingController(text: itemTemp.precoAtual.toString());
 
-  if (_textEditingControllerEditItemValor.text == null ||
-      _textEditingControllerEditItemValor.text == '0.0') {
-    _textEditingControllerEditItemValor.text = '';
+  if (textEditingControllerEditItemValor.text == null ||
+      textEditingControllerEditItemValor.text == '0.0') {
+    textEditingControllerEditItemValor.text = '';
   }
 
   bool isButtonEnabled = false;
   String selectedCategory = itemTemp.categoria;
 
-  isButtonEnabled = _textEditingControllerEditItem.text.isNotEmpty &&
-      _textEditingControllerEditItemQuant.text.isNotEmpty;
+  isButtonEnabled = textEditingControllerEditItem.text.isNotEmpty &&
+      textEditingControllerEditItemQuant.text.isNotEmpty;
 
   //FocusNode _focusNodeQuant = FocusNode();
 
@@ -54,7 +54,7 @@ Future<Produto> confirmEditItemScreen(
                     child: TextField(
                       //autofocus: true,
                       keyboardType: TextInputType.text,
-                      controller: _textEditingControllerEditItem,
+                      controller: textEditingControllerEditItem,
                       textAlign: TextAlign.center,
                       decoration: const InputDecoration(
                         labelText: 'Produto',
@@ -62,22 +62,22 @@ Future<Produto> confirmEditItemScreen(
                       onChanged: (text) {
                         setState(() {
                           isButtonEnabled =
-                              _textEditingControllerEditItem.text.isNotEmpty &&
-                                  _textEditingControllerEditItemQuant
+                              textEditingControllerEditItem.text.isNotEmpty &&
+                                  textEditingControllerEditItemQuant
                                       .text.isNotEmpty;
 
                           selectedCategory = Categorias.defineCategoriaAuto(
-                              _textEditingControllerEditItem.text);
+                              textEditingControllerEditItem.text);
                         });
                       },
 
                       onTap: () {
                         // Seleciona todo o conteúdo ao focar no campo
-                        _textEditingControllerEditItem.selection =
+                        textEditingControllerEditItem.selection =
                             TextSelection(
                           baseOffset: 0,
                           extentOffset:
-                              _textEditingControllerEditItem.text.length,
+                              textEditingControllerEditItem.text.length,
                         );
                       },
                     ),
@@ -98,13 +98,13 @@ Future<Produto> confirmEditItemScreen(
                             //      RegExp(r'[0-9\.,]')),
                             // ],
                             keyboardType: TextInputType.number,
-                            controller: _textEditingControllerEditItemQuant,
+                            controller: textEditingControllerEditItemQuant,
                             textAlign: TextAlign.center,
                             onChanged: (text) {
                               setState(() {
-                                isButtonEnabled = _textEditingControllerEditItem
+                                isButtonEnabled = textEditingControllerEditItem
                                         .text.isNotEmpty &&
-                                    _textEditingControllerEditItemQuant
+                                    textEditingControllerEditItemQuant
                                         .text.isNotEmpty;
                               });
                             },
@@ -114,11 +114,11 @@ Future<Produto> confirmEditItemScreen(
 
                             onTap: () {
                               // Seleciona todo o conteúdo ao focar no campo
-                              _textEditingControllerEditItemQuant.selection =
+                              textEditingControllerEditItemQuant.selection =
                                   TextSelection(
                                 baseOffset: 0,
                                 extentOffset:
-                                    _textEditingControllerEditItemQuant
+                                    textEditingControllerEditItemQuant
                                         .text.length,
                               );
                             },
@@ -139,13 +139,13 @@ Future<Produto> confirmEditItemScreen(
                             //       RegExp(r'[0-9\.,]')),
                             //  ],
                             keyboardType: TextInputType.number,
-                            controller: _textEditingControllerEditItemValor,
+                            controller: textEditingControllerEditItemValor,
                             textAlign: TextAlign.center,
                             onChanged: (text) {
                               setState(() {
-                                isButtonEnabled = _textEditingControllerEditItem
+                                isButtonEnabled = textEditingControllerEditItem
                                         .text.isNotEmpty &&
-                                    _textEditingControllerEditItemQuant
+                                    textEditingControllerEditItemQuant
                                         .text.isNotEmpty;
                               });
                             },
@@ -154,11 +154,11 @@ Future<Produto> confirmEditItemScreen(
                             ),
                             onTap: () {
                               // Seleciona todo o conteúdo ao focar no campo
-                              _textEditingControllerEditItemValor.selection =
+                              textEditingControllerEditItemValor.selection =
                                   TextSelection(
                                 baseOffset: 0,
                                 extentOffset:
-                                    _textEditingControllerEditItemValor
+                                    textEditingControllerEditItemValor
                                         .text.length,
                               );
                             },
@@ -228,31 +228,29 @@ Future<Produto> confirmEditItemScreen(
                         ElevatedButton(
                             style: ButtonStyle(
                               backgroundColor: isButtonEnabled
-                                  ? MaterialStateProperty.all(Colors.deepPurple)
-                                  : MaterialStateProperty.all(
+                                  ? WidgetStateProperty.all(Colors.deepPurple)
+                                  : WidgetStateProperty.all(
                                       Colors.deepPurple[100]),
                             ),
                             onPressed: isButtonEnabled
                                 ? () {
                                     double? quantidade = double.tryParse(
-                                      _textEditingControllerEditItemQuant.text
+                                      textEditingControllerEditItemQuant.text
                                           .replaceAll(',', '.'),
                                     );
                                     double? valor = double.tryParse(
-                                      _textEditingControllerEditItemValor.text
+                                      textEditingControllerEditItemValor.text
                                           .replaceAll(',', '.'),
                                     );
 
                                     if (valor == null ||
                                         valor == 0.0 &&
-                                            _textEditingControllerEditItem
+                                            textEditingControllerEditItem
                                                     .text !=
                                                 '') {
-                                      if (valor == null) {
-                                        valor = 0.0;
-                                      }
+                                      valor ??= 0.0;
                                       itemTemp.descricao =
-                                          _textEditingControllerEditItem.text;
+                                          textEditingControllerEditItem.text;
                                       itemTemp.quantidade = quantidade!;
                                       itemTemp.precoAtual = valor ?? 0.0;
                                       itemTemp.categoria = selectedCategory;
@@ -262,12 +260,11 @@ Future<Produto> confirmEditItemScreen(
                                       //print('${valor} =========================');
 
                                       Navigator.of(context).pop(itemTemp);
-                                    } else if (valor != null &&
-                                        valor > 0.0 &&
-                                        _textEditingControllerEditItem.text !=
+                                    } else if (valor > 0.0 &&
+                                        textEditingControllerEditItem.text !=
                                             '') {
                                       itemTemp.descricao =
-                                          _textEditingControllerEditItem.text;
+                                          textEditingControllerEditItem.text;
                                       itemTemp.quantidade = quantidade!;
                                       itemTemp.precoAtual = valor;
                                       itemTemp.categoria = selectedCategory;

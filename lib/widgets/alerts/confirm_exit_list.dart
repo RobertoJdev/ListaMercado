@@ -8,13 +8,12 @@ class ConfirmExitDialog extends StatelessWidget {
   //final VoidCallback onSaveAndExit;
 
   const ConfirmExitDialog({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      
       buttonPadding: EdgeInsets.all(0),
       //iconPadding: EdgeInsets.all(10),
       titlePadding:
@@ -46,17 +45,13 @@ class ConfirmExitDialog extends StatelessWidget {
           padding: const EdgeInsets.only(bottom: 10),
           child: ElevatedButton(
             onPressed: () {
-              Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const ScreenListasMercado()),
-                (route) => false,
-              );
+              //print('Botão NÃO pressionado');
+              Navigator.pop(context, false);
             },
             style: ButtonStyle(
                 backgroundColor:
-                    MaterialStateProperty.all(Colors.deepPurple[100]),
-                foregroundColor: MaterialStateProperty.all(Colors.deepPurple)),
+                    WidgetStateProperty.all(Colors.deepPurple[100]),
+                foregroundColor: WidgetStateProperty.all(Colors.deepPurple)),
             child: const Padding(
               padding: EdgeInsets.all(10.0),
               child: Text('  Não  '),
@@ -67,15 +62,12 @@ class ConfirmExitDialog extends StatelessWidget {
           padding: const EdgeInsets.only(bottom: 10),
           child: ElevatedButton(
             onPressed: () {
-              if (activeListKey.currentState != null) {
-                activeListKey.currentState!.salvarListaTemp();
-              } else {
-                print('activeListKey.currentState is null');
-              }
+              //print('Botão SALVAR pressionado');
+              Navigator.pop(context, true);
             },
             style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.all(Colors.deepPurple),
-              foregroundColor: MaterialStateProperty.all(Colors.white),
+              backgroundColor: WidgetStateProperty.all(Colors.deepPurple),
+              foregroundColor: WidgetStateProperty.all(Colors.white),
             ),
             child: const Padding(
               padding: EdgeInsets.all(10.0),

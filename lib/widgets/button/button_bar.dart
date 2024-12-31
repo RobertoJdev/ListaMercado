@@ -4,8 +4,10 @@ import 'package:lista_mercado/models/lista_mercado.dart';
 import 'package:lista_mercado/models/produto.dart';
 import 'package:lista_mercado/screens/screen_listas_mercado.dart';
 import 'package:lista_mercado/util/data_util.dart';
+import 'package:lista_mercado/util/teste_print_mixin.dart';
 import 'package:lista_mercado/widgets/modals/confirm_mercado_screen.dart';
 import 'package:lista_mercado/widgets/modals/new_item_screen.dart';
+import 'package:uuid/uuid.dart';
 
 class ButtomBar extends StatefulWidget {
   //final Function finalizarListCompras;
@@ -17,14 +19,14 @@ class ButtomBar extends StatefulWidget {
   late bool listaAberta;
 
   ButtomBar({
-    Key? key,
+    super.key,
     // required this.finalizarListCompras,
     //required this.adicionarItem,
     required this.totalValue,
     required this.listPendentItens,
     required this.listConfirmedItens,
     required this.listaMercado,
-  }) : super(key: key);
+  });
 
   @override
   State<ButtomBar> createState() => _BottomBarState();
@@ -58,9 +60,7 @@ class _BottomBarState extends State<ButtomBar> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           GestureDetector(
-            onTap: () {
-              finalizarListCompras();
-            },
+            onTap: null,
             child: Row(
               children: [
                 const Icon(
@@ -86,7 +86,7 @@ class _BottomBarState extends State<ButtomBar> {
             ),
           ),
           GestureDetector(
-            onTap: adicionarNovoItem,
+            onTap: null,
             child: const Row(
               children: [
                 Icon(
@@ -109,10 +109,10 @@ class _BottomBarState extends State<ButtomBar> {
     );
   }
 
-  void finalizarListCompras() async {
+/*   void finalizarListCompras() async {
+    print('teste de chamada finalizar Lista compras ------------');
     String? nomeMercado = await confirmMercadoScreen(context: context);
-    late bool listaAberta;
-    listaAberta = widget.listaMercado.finalizada;
+    bool listaAberta = widget.listaMercado.finalizada;
 
     if (nomeMercado != null) {
       widget.listaMercado.custoTotal = double.parse(widget.totalValue);
@@ -121,18 +121,21 @@ class _BottomBarState extends State<ButtomBar> {
       widget.listaMercado.supermercado = nomeMercado;
       widget.listaMercado.finalizada = true;
       widget.listaMercado.data = DataUtil.getCurrentFormattedDate();
+      widget.listaMercado.uniqueKey = Uuid().v4().substring(0, 8);
 
-      if (!listaAberta) {
-        db.atualizarListaMercado(widget.listaMercado);
+/*       if (!listaAberta) {
+        await db.atualizarListaMercado(widget.listaMercado);
 
         Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(builder: (context) => const ScreenListasMercado()),
           (route) => false,
         );
-      } else {}
+      } else {} */
 
-      db.novaListaMercado(widget.listaMercado);
+      TestePrintMixin.printListaMercadoInfo(widget.listaMercado);
+
+      await db.salvarListaMercado(widget.listaMercado);
 
       Navigator.pushAndRemoveUntil(
         context,
@@ -140,14 +143,14 @@ class _BottomBarState extends State<ButtomBar> {
         (route) => false,
       );
     }
-  }
+  } */
 
-  Future adicionarNovoItem() async {
+/*   Future adicionarNovoItem() async {
     Produto? temp;
     temp = await newItemScreen(context);
     if (temp != null && temp.precoAtual == 0.0) {
       db.inserirItem(widget.listaMercado, temp);
-      widget.listPendentItens.add(temp!);
+      widget.listPendentItens.add(temp);
       setState(() {
         widget.listPendentItens = Produto.ordenarItens(widget.listPendentItens);
       });
@@ -159,5 +162,5 @@ class _BottomBarState extends State<ButtomBar> {
             Produto.ordenarItens(widget.listConfirmedItens);
       });
     }
-  }
+  } */
 }
