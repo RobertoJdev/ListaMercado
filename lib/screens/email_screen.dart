@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class EmailScreen extends StatefulWidget {
   const EmailScreen(this.email, {super.key});
@@ -16,8 +15,7 @@ class _EmailScreenState extends State<EmailScreen> {
   @override
   void initState() {
     super.initState();
-    // Preenche o controller com o e-mail passado via widget
-    _emailController.text = widget.email;
+    _emailController.text = widget.email; // Preenche o campo com o e-mail atual
   }
 
   @override
@@ -92,7 +90,11 @@ class _EmailScreenState extends State<EmailScreen> {
                         MaterialStateProperty.all(Colors.deepPurple),
                     foregroundColor: MaterialStateProperty.all(Colors.white),
                   ),
-                  onPressed: _saveEmail,
+                  onPressed: () {
+                    if (_formKey.currentState?.validate() ?? false) {
+                      Navigator.pop(context, _emailController.text.trim());
+                    }
+                  },
                   child: const Padding(
                     padding:
                         EdgeInsets.symmetric(horizontal: 15.0, vertical: 10),
@@ -105,16 +107,5 @@ class _EmailScreenState extends State<EmailScreen> {
         ),
       ),
     );
-  }
-
-  Future<void> _saveEmail() async {
-    if (_formKey.currentState?.validate() ?? false) {
-      final email = _emailController.text.trim();
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setString('user_email', email);
-
-      // Fecha a tela e retorna o e-mail digitado
-      Navigator.pop(context, email);
-    }
   }
 }

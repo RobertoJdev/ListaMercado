@@ -1,46 +1,74 @@
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:lista_mercado/screens/email_screen.dart';
 import 'package:lista_mercado/util/app_info.dart';
+import 'package:lista_mercado/util/user_preferences.dart';
 import 'package:lista_mercado/widgets/alerts/donation_alert.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class Menu extends StatefulWidget {
-  final String userEmail; // Adicionando uma variável para o e-mail do usuário
-  const Menu({super.key, required this.userEmail});
+  const Menu({super.key});
 
   @override
   State<Menu> createState() => _MenuState();
 }
 
 class _MenuState extends State<Menu> {
+  String _userEmail = '';
+
+  Future<void> _loadUserEmail() async {
+    String email = await UserPreferences.checkAndGetEmail(context);
+    if (mounted) {
+      setState(() {
+        _userEmail = email;
+      });
+    }
+  }
+
+  Future<void> _updateEmail() async {
+    final String? newEmail = await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => EmailScreen(_userEmail)),
+    );
+
+    if (newEmail != null && newEmail.isNotEmpty) {
+      await UserPreferences.setEmail(newEmail);
+      if (mounted) {
+        setState(() {
+          _userEmail = newEmail;
+        });
+      }
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserEmail();
+  }
+
   @override
   Widget build(BuildContext context) {
     String urlPoliticas =
         "https://politicadeprivacidadelistademercado.blogspot.com/2024/03/politica-de-privacidade-lista-de-mercado.html";
     String urlDesenvolvedor =
         "https://www.linkedin.com/in/roberto-j-874325144/";
-    String notasVersao = "";
+
     return Drawer(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         crossAxisAlignment: CrossAxisAlignment.start,
-        //padding: EdgeInsets.zero,
         children: [
           Container(
             decoration: const BoxDecoration(
               gradient: LinearGradient(
-                colors: [
-                  Colors.deepPurple,
-                  Colors.deepPurpleAccent, // Cor final do degradê
-                ],
-                begin: Alignment.center, // Início do gradiente
-                end: Alignment.bottomCenter, // Fim do gradiente
+                colors: [Colors.deepPurple, Colors.deepPurpleAccent],
+                begin: Alignment.center,
+                end: Alignment.bottomCenter,
               ),
             ),
             alignment: Alignment.center,
-            //color: Color(),
             height: 200,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -75,7 +103,6 @@ class _MenuState extends State<Menu> {
               ],
             ),
           ),
-          // Adicionando o ListTile para exibir o e-mail do usuário
           Padding(
             padding: const EdgeInsets.only(top: 10.0),
             child: Column(
@@ -85,26 +112,14 @@ class _MenuState extends State<Menu> {
                   padding: EdgeInsets.only(left: 20),
                   child: Text(
                     'E-mail usuário:',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                 ),
                 ListTile(
-                  leading: const Icon(
-                    Icons.email,
-                    color: Colors.blue,
-                  ),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => EmailScreen(widget.userEmail),
-                      ),
-                    );
-                  },
+                  leading: const Icon(Icons.email, color: Colors.blue),
+                  onTap: _updateEmail,
                   title: Text(
-                    widget.userEmail,
+                    _userEmail, // Corrigido para usar a variável correta
                     style: const TextStyle(
                         fontWeight: FontWeight.normal,
                         fontStyle: FontStyle.italic),
@@ -114,69 +129,42 @@ class _MenuState extends State<Menu> {
             ),
           ),
           ListTile(
-            leading: const Icon(
-              Icons.privacy_tip,
-              color: Colors.indigo,
-            ),
+            leading: const Icon(Icons.privacy_tip, color: Colors.indigo),
             title: const Text('Políticas de Privacidade'),
+            onTap: () => abrirUrl(urlPoliticas),
+          ),
+          const Expanded(child: SizedBox()),
+          const Divider(color: Colors.black12),
+          ListTile(
             onTap: () {
-              abrirUrl(urlPoliticas);
+              Navigator.pop(context);
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return DonationAlert();
+                },
+              );
             },
+            leading: const Icon(Icons.favorite, color: Colors.red),
+            title: const Text('Doe ao desenvolvedor'),
           ),
-          const Expanded(
-            flex: 1,
-            child: ListTile(
-              title: Text(''),
-              onTap: null,
-            ),
+          ListTile(
+            leading: const Icon(Icons.info),
+            title: Text('Versão: ${AppInfo.version}'),
           ),
-          const Divider(
-            color: Colors.black12,
-          ),
-          Padding(
-            padding: const EdgeInsets.all(0.0),
-            child: ListTile(
-              onTap: () {
-                Navigator.pop(context);
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return DonationAlert();
-                  },
-                );
-              },
-              leading: const Icon(
-                Icons.favorite,
-                color: Colors.red,
-              ),
-              title: const Text('Doe ao desenvolvedor'),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(0.0),
-            child: ListTile(
-              leading: const Icon(Icons.info),
-              title: Text('Versão: ${AppInfo.version}'),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 5),
-            child: ListTile(
-              leading: const Icon(Icons.developer_mode),
-              onTap: () {
-                abrirUrl(urlDesenvolvedor);
-              },
-              title: const Text.rich(
-                TextSpan(
-                  text: 'Dev. por: ',
-                  style: TextStyle(fontSize: 16),
-                  children: [
-                    TextSpan(
-                      text: 'Roberto J.',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                  ],
-                ),
+          ListTile(
+            leading: const Icon(Icons.developer_mode),
+            onTap: () => abrirUrl(urlDesenvolvedor),
+            title: const Text.rich(
+              TextSpan(
+                text: 'Dev. por: ',
+                style: TextStyle(fontSize: 16),
+                children: [
+                  TextSpan(
+                    text: 'Roberto J.',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ],
               ),
             ),
           ),

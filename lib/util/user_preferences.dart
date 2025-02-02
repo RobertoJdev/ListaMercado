@@ -15,6 +15,14 @@ class UserPreferences {
     await getUserId(); // Garante a geração do userId no init
   }
 
+  /// Define o e-mail do usuário e o salva no SharedPreferences
+  static Future<bool> setEmail(String email) async {
+    if (email.isEmpty) return false; // Evita salvar valores inválidos
+
+    bool success = await _prefs.setString(_emailKey, email);
+    return success;
+  }
+
   static Future<String> checkAndGetEmail(BuildContext context) async {
     String? email = _prefs.getString(_emailKey);
 

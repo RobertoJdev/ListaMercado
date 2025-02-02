@@ -174,7 +174,7 @@ class _listasMercadoState extends State<ScreenListasMercado> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: Menu(userEmail: email), // Passa o e-mail para o Menu
+      drawer: Menu(), // Passa o e-mail para o Menu
       appBar: const CustomAppBar(
         title: 'Minhas Listas',
         showShareButton: false,
