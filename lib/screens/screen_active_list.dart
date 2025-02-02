@@ -439,7 +439,7 @@ class _ActiveListState extends State<ScreenActiveList>
       widget.listaMercado.data = DataUtil.getCurrentFormattedDate();
       widget.listaMercado.uniqueKey = Uuid().v4().substring(0, 8);
 
-      await db.salvarListaMercado(widget.listaMercado);
+      await db.salvarListaMercado(widget.listaMercado, true);
       await db.apagarListaMercadoNaoFinalizada();
 
       Navigator.pushAndRemoveUntil(
@@ -512,14 +512,14 @@ class _ActiveListState extends State<ScreenActiveList>
       //listaAberta = widget.listaMercado.finalizada;
 
       //widget.listaMercado.userId = getUserId().toString();
-      widget.listaMercado.finalizada = true;
+      //widget.listaMercado.finalizada = true;
       widget.listaMercado.custoTotal = double.parse(totalValue);
       widget.listaMercado.data = DataUtil.getCurrentFormattedDate();
       widget.listaMercado.supermercado = nomeMercado;
       widget.listaMercado.uniqueKey = const Uuid().v4().substring(0, 8);
       widget.listaMercado.itens = listItensPendent + listItensConfirmed;
 
-      await db.salvarListaMercado(widget.listaMercado);
+      await db.salvarListaMercado(widget.listaMercado, true);
       await db.apagarListaMercadoNaoFinalizada();
 
       Navigator.pushAndRemoveUntil(

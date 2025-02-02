@@ -99,8 +99,7 @@ class _MenuState extends State<Menu> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) =>
-                            EmailScreen(), // Navega para a tela de e-mail
+                        builder: (context) => EmailScreen(widget.userEmail),
                       ),
                     );
                   },

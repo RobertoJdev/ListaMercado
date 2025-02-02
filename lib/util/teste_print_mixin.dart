@@ -7,6 +7,7 @@ mixin TestePrintMixin {
         ' ---------------- Informações da Lista de Mercado: ----------------- ');
 
     print("Lista.Id:              ${listaMercado.id}");
+    print("Lista.userId:          ${listaMercado.userId}");
     print("Lista.userEmail:       ${listaMercado.userEmail}");
     print("Lista.isShared:        ${listaMercado.isShared}");
     print("Lista.sharedWithEmail: ${listaMercado.sharedWithEmail}");

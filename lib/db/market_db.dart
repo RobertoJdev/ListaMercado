@@ -121,7 +121,7 @@ class MarketDB with GenerateItemListMixin, TestePrintMixin {
       version: 5,
       onCreate: (db, version) async {
         await _createTables(db);
-        await _inserirTesteMercadoData(db);
+        await _inserirListaMercadoInicial(db);
       },
       onUpgrade: (db, oldVersion, newVersion) async {
         print(
@@ -137,18 +137,22 @@ class MarketDB with GenerateItemListMixin, TestePrintMixin {
     await openDB();
   }
 
-  static void popularDB(ListaMercado listaMercado) {
+/*   static void popularDB(ListaMercado listaMercado) {
     MarketDB itemMarketDB = MarketDB();
-    itemMarketDB.novaListaMercado(listaMercado);
-  }
 
-  Future<void> _inserirTesteMercadoData(Database db) async {
+    //retornar***
+    //itemMarketDB.novaListaMercado(listaMercado);
+    itemMarketDB.salvarListaMercado(listaMercado, true);
+  } */
+
+  Future<void> _inserirListaMercadoInicial(Database db) async {
     //List<Produto> itensMercado = GenerateItemListMixin.generateMultiProdutosExemplo();
     //List<Produto> itensMercado = Produto.generateMultiProdutosExemplo();
-    ListaMercado lista = GenerateItemListMixin.generateListaMercadoExemplo();
+    ListaMercado listaInicial =
+        GenerateItemListMixin.generateListaMercadoExemplo();
     //ListaMercado lista = ListaMercado.generateListaMercadoExemplo(itensMercado);
     //const userId = 1;
-    salvarListaMercado(lista);
+    salvarListaMercado(listaInicial, true);
   }
 
   Future<void> inserirItem(ListaMercado listaMercado, Produto produto) async {
@@ -436,8 +440,7 @@ class MarketDB with GenerateItemListMixin, TestePrintMixin {
         'descricao': produto.descricao,
         'barras': produto.barras,
         'quantidade': produto.quantidade,
-        'pendente':
-            produto.pendente ? 1 : 0, // Ajustando para armazenar como inteiro
+        'pendente': produto.pendente ? 1 : 0, // Salvando como inteiro
         'precoAtual': produto.precoAtual,
         'categoria': produto.categoria,
       };
@@ -467,7 +470,7 @@ class MarketDB with GenerateItemListMixin, TestePrintMixin {
       );
 
       // Imprimir os preços no histórico
-      TestePrintMixin.printHistoricoPreco(produto, "NOVA LISTA MERCADO");
+      //TestePrintMixin.printHistoricoPreco(produto, "NOVA LISTA MERCADO");
     }
 
     return listaMercadoId;
@@ -495,16 +498,20 @@ class MarketDB with GenerateItemListMixin, TestePrintMixin {
     return listaMercadoId;
   }
 
-  Future<int> salvarListaMercado(ListaMercado listaMercado) async {
+  Future<int> salvarListaMercado(
+      ListaMercado listaMercado, bool finalizarLista) async {
     await initDB();
     await openDB();
 
-    //listaMercado.finalizada = true;
+    TestePrintMixin.printListaMercadoInfo(listaMercado);
+
+    listaMercado.finalizada = finalizarLista;
+
     //print('teste interno no save do bd ${listaMercado.uniqueKey}');
 
-    listaMercado.uniqueKey =
-        listaMercado.uniqueKey ?? Uuid().v4().substring(0, 8);
-    //listaMercado.uniqueKey = Uuid().v4().substring(0, 8);
+    //listaMercado.uniqueKey =
+    //   listaMercado.uniqueKey ?? Uuid().v4().substring(0, 8);
+
     final listaMercadoMap = listaMercado.toMapSql();
 
     int listaMercadoId =
@@ -525,8 +532,7 @@ class MarketDB with GenerateItemListMixin, TestePrintMixin {
       // Insere o produto no banco de dados
       int produtoId = await _database.insert('Produto', produtoMap);
 
-      //teste para inserir os valores já existentes no historico.
-
+      //inserir os valores já existentes no historico.
       for (int i = 0; i < produto.historicoPreco.length; i++) {
         await _database.insert(
           'HistoricoPreco',
@@ -557,7 +563,7 @@ class MarketDB with GenerateItemListMixin, TestePrintMixin {
         },
       );
       // Verificar os preços no histórico após a inserção
-      await procurarHistoricoDePreco(produtoId);
+      // await procurarHistoricoDePreco(produtoId);
     }
     return listaMercadoId;
   }

@@ -5,6 +5,7 @@ import 'package:lista_mercado/models/categoria.dart';
 import 'package:lista_mercado/models/categorias.dart';
 import 'package:lista_mercado/models/lista_mercado.dart';
 import 'package:lista_mercado/models/produto.dart';
+import 'package:lista_mercado/util/data_util.dart';
 import 'package:lista_mercado/util/teste_print_mixin.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -38,13 +39,15 @@ mixin GenerateItemListMixin {
       isShared: false,
       sharedWithEmail: '',
       custoTotal: valorTotal,
-      data: '01-01-24',
+      data: DataUtil.getCurrentFormattedDate(),
       supermercado: 'Supermarket Exemplo',
       finalizada: true,
       isSynced: false,
       itens: produtos!,
     );
-    print('teste de valores dentro do gerador de lista na inicialição');
+    TestePrintMixin.testeGenerico(
+        " ============ Gerador Lista Inicial ============ ", "");
+    //print('teste de valores dentro do gerador de lista na inicialição');
     //TestePrintMixin.printListaMercadoInfo(listaMercadoTemp);
     return listaMercadoTemp;
   }

@@ -14,8 +14,8 @@ Future<void> enviarListaParaFirestore(ListaMercado listaMercado) async {
     DocumentReference documentReference = await listasMercado.add(listaData);
 
     print(
-        "Lista enviada com sucesso. ID do documento: ${documentReference.id}");
+        "Teste modulo firestore -- Lista enviada com sucesso. ID do documento: ${documentReference.id}");
   } catch (e) {
-    print("Erro ao enviar a lista: $e");
+    print("Teste modulo firestore -- Erro ao enviar a lista: $e");
   }
 }

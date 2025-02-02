@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:lista_mercado/screens/screen_listas_mercado.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class EmailScreen extends StatefulWidget {
-  const EmailScreen({super.key});
+  const EmailScreen(this.email, {super.key});
+  final String email;
 
   @override
   _EmailScreenState createState() => _EmailScreenState();
@@ -16,44 +16,25 @@ class _EmailScreenState extends State<EmailScreen> {
   @override
   void initState() {
     super.initState();
-    _loadEmail(); // Carrega o email quando a tela inicia
-  }
-
-  Future<void> _loadEmail() async {
-    final prefs = await SharedPreferences.getInstance();
-    String? email = prefs.getString('user_email');
-    if (email != null) {
-      setState(() {
-        _emailController.text = email; // Preenche o campo com o email salvo
-      });
-    }
+    // Preenche o controller com o e-mail passado via widget
+    _emailController.text = widget.email;
   }
 
   @override
   Widget build(BuildContext context) {
     final bool isKeyboardOpen = MediaQuery.of(context).viewInsets.bottom > 0;
-    //excluir antes de publicar
-    _emailController.text = 'teste@gmail.com';
+
     return Scaffold(
-      /*
-      appBar: AppBar(
-        title: _emailController.text.isEmpty
-            ? const Text('Adicionar E-mail')
-            : const Text('Modifique seu E-mail'),
-      ),
-      */
       resizeToAvoidBottomInset: true,
       body: SafeArea(
         child: Container(
           decoration: const BoxDecoration(
-              gradient: LinearGradient(
-            colors: [
-              Colors.deepPurple, // Cor inicial
-              Colors.white, // Cor final
-            ],
-            begin: Alignment.topLeft, // Ponto de início do gradiente
-            end: Alignment.center, // Ponto de término do gradiente
-          )),
+            gradient: LinearGradient(
+              colors: [Colors.deepPurple, Colors.white],
+              begin: Alignment.topLeft,
+              end: Alignment.center,
+            ),
+          ),
           child: Padding(
             padding: const EdgeInsets.fromLTRB(16, 20, 16, 20),
             child: Column(
@@ -63,18 +44,14 @@ class _EmailScreenState extends State<EmailScreen> {
                   padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
                   child: Image.asset(
                     'assets/images/compartilhar.png',
-                    width: isKeyboardOpen
-                        ? 150
-                        : 200, // Reduz o tamanho se o teclado estiver aberto
-                    height: isKeyboardOpen
-                        ? 150
-                        : 200, // Reduz o tamanho se o teclado estiver aberto
+                    width: isKeyboardOpen ? 150 : 200,
+                    height: isKeyboardOpen ? 150 : 200,
                   ),
                 ),
                 const Padding(
                   padding: EdgeInsets.fromLTRB(15, 10, 15, 10),
                   child: Text(
-                    'Compartilhe suas listas de mercado com outros usuários.\n Por favor, insira seu e-mail:',
+                    'Compartilhe suas listas de mercado com outros usuários.\nPor favor, insira seu e-mail:',
                     textAlign: TextAlign.center,
                     style: TextStyle(fontSize: 18, color: Colors.deepPurple),
                   ),
@@ -94,10 +71,6 @@ class _EmailScreenState extends State<EmailScreen> {
                           borderSide:
                               BorderSide(color: Colors.deepPurple, width: 2.0),
                         ),
-                        //prefixIcon: Icon(Icons.email),
-                        //suffixIcon: Icon(Icons.email),
-                        suffixIconColor: Colors.deepPurple,
-                        prefixIconColor: Colors.deepPurple,
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -116,8 +89,8 @@ class _EmailScreenState extends State<EmailScreen> {
                 ElevatedButton(
                   style: ButtonStyle(
                     backgroundColor:
-                        WidgetStateProperty.all(Colors.deepPurple),
-                    foregroundColor: WidgetStateProperty.all(Colors.white),
+                        MaterialStateProperty.all(Colors.deepPurple),
+                    foregroundColor: MaterialStateProperty.all(Colors.white),
                   ),
                   onPressed: _saveEmail,
                   child: const Padding(
@@ -136,13 +109,12 @@ class _EmailScreenState extends State<EmailScreen> {
 
   Future<void> _saveEmail() async {
     if (_formKey.currentState?.validate() ?? false) {
+      final email = _emailController.text.trim();
       final prefs = await SharedPreferences.getInstance();
-      await prefs.setString('user_email', _emailController.text.trim());
-      // Após salvar o e-mail, redireciona para a tela de listas de mercado
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const ScreenListasMercado()),
-      );
+      await prefs.setString('user_email', email);
+
+      // Fecha a tela e retorna o e-mail digitado
+      Navigator.pop(context, email);
     }
   }
 }
