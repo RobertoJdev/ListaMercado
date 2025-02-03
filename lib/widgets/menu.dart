@@ -18,7 +18,9 @@ class _MenuState extends State<Menu> {
   String _userEmail = '';
 
   Future<void> _loadUserEmail() async {
-    String email = await UserPreferences.checkAndGetEmail(context);
+    //String email = await UserPreferences.checkAndGetEmail(context);
+    String email = await UserPreferences.getEmail();
+    
     if (mounted) {
       setState(() {
         _userEmail = email;

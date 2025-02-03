@@ -52,12 +52,12 @@ class _listasMercadoState extends State<ScreenListasMercado> {
 // Método para inicializar preferências de forma assíncrona
   Future<void> _loadSharedPrefs() async {
     await UserPreferences.init(context); // Aguarda a inicialização
-    String fetchedEmail = await UserPreferences.checkAndGetEmail(
-        context); // Aguarda o e-mail ser retornado
-    setState(() {
+    email = await UserPreferences.getEmail();
+    userId = await UserPreferences.getUserId();
+/*     setState(() {
       email = fetchedEmail;
       userId = UserPreferences.getUserId().toString();
-    });
+    }); */
     //_carregarListasCompartilhadas();
     //_initializeDB();
   }
@@ -174,7 +174,7 @@ class _listasMercadoState extends State<ScreenListasMercado> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: Menu(), // Passa o e-mail para o Menu
+      drawer: Menu(),
       appBar: const CustomAppBar(
         title: 'Minhas Listas',
         showShareButton: false,

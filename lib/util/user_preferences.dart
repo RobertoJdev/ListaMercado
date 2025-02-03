@@ -8,37 +8,43 @@ class UserPreferences {
   static const String _emailKey = 'user_email';
   static const String _userIdKey = 'user_Id';
 
-  // Método init modificado para ser assíncrono
+  // Inicializa as preferências e verifica o e-mail
   static Future<void> init(BuildContext context) async {
     _prefs = await SharedPreferences.getInstance();
-    await checkAndGetEmail(context);
+    //await checkAndGetEmail(context);
+    await openEmailScreen(context);
     await getUserId(); // Garante a geração do userId no init
   }
 
-  /// Define o e-mail do usuário e o salva no SharedPreferences
+  /// Define o e-mail do usuário e salva no SharedPreferences
   static Future<bool> setEmail(String email) async {
     if (email.isEmpty) return false; // Evita salvar valores inválidos
-
-    bool success = await _prefs.setString(_emailKey, email);
-    return success;
+    return await _prefs.setString(_emailKey, email);
   }
 
-  static Future<String> checkAndGetEmail(BuildContext context) async {
-    String? email = _prefs.getString(_emailKey);
+  /// Abre a tela de e-mail e salva o e-mail fornecido, sem retornar nada
+  static Future<void> openEmailScreen(BuildContext context) async {
+    final String? newEmail = await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const EmailScreen('')),
+    );
 
-    if (email == null || email.isEmpty) {
-      final String? newEmail = await Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const EmailScreen('')),
-      );
-
-      if (newEmail != null && newEmail.isNotEmpty) {
-        await _prefs.setString(_emailKey, newEmail);
-        return newEmail;
-      }
+    if (newEmail != null && newEmail.isNotEmpty) {
+      await setEmail(newEmail);
     }
+  }
 
-    return email ?? ''; // Caso o e-mail seja válido, retorna o e-mail
+  /// Verifica se há um e-mail salvo. Se não houver, abre a tela para fornecimento.
+  static Future<void> checkAndGetEmail(BuildContext context) async {
+    String? email = _prefs.getString(_emailKey);
+    if (email == null || email.isEmpty) {
+      await openEmailScreen(context);
+    }
+  }
+
+  /// Obtém o e-mail salvo, retornando uma string vazia se não houver e-mail salvo
+  static Future<String> getEmail() async {
+    return _prefs.getString(_emailKey) ?? '';
   }
 
   static Future<String> getUserId() async {
@@ -49,8 +55,7 @@ class UserPreferences {
   }
 
   static Future<String> _generateUserId() async {
-    final String newUserId =
-        Uuid().v4().substring(0, 8); // UUID curto (8 caracteres)
+    final String newUserId = Uuid().v4().substring(0, 8); // UUID curto (8 caracteres)
     await _prefs.setString(_userIdKey, newUserId);
     print("Novo userId gerado: $newUserId");
     return newUserId;
