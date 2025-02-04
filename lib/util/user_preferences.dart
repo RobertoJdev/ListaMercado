@@ -11,8 +11,12 @@ class UserPreferences {
   // Inicializa as preferências e verifica o e-mail
   static Future<void> init(BuildContext context) async {
     _prefs = await SharedPreferences.getInstance();
+    checkAndGetEmail(context);
+    //String email = getEmail() as String;
+    //if (email.isEmpty) {
+    //  await openEmailScreen(context);
+    //}
     //await checkAndGetEmail(context);
-    await openEmailScreen(context);
     await getUserId(); // Garante a geração do userId no init
   }
 
@@ -55,7 +59,8 @@ class UserPreferences {
   }
 
   static Future<String> _generateUserId() async {
-    final String newUserId = Uuid().v4().substring(0, 8); // UUID curto (8 caracteres)
+    final String newUserId =
+        Uuid().v4().substring(0, 8); // UUID curto (8 caracteres)
     await _prefs.setString(_userIdKey, newUserId);
     print("Novo userId gerado: $newUserId");
     return newUserId;

@@ -2,12 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:lista_mercado/db/market_db.dart';
 import 'package:lista_mercado/models/lista_mercado.dart';
 import 'package:lista_mercado/models/produto.dart';
-import 'package:lista_mercado/screens/screen_listas_mercado.dart';
-import 'package:lista_mercado/util/data_util.dart';
-import 'package:lista_mercado/util/teste_print_mixin.dart';
-import 'package:lista_mercado/widgets/modals/confirm_mercado_screen.dart';
-import 'package:lista_mercado/widgets/modals/new_item_screen.dart';
-import 'package:uuid/uuid.dart';
 
 class ButtomBar extends StatefulWidget {
   //final Function finalizarListCompras;

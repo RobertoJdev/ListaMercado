@@ -1,14 +1,10 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:lista_mercado/models/categoria.dart';
 import 'package:lista_mercado/models/categorias.dart';
 import 'package:lista_mercado/models/produto.dart';
-import 'package:intl/intl.dart';
 import 'package:lista_mercado/my_theme.dart';
 import 'package:lista_mercado/util/decimal_text_input_formatter.dart';
-import 'package:path/path.dart';
-
 import '../button/custom_buttons.dart';
 
 Future<Produto?> newItemScreen(BuildContext context) async {

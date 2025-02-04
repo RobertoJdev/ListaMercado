@@ -1,7 +1,5 @@
-import 'package:lista_mercado/db/database_utils.dart';
 import 'package:lista_mercado/util/generate_item_list_mixin.dart';
 import 'package:lista_mercado/util/teste_print_mixin.dart';
-import 'package:uuid/uuid.dart';
 
 import '/models/lista_mercado.dart';
 import '/models/produto.dart';

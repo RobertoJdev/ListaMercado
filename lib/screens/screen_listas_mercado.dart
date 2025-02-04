@@ -1,25 +1,17 @@
 import 'dart:math';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:lista_mercado/screens/email_screen.dart';
-import 'package:lista_mercado/util/teste_print_mixin.dart';
-import 'package:lista_mercado/widgets/decoration_list_bar.dart';
 import 'package:lista_mercado/widgets/items/item_list_compra.dart';
-import 'package:lista_mercado/widgets/items/item_list_compra_nao_finalizada.dart';
 import 'package:lista_mercado/db/market_db.dart';
 import 'package:lista_mercado/widgets/menu.dart';
 import 'package:lista_mercado/widgets/modals/open_list_unfinished_list.dart';
 import 'package:lista_mercado/util/data_util.dart';
 import 'package:lista_mercado/models/lista_mercado.dart';
-import 'package:lista_mercado/models/produto.dart';
 import 'package:lista_mercado/widgets/modals/confirm_delete_list_screen.dart';
 import 'package:lista_mercado/widgets/modals/reopen_list_screen.dart';
 import 'package:lista_mercado/screens/screen_active_list.dart';
 import 'package:lista_mercado/widgets/custom_app_bar.dart.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
-
 import '../util/user_preferences.dart';
 
 class ScreenListasMercado extends StatefulWidget {
@@ -43,67 +35,24 @@ class _listasMercadoState extends State<ScreenListasMercado> {
   @override
   void initState() {
     super.initState();
-    _loadSharedPrefs();
-    _carregarListasCompartilhadas();
-    _initializeDB();
-    //db.getListasNaoFinalizadas();
+    _initialize();
+  }
+
+  Future<void> _initialize() async {
+    await _loadSharedPrefs();
+    await _initializeDB();
+    isLoading = true;
+    await _carregarListasCompartilhadas();
   }
 
 // Método para inicializar preferências de forma assíncrona
   Future<void> _loadSharedPrefs() async {
-    await UserPreferences.init(context); // Aguarda a inicialização
+    await UserPreferences.init(context);
     email = await UserPreferences.getEmail();
     userId = await UserPreferences.getUserId();
-/*     setState(() {
-      email = fetchedEmail;
-      userId = UserPreferences.getUserId().toString();
-    }); */
-    //_carregarListasCompartilhadas();
-    //_initializeDB();
   }
 
-/*   // Função para verificar se o e-mail do usuário já está salvo
-  Future<void> _checkEmail() async {
-    final prefs = await SharedPreferences.getInstance();
-    final email = prefs.getString('user_email');
-
-    if (email == null || email.isEmpty) {
-      // Se o e-mail não estiver salvo, redireciona para a tela de inserir e-mail
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => EmailScreen()),
-      );
-    } else {}
-  }
-
-  Future<void> _loadEmail() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState(() {
-      email = prefs.getString('user_email') ?? '';
-    });
-  }
-
-// Método para verificar e carregar ou gerar o userId
-  Future<String> getUserId() async {
-    final prefs = await SharedPreferences.getInstance();
-
-    // Verifica se o userId existe nas preferências
-    if (prefs.containsKey('userId')) {
-      return prefs.getString('userId')!;
-    } else {
-      // Gera um novo userId e salva nas preferências
-      String newUserId =
-          Uuid().v4().substring(0, 8); // UUID curto (8 caracteres)
-      await prefs.setString('userId', newUserId);
-      print("Retorno do valor do ID do usuário: ========== $newUserId");
-      return newUserId;
-    }
-  }
- */
   Future<void> _carregarListasCompartilhadas() async {
-    //final prefs = await SharedPreferences.getInstance();
-    //final email = prefs.getString('user_email');
-
     if (email.isNotEmpty) {
       try {
         final snapshot = await FirebaseFirestore.instance
@@ -111,7 +60,7 @@ class _listasMercadoState extends State<ScreenListasMercado> {
             .where('sharedWithEmail', isEqualTo: email)
             .get();
 
-        print('++++++++++++++++++++++++++++++++++++++++++++++++++++++');
+        //print('++++++++++++++++++++++++++++++++++++++++++++++++++++++');
 
         List<ListaMercado?> listasCompartilhadas = snapshot.docs
             .map((doc) {
@@ -125,8 +74,6 @@ class _listasMercadoState extends State<ScreenListasMercado> {
             })
             .where((element) => element != null)
             .toList(); // Filtra os valores nulos, se houver
-
-        //print(listasCompartilhadas[0]?.itens[0].descricao);
 
         setState(() async {
           bool addList;
@@ -145,23 +92,19 @@ class _listasMercadoState extends State<ScreenListasMercado> {
             }
 
             if (addList && element != null) {
-              print(
-                  "++++++++++teste de if para salvar ++++++++++++++++++++++++");
-              //retornar*** para conferir mudança de id ao salvar.
-              element.id =
-                  Random().nextInt(100); // Altera o ID para evitar conflito
+              //print("++++++++++teste de if para salvar ++++++++++++++++++++++++");
+              element.id = Random().nextInt(100);
               element.finalizada = true;
-              element.userId = Uuid().v4().substring(0, 8);
-
-              //element.uniqueKey = Uuid().v4().substring(0, 8);
+              element.userId = userId;
+              element.supermercado = "Lista compartilhada";
               listasMercado.add(element);
-              //TestePrintMixin.printListaMercadoInfo(element);
-
               await db.salvarListaMercado(element, true);
-              print('Adicionado:::  ${element.uniqueKey}');
+              print('Lista compartilhada Adicionada:::  ${element.uniqueKey}');
             }
           }
-          isLoading = false;
+          setState(() {
+            isLoading = false;
+          });
         });
 
         //TestePrintMixin.returnFireBase(snapshot);

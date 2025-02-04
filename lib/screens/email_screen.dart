@@ -87,8 +87,8 @@ class _EmailScreenState extends State<EmailScreen> {
                 ElevatedButton(
                   style: ButtonStyle(
                     backgroundColor:
-                        MaterialStateProperty.all(Colors.deepPurple),
-                    foregroundColor: MaterialStateProperty.all(Colors.white),
+                        WidgetStateProperty.all(Colors.deepPurple),
+                    foregroundColor: WidgetStateProperty.all(Colors.white),
                   ),
                   onPressed: () {
                     if (_formKey.currentState?.validate() ?? false) {

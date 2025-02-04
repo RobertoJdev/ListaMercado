@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:lista_mercado/firebase/teste_envio_lista.dart';
 import 'package:lista_mercado/widgets/alerts/confirm_exit_list.dart';
 import 'package:lista_mercado/widgets/calculator.dart';
 

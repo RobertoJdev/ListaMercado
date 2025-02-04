@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-import 'package:lista_mercado/widgets/modals/confirm_share_email_screen.dart';
 
 // mixin CompartilharListaMixin {
 //   Future<void> compartilharLista({

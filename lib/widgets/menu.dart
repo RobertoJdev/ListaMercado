@@ -1,10 +1,8 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:lista_mercado/screens/email_screen.dart';
 import 'package:lista_mercado/util/app_info.dart';
 import 'package:lista_mercado/util/user_preferences.dart';
 import 'package:lista_mercado/widgets/alerts/donation_alert.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class Menu extends StatefulWidget {

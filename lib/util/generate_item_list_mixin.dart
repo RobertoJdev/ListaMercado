@@ -1,7 +1,5 @@
-import 'dart:ffi';
 import 'dart:math';
 
-import 'package:lista_mercado/models/categoria.dart';
 import 'package:lista_mercado/models/categorias.dart';
 import 'package:lista_mercado/models/lista_mercado.dart';
 import 'package:lista_mercado/models/produto.dart';

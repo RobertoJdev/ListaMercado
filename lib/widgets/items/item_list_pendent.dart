@@ -1,17 +1,12 @@
-import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
-import 'package:intl/intl.dart';
 import 'package:lista_mercado/models/categorias.dart';
 import 'package:lista_mercado/my_theme.dart';
 import 'package:lista_mercado/widgets/modals/confirm_edit_item_screen.dart';
-import 'package:lista_mercado/models/categoria.dart';
-import 'package:lista_mercado/widgets/items/item_list_confirmed.dart';
 import 'package:lista_mercado/models/produto.dart';
 import 'package:lista_mercado/util/format_value.dart';
 // Import necessário para gráficos
-import 'package:fl_chart/fl_chart.dart';
 import 'package:lista_mercado/widgets/modals/show_price_history_modal.dart';
 
 class ItemListPendent extends StatelessWidget {

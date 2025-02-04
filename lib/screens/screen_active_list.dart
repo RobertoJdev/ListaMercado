@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lista_mercado/firebase/enviar_lista_firestore.dart';
-import 'package:lista_mercado/widgets/decoration_list_bar.dart';
 import 'package:lista_mercado/widgets/items/item_list_pendent.dart';
 import 'package:lista_mercado/widgets/items/item_list_confirmed.dart';
-import 'package:lista_mercado/widgets/modals/confirm_edit_item_screen.dart';
 import 'package:lista_mercado/db/market_db.dart';
 import 'package:lista_mercado/models/lista_mercado.dart';
 import 'package:lista_mercado/models/produto.dart';
@@ -14,10 +12,8 @@ import 'package:lista_mercado/widgets/modals/new_item_screen.dart';
 import 'package:lista_mercado/screens/screen_listas_mercado.dart';
 import 'package:lista_mercado/util/data_util.dart';
 import 'package:lista_mercado/widgets/custom_app_bar.dart.dart';
-import 'package:flutter/services.dart';
 import 'package:uuid/uuid.dart';
 
-import '../widgets/alerts/confirm_exit_list.dart';
 
 class ScreenActiveList extends StatefulWidget {
   ScreenActiveList(this.listaMercado, {Key? key})

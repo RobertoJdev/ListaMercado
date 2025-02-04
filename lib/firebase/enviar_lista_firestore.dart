@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:lista_mercado/models/lista_mercado.dart';
 
 Future<void> enviarListaParaFirestore(ListaMercado listaMercado) async {
+  listaMercado.supermercado = "Lista compartilhada";
   try {
     // Referência à coleção "listasMercado" no Firestore
     CollectionReference listasMercado =

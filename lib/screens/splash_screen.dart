@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lista_mercado/screens/screen_listas_mercado.dart';
 import 'package:lista_mercado/util/app_info.dart';
-import 'package:path/path.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});

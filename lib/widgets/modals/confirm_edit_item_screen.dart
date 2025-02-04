@@ -17,8 +17,7 @@ Future<Produto> confirmEditItemScreen(
   TextEditingController textEditingControllerEditItemValor =
       TextEditingController(text: itemTemp.precoAtual.toString());
 
-  if (textEditingControllerEditItemValor.text == null ||
-      textEditingControllerEditItemValor.text == '0.0') {
+  if (textEditingControllerEditItemValor.text == '0.0') {
     textEditingControllerEditItemValor.text = '';
   }
 

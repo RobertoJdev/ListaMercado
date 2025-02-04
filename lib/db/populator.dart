@@ -1,7 +1,3 @@
-import 'dart:math';
-import 'package:lista_mercado/db/market_db.dart';
-import 'package:lista_mercado/models/lista_mercado.dart';
-import 'package:lista_mercado/models/produto.dart';
 
 class Populador {
   //List<Produto> produtos = [];
