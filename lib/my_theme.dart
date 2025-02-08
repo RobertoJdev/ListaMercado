@@ -67,8 +67,7 @@ class MyTheme {
     ),
 
     //accentColor: Colors.deepPurpleAccent,
-    colorScheme:
-        ColorScheme.fromSwatch().copyWith(secondary: Colors.deepPurpleAccent),
+    colorScheme: ColorScheme.fromSwatch().copyWith(secondary: Colors.deepPurpleAccent),
   );
 
   // Style utilizado na etiqueta da categoria do produto em pendente e confirmado.
@@ -144,35 +143,37 @@ class MyTheme {
     foregroundColor: WidgetStateProperty.all(Colors.white),
   );
 
-  static const EdgeInsets myCustomEdgeInsetsSpaceExtern =
-      EdgeInsets.only(bottom: 5);
+/*   static ButtonStyle iconsBar = ButtonStyle(
+    backgroundColor: WidgetStateProperty.all(Colors.deepPurple),
+    foregroundColor: WidgetStateProperty.all(Colors.white),
+    padding: WidgetStateProperty.all(EdgeInsets.zero),
+  ); */
 
-  static const EdgeInsets myCustomEdgeInsetsItemSpaceIntern =
-      EdgeInsets.symmetric(horizontal: 10, vertical: 13);
+  static final IconThemeData iconBarTheme = const IconThemeData(
+    color: Colors.white, // Cor padrão dos ícones
+    size: 24, // Tamanho dos ícones
+    
+  );
 
-  static const EdgeInsets myCustomEdgeInsetsItemSpaceInternRight =
-      EdgeInsets.only(right: 2);
+  static const EdgeInsets myCustomEdgeInsetsSpaceExtern = EdgeInsets.only(bottom: 5);
 
-  static const EdgeInsets myCustomEdgeInsetsItemSpaceInternRight2 =
-      EdgeInsets.only(right: 6);
+  static const EdgeInsets myCustomEdgeInsetsItemSpaceIntern = EdgeInsets.symmetric(horizontal: 10, vertical: 13);
 
-  static const EdgeInsets myCustomEdgeInsetsItemPrice =
-      EdgeInsets.only(top: 0, bottom: 0, left: 0, right: 12);
+  static const EdgeInsets myCustomEdgeInsetsItemSpaceInternRight = EdgeInsets.only(right: 2);
 
-  static const EdgeInsets myCustomEdgeInsetsItemPriceConfirmed =
-      EdgeInsets.only(top: 0, bottom: 0, left: 0, right: 5);
+  static const EdgeInsets myCustomEdgeInsetsItemSpaceInternRight2 = EdgeInsets.only(right: 6);
 
-  static const EdgeInsets myCustomEdgeInsetsItemSpaceInternCategoryProduct =
-      EdgeInsets.symmetric(horizontal: 6);
+  static const EdgeInsets myCustomEdgeInsetsItemPrice = EdgeInsets.only(top: 0, bottom: 0, left: 0, right: 12);
 
-  static const EdgeInsets myCustomEdgeInsetsTitleModal =
-      EdgeInsets.fromLTRB(0, 30, 0, 10);
+  static const EdgeInsets myCustomEdgeInsetsItemPriceConfirmed = EdgeInsets.only(top: 0, bottom: 0, left: 0, right: 5);
 
-  static const EdgeInsets myCustomEdgeInsetsTextFildItensModal =
-      EdgeInsets.fromLTRB(20, 4, 20, 4);
+  static const EdgeInsets myCustomEdgeInsetsItemSpaceInternCategoryProduct = EdgeInsets.symmetric(horizontal: 6);
 
-  static const EdgeInsets myCustomEdgeInsetsButtomModal =
-      EdgeInsets.symmetric(vertical: 10);
+  static const EdgeInsets myCustomEdgeInsetsTitleModal = EdgeInsets.fromLTRB(0, 30, 0, 10);
+
+  static const EdgeInsets myCustomEdgeInsetsTextFildItensModal = EdgeInsets.fromLTRB(20, 4, 20, 4);
+
+  static const EdgeInsets myCustomEdgeInsetsButtomModal = EdgeInsets.symmetric(vertical: 10);
 
   static Color? modalColorBackground = Colors.grey[200];
 

@@ -31,7 +31,8 @@ class _ActiveListState extends State<ScreenActiveList> with TickerProviderStateM
 
   List<Produto> listItensPendent = [];
   List<Produto> listItensConfirmed = [];
-  List<Produto> filteredList = [];
+  List<Produto> filteredListPendent = [];
+  List<Produto> filteredListConfirmed = [];
 
   final MarketDB db = MarketDB();
   //late bool listaAberta;
@@ -61,33 +62,13 @@ class _ActiveListState extends State<ScreenActiveList> with TickerProviderStateM
     }
   }
 
-/*   @override
-  void initState() {
-    super.initState();
-    db.initDB();
-    abrirListaMercado(widget.listaMercado);
-    _animationController = AnimationController(vsync: this, duration: Duration(milliseconds: 100));
-    //testeExibirListaItems();
-    // Inicie com a lista de itens que faltam expandida
-    //isListPendentExpanded = true;
-    //isListConfirmedExpanded = false;
-    // Se lista pendente estiver vazia, inicie a lista confirmada expandida
-    if (listItensPendent.isEmpty) {
-      isListConfirmedExpanded = listItensPendent.isEmpty;
-      isListPendentExpanded = false;
-    } else {
-      isListConfirmedExpanded = listItensPendent.isEmpty;
-      isListPendentExpanded = true;
-    }
-  } */
-
   @override
   Widget build(BuildContext context) {
     totalValue = somarList(listItensConfirmed).toStringAsFixed(2);
 
     return Scaffold(
       //key: activeListKey,
-      appBar: CustomAppBar(
+      appBar: CustomAppBar(        
         title: 'Itens da Lista',
         screenReturn: true,
         showShareButton: true,
@@ -143,7 +124,7 @@ class _ActiveListState extends State<ScreenActiveList> with TickerProviderStateM
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
                           padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                          itemCount: filteredList.length,
+                          itemCount: filteredListPendent.length,
                           itemBuilder: (BuildContext context, int index) {
                             return Dismissible(
                               key: UniqueKey(),
@@ -154,7 +135,7 @@ class _ActiveListState extends State<ScreenActiveList> with TickerProviderStateM
                                   bool? confirm = await confirmDeleteItemList(context);
                                   setState(() {
                                     if (confirm!) {
-                                      excluirItem(widget.listaMercado, filteredList[index]);
+                                      excluirItem(widget.listaMercado, filteredListPendent[index]);
                                     }
                                   });
                                   return false;
@@ -163,8 +144,8 @@ class _ActiveListState extends State<ScreenActiveList> with TickerProviderStateM
                               },
                               onDismissed: (direction) async {
                                 if (direction == DismissDirection.startToEnd) {
-                                  filteredList[index].pendente = false;
-                                  moveItemToConfirmedList(filteredList[index]);
+                                  filteredListPendent[index].pendente = false;
+                                  moveItemToConfirmedList(filteredListPendent[index]);
                                 } else if (direction == DismissDirection.endToStart) {}
                               },
                               // demais propriedades do Dismissible
@@ -187,7 +168,7 @@ class _ActiveListState extends State<ScreenActiveList> with TickerProviderStateM
                                 ),
                               ),
                               child: ItemListPendent(
-                                item: filteredList[index],
+                                item: filteredListPendent[index],
                                 moveCallback: moveItemToConfirmedList,
                               ),
                             );
@@ -215,20 +196,20 @@ class _ActiveListState extends State<ScreenActiveList> with TickerProviderStateM
                           shrinkWrap: true,
                           physics: NeverScrollableScrollPhysics(),
                           padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                          itemCount: listItensConfirmed.length,
+                          itemCount: filteredListConfirmed.length,
                           itemBuilder: (BuildContext context, int index) {
                             return Dismissible(
                               key: UniqueKey(),
                               direction: DismissDirection.horizontal,
                               onDismissed: (direction) async {
                                 if (direction == DismissDirection.startToEnd) {
-                                  listItensConfirmed[index].pendente = true;
-                                  moveItemToPendentList(listItensConfirmed[index]);
+                                  filteredListConfirmed[index].pendente = true;
+                                  moveItemToPendentList(filteredListConfirmed[index]);
                                 } else if (direction == DismissDirection.endToStart) {
                                   bool? confirm = await confirmDeleteItemList(context);
                                   setState(() {
                                     if (confirm!) {
-                                      excluirItem(widget.listaMercado, listItensConfirmed[index]);
+                                      excluirItem(widget.listaMercado, filteredListConfirmed[index]);
                                     }
                                   });
                                 }
@@ -252,7 +233,7 @@ class _ActiveListState extends State<ScreenActiveList> with TickerProviderStateM
                                 ),
                               ),
                               child: ItemListConfirmed(
-                                item: listItensConfirmed[index],
+                                item: filteredListConfirmed[index],
                                 moveCallback: moveItemToPendentList,
                               ),
                             );
@@ -355,8 +336,9 @@ class _ActiveListState extends State<ScreenActiveList> with TickerProviderStateM
     //db.printAllItems();
     setState(() {
       if (!item.pendente) {
-        filteredList.remove(item);
-        //item.pendente = false;
+        filteredListPendent.remove(item);
+        filteredListConfirmed.add(item);
+
         listItensPendent.remove(item);
         listItensConfirmed.add(item);
       }
@@ -376,9 +358,10 @@ class _ActiveListState extends State<ScreenActiveList> with TickerProviderStateM
       if (item.precoAtual == 0.0 || item.pendente == true) {
         item.precoAtual = 0.0;
         item.pendente = true;
+        filteredListConfirmed.remove(item);
+        filteredListPendent.add(item);
         listItensConfirmed.remove(item);
         listItensPendent.add(item);
-        filteredList.add(item);
       }
     });
     if (listItensConfirmed.isEmpty) {
@@ -394,9 +377,10 @@ class _ActiveListState extends State<ScreenActiveList> with TickerProviderStateM
     setState(() {
       if (item.pendente) {
         listItensPendent.remove(item);
-        filteredList.remove(item);
+        filteredListPendent.remove(item);
       } else {
         listItensConfirmed.remove(item);
+        filteredListConfirmed.remove(item);
       }
     });
     db.apagarProdutoDaLista(listaMercado, item);
@@ -531,18 +515,24 @@ class _ActiveListState extends State<ScreenActiveList> with TickerProviderStateM
     if (email != null) {
       return email;
     }
-    return ''; // Ou qualquer valor padrão que represente o "não compartilhado"
+    return '';
   }
 
   ///Retorna uma lista filtrada pela query passada como parâmetro.
   void _filterItems(String query) {
     setState(() {
-      if (query.isEmpty || query == '') {
-        filteredList = [...listItensPendent, ...listItensConfirmed];
+      if (query.isEmpty) {
+        // Se a pesquisa estiver vazia, mostra todos os itens
+        filteredListPendent = [...listItensPendent]; // Mantém a lista de itens pendentes sem filtro
+        filteredListConfirmed = [...listItensConfirmed]; // Mantém a lista de itens confirmados sem filtro
       } else {
-        filteredList = [...listItensPendent, ...listItensConfirmed]
-            .where((item) => item.descricao.toLowerCase().contains(query.toLowerCase()))
-            .toList();
+        // Filtra os itens pendentes com base na pesquisa
+        filteredListPendent =
+            listItensPendent.where((item) => item.descricao.toLowerCase().contains(query.toLowerCase())).toList();
+
+        // Filtra os itens confirmados com base na pesquisa
+        filteredListConfirmed =
+            listItensConfirmed.where((item) => item.descricao.toLowerCase().contains(query.toLowerCase())).toList();
       }
     });
   }

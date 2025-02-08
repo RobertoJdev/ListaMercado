@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:lista_mercado/my_theme.dart';
 import 'package:lista_mercado/widgets/alerts/confirm_exit_list.dart';
 import 'package:lista_mercado/widgets/calculator.dart';
 
@@ -58,11 +59,16 @@ class _CustomAppBarState extends State<CustomAppBar> {
         ),
       ),
       child: AppBar(
+        //toolbarHeight: 50, // Reduz altura total da AppBar
+        titleSpacing: 0, // Remove espaçamento padrão do título
+        //iconTheme: MyTheme.iconBarTheme,
         backgroundColor: Colors.transparent,
         foregroundColor: Colors.white,
         centerTitle: true,
         leading: widget.screenReturn
             ? IconButton(
+                padding: const EdgeInsets.all(0),
+                visualDensity: VisualDensity.compact,
                 icon: const Icon(Icons.arrow_back),
                 onPressed: () async {
                   final shouldSave = await showDialog<bool>(
@@ -83,18 +89,19 @@ class _CustomAppBarState extends State<CustomAppBar> {
           duration: const Duration(milliseconds: 300),
           child: isSearching
               ? AnimatedContainer(
+                  //margin: EdgeInsets.zero, // Remove margem externa
+                  //padding: EdgeInsets.zero, // Remove padding interno
+                  //padding: EdgeInsets.zero,
+                  //margin: EdgeInsets.zero,
                   duration: const Duration(milliseconds: 300),
-                  width: MediaQuery.of(context).size.width * 0.7,
+                  width: MediaQuery.of(context).size.width * 0.85,
                   height: 40,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
                   child: TextField(
                     controller: searchController,
                     focusNode: searchFocusNode, // Adicione o FocusNode aqui
                     onChanged: widget.onSearchChanged,
                     decoration: InputDecoration(
+                      //margin: EdgeInsets.zero
                       contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
                       hintText: 'Pesquisar...',
                       hintStyle: const TextStyle(color: Colors.grey),
@@ -111,7 +118,8 @@ class _CustomAppBarState extends State<CustomAppBar> {
         actions: [
           if (widget.showShareButton)
             IconButton(
-              padding: const EdgeInsets.all(5),
+              padding: const EdgeInsets.only(left: 8),
+              visualDensity: VisualDensity.compact,
               icon: Icon(isSearching ? Icons.close : Icons.search),
               onPressed: () {
                 setState(() {
@@ -130,14 +138,20 @@ class _CustomAppBarState extends State<CustomAppBar> {
             ),
           if (widget.showShareButton)
             IconButton(
-              padding: const EdgeInsets.all(5),
+              //padding: const EdgeInsets.only(right: 4),
+              visualDensity: VisualDensity.compact,
               onPressed: widget.onSharePressed,
-              icon: const Icon(Icons.share),
+              icon: const Icon(
+                Icons.share,
+              ),
             ),
           IconButton(
-            padding: const EdgeInsets.only(right: 10),
+            visualDensity: VisualDensity.compact,
+            padding: const EdgeInsets.only(right: 8),
             onPressed: () => calculator(context),
-            icon: const Icon(Icons.calculate_outlined),
+            icon: const Icon(
+              Icons.calculate_outlined,
+            ),
           ),
         ],
       ),
