@@ -14,10 +14,8 @@ import 'package:lista_mercado/util/data_util.dart';
 import 'package:lista_mercado/widgets/custom_app_bar.dart.dart';
 import 'package:uuid/uuid.dart';
 
-
 class ScreenActiveList extends StatefulWidget {
-  ScreenActiveList(this.listaMercado, {Key? key})
-      : super(key: key ?? activeListKey);
+  ScreenActiveList(this.listaMercado, {Key? key}) : super(key: key ?? activeListKey);
 
   //ScreenActiveList(this.listaMercado, {Key? key}) : super(key: key);
   final ListaMercado listaMercado;
@@ -28,12 +26,13 @@ class ScreenActiveList extends StatefulWidget {
 
 final GlobalKey<_ActiveListState> activeListKey = GlobalKey<_ActiveListState>();
 
-class _ActiveListState extends State<ScreenActiveList>
-    with TickerProviderStateMixin {
-  late final TextEditingController _textEditingController =
-      TextEditingController();
+class _ActiveListState extends State<ScreenActiveList> with TickerProviderStateMixin {
+  late final TextEditingController _textEditingController = TextEditingController();
+
   List<Produto> listItensPendent = [];
   List<Produto> listItensConfirmed = [];
+  List<Produto> filteredList = [];
+
   final MarketDB db = MarketDB();
   //late bool listaAberta;
 
@@ -48,10 +47,26 @@ class _ActiveListState extends State<ScreenActiveList>
     super.initState();
     db.initDB();
     abrirListaMercado(widget.listaMercado);
-    _animationController = AnimationController(
-      vsync: this,
-      duration: Duration(milliseconds: 100),
-    );
+
+    _animationController = AnimationController(vsync: this, duration: Duration(milliseconds: 100));
+
+    _filterItems(""); // Inicializa com todos os itens visíveis
+
+    if (listItensPendent.isEmpty) {
+      isListConfirmedExpanded = listItensPendent.isEmpty;
+      isListPendentExpanded = false;
+    } else {
+      isListConfirmedExpanded = listItensPendent.isEmpty;
+      isListPendentExpanded = true;
+    }
+  }
+
+/*   @override
+  void initState() {
+    super.initState();
+    db.initDB();
+    abrirListaMercado(widget.listaMercado);
+    _animationController = AnimationController(vsync: this, duration: Duration(milliseconds: 100));
     //testeExibirListaItems();
     // Inicie com a lista de itens que faltam expandida
     //isListPendentExpanded = true;
@@ -64,7 +79,7 @@ class _ActiveListState extends State<ScreenActiveList>
       isListConfirmedExpanded = listItensPendent.isEmpty;
       isListPendentExpanded = true;
     }
-  }
+  } */
 
   @override
   Widget build(BuildContext context) {
@@ -78,43 +93,13 @@ class _ActiveListState extends State<ScreenActiveList>
         showShareButton: true,
         onSharePressed: compartilharLista,
         onSave: salvarListaTemp,
+        onSearchChanged: _filterItems,
       ),
 
       body: PopScope(
         canPop: false,
         onPopInvokedWithResult: (bool didPop, dynamic result) async {
           //print('onPopInvokedWithResult chamado'); // Confirmação do evento
-
-/*
-          // Chama o diálogo e aguarda a resposta
-          final shouldSave = await showDialog<bool>(
-            context: context,
-            builder: (context) => const ConfirmExitDialog(),
-          );
-
-           // Lógica com base no retorno do diálogo
-          if (shouldSave == true) {
-            print('Salvando lista...');
-            if (activeListKey.currentState != null) {
-              activeListKey.currentState!.salvarListaTemp();
-            }
-            Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => const ScreenListasMercado()),
-              (route) => false,
-            );
-          } else if (shouldSave == false) {
-            print('Descartando lista e voltando...');
-            Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => const ScreenListasMercado()),
-              (route) => false,
-            );
-          } else {
-            print('Usuário fechou o diálogo sem ação.');
-          } */
         },
         child: Stack(
           children: [
@@ -147,12 +132,10 @@ class _ActiveListState extends State<ScreenActiveList>
                         isExpanded: isListPendentExpanded,
                         headerBuilder: (context, isExpanded) {
                           return const ListTile(
-                            leading: Icon(Icons.checklist,
-                                color: Color.fromARGB(255, 202, 13, 0)),
+                            leading: Icon(Icons.checklist, color: Color.fromARGB(255, 202, 13, 0)),
                             title: Text(
                               'Itens que faltam',
-                              style: TextStyle(
-                                  color: Color.fromARGB(255, 202, 13, 0)),
+                              style: TextStyle(color: Color.fromARGB(255, 202, 13, 0)),
                             ),
                           );
                         },
@@ -160,21 +143,18 @@ class _ActiveListState extends State<ScreenActiveList>
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
                           padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                          itemCount: listItensPendent.length,
+                          itemCount: filteredList.length,
                           itemBuilder: (BuildContext context, int index) {
                             return Dismissible(
                               key: UniqueKey(),
                               confirmDismiss: (direction) async {
                                 if (direction == DismissDirection.startToEnd) {
                                   return true; // ou implemente uma confirmação específica se necessário
-                                } else if (direction ==
-                                    DismissDirection.endToStart) {
-                                  bool? confirm =
-                                      await confirmDeleteItemList(context);
+                                } else if (direction == DismissDirection.endToStart) {
+                                  bool? confirm = await confirmDeleteItemList(context);
                                   setState(() {
                                     if (confirm!) {
-                                      excluirItem(widget.listaMercado,
-                                          listItensPendent[index]);
+                                      excluirItem(widget.listaMercado, filteredList[index]);
                                     }
                                   });
                                   return false;
@@ -183,11 +163,9 @@ class _ActiveListState extends State<ScreenActiveList>
                               },
                               onDismissed: (direction) async {
                                 if (direction == DismissDirection.startToEnd) {
-                                  listItensPendent[index].pendente = false;
-                                  moveItemToConfirmedList(
-                                      listItensPendent[index]);
-                                } else if (direction ==
-                                    DismissDirection.endToStart) {}
+                                  filteredList[index].pendente = false;
+                                  moveItemToConfirmedList(filteredList[index]);
+                                } else if (direction == DismissDirection.endToStart) {}
                               },
                               // demais propriedades do Dismissible
                               background: Container(
@@ -209,7 +187,7 @@ class _ActiveListState extends State<ScreenActiveList>
                                 ),
                               ),
                               child: ItemListPendent(
-                                item: listItensPendent[index],
+                                item: filteredList[index],
                                 moveCallback: moveItemToConfirmedList,
                               ),
                             );
@@ -245,16 +223,12 @@ class _ActiveListState extends State<ScreenActiveList>
                               onDismissed: (direction) async {
                                 if (direction == DismissDirection.startToEnd) {
                                   listItensConfirmed[index].pendente = true;
-                                  moveItemToPendentList(
-                                      listItensConfirmed[index]);
-                                } else if (direction ==
-                                    DismissDirection.endToStart) {
-                                  bool? confirm =
-                                      await confirmDeleteItemList(context);
+                                  moveItemToPendentList(listItensConfirmed[index]);
+                                } else if (direction == DismissDirection.endToStart) {
+                                  bool? confirm = await confirmDeleteItemList(context);
                                   setState(() {
                                     if (confirm!) {
-                                      excluirItem(widget.listaMercado,
-                                          listItensConfirmed[index]);
+                                      excluirItem(widget.listaMercado, listItensConfirmed[index]);
                                     }
                                   });
                                 }
@@ -380,7 +354,8 @@ class _ActiveListState extends State<ScreenActiveList>
   void moveItemToConfirmedList(Produto item) {
     //db.printAllItems();
     setState(() {
-      if (item.pendente == false) {
+      if (!item.pendente) {
+        filteredList.remove(item);
         //item.pendente = false;
         listItensPendent.remove(item);
         listItensConfirmed.add(item);
@@ -403,6 +378,7 @@ class _ActiveListState extends State<ScreenActiveList>
         item.pendente = true;
         listItensConfirmed.remove(item);
         listItensPendent.add(item);
+        filteredList.add(item);
       }
     });
     if (listItensConfirmed.isEmpty) {
@@ -412,6 +388,18 @@ class _ActiveListState extends State<ScreenActiveList>
         isListConfirmedExpanded = false;
       });
     }
+  }
+
+  void excluirItem(ListaMercado listaMercado, Produto item) {
+    setState(() {
+      if (item.pendente) {
+        listItensPendent.remove(item);
+        filteredList.remove(item);
+      } else {
+        listItensConfirmed.remove(item);
+      }
+    });
+    db.apagarProdutoDaLista(listaMercado, item);
   }
 
   double somarList(List<Produto> produtos) {
@@ -470,17 +458,6 @@ class _ActiveListState extends State<ScreenActiveList>
         listItensConfirmed.add(element);
       }
     }
-  }
-
-  void excluirItem(ListaMercado listaMercado, Produto produto) {
-    setState(() {
-      if (produto.pendente) {
-        listItensPendent.remove(produto);
-      } else {
-        listItensConfirmed.remove(produto);
-      }
-    });
-    db.apagarProdutoDaLista(listaMercado, produto);
   }
 
   Future adicionarNovoItem() async {
@@ -549,12 +526,24 @@ class _ActiveListState extends State<ScreenActiveList>
     }
   }
 
-  _abrirModalCompartilharEmail(BuildContext context) async {
+  Future<String> _abrirModalCompartilharEmail(BuildContext context) async {
     final email = await confirmShareEmailScreen(context: context);
     if (email != null) {
       return email;
     }
-    print('teste de compartilhamento: valor do compartilhamento');
-    print(widget.listaMercado.isShared);
+    return ''; // Ou qualquer valor padrão que represente o "não compartilhado"
+  }
+
+  ///Retorna uma lista filtrada pela query passada como parâmetro.
+  void _filterItems(String query) {
+    setState(() {
+      if (query.isEmpty || query == '') {
+        filteredList = [...listItensPendent, ...listItensConfirmed];
+      } else {
+        filteredList = [...listItensPendent, ...listItensConfirmed]
+            .where((item) => item.descricao.toLowerCase().contains(query.toLowerCase()))
+            .toList();
+      }
+    });
   }
 }
