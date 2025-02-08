@@ -11,7 +11,7 @@ class UserPreferences {
   // Inicializa as preferências e verifica o e-mail
   static Future<void> init(BuildContext context) async {
     _prefs = await SharedPreferences.getInstance();
-    checkAndGetEmail(context);
+    await checkAndGetEmail(context);
     //String email = getEmail() as String;
     //if (email.isEmpty) {
     //  await openEmailScreen(context);

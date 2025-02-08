@@ -42,7 +42,13 @@ class _listasMercadoState extends State<ScreenListasMercado> {
     await _loadSharedPrefs();
     await _initializeDB();
     isLoading = true;
+    print(
+        'Chamda do metodo carregar lista compartilahda. 8888888888888888888888 1');
     await _carregarListasCompartilhadas();
+    print(
+        'Saida do metodo carregar lista compartilahda. 8888888888888888888888 1');
+
+    setState(() {}); // Garante atualização da tela
   }
 
 // Método para inicializar preferências de forma assíncrona
@@ -53,6 +59,7 @@ class _listasMercadoState extends State<ScreenListasMercado> {
   }
 
   Future<void> _carregarListasCompartilhadas() async {
+    print("Chamando _carregarListasCompartilhadas");
     if (email.isNotEmpty) {
       try {
         final snapshot = await FirebaseFirestore.instance
@@ -60,54 +67,50 @@ class _listasMercadoState extends State<ScreenListasMercado> {
             .where('sharedWithEmail', isEqualTo: email)
             .get();
 
-        //print('++++++++++++++++++++++++++++++++++++++++++++++++++++++');
-
         List<ListaMercado?> listasCompartilhadas = snapshot.docs
             .map((doc) {
               try {
-                ListaMercado temp = ListaMercado.fromMap(doc.data());
-                return temp;
+                return ListaMercado.fromMap(doc.data());
               } catch (e) {
                 print("Erro ao carregar listas compartilhadas no map: $e");
-                return null; // ou pode optar por retornar um objeto default
+                return null;
               }
             })
             .where((element) => element != null)
-            .toList(); // Filtra os valores nulos, se houver
+            .toList();
 
-        setState(() async {
-          bool addList;
-          for (var element in listasCompartilhadas) {
-            addList = true;
-            print('Key do Firebase: ${element?.uniqueKey}');
+        bool houveMudanca = false;
 
-            //percorre as listas Locais do dispositivo e compara com as listas compartilhadas.
-            for (var elementLocal in listasMercado) {
-              print('Keys retornadas da Base:  ${elementLocal.uniqueKey}');
-              if (element?.uniqueKey == elementLocal.uniqueKey) {
-                print('A lista já existe na base.');
-                addList = false;
-                break;
-              }
-            }
+        for (var element in listasCompartilhadas) {
+          bool addList = true;
 
-            if (addList && element != null) {
-              //print("++++++++++teste de if para salvar ++++++++++++++++++++++++");
-              element.id = Random().nextInt(100);
-              element.finalizada = true;
-              element.userId = userId;
-              element.supermercado = "Lista compartilhada";
-              listasMercado.add(element);
-              await db.salvarListaMercado(element, true);
-              print('Lista compartilhada Adicionada:::  ${element.uniqueKey}');
+          for (var elementLocal in listasMercado) {
+            if (element?.uniqueKey == elementLocal.uniqueKey) {
+              addList = false;
+              break;
             }
           }
-          setState(() {
-            isLoading = false;
-          });
-        });
 
-        //TestePrintMixin.returnFireBase(snapshot);
+          if (addList && element != null) {
+            element.id = Random().nextInt(100);
+            element.finalizada = true;
+            element.userId = userId;
+            element.supermercado = "Lista compartilhada";
+
+            int returnCompart = await db.salvarListaMercado(element, true);
+            print('id do salvamento da lista compartilhada: $returnCompart');
+            print('Lista compartilhada Adicionada:::  ${element.uniqueKey}');
+            houveMudanca = true;
+          }
+        }
+
+        if (houveMudanca) {
+          listasMercado = await db.getTodasListasMercado();
+          print("Atualizando UI com novas listas");
+          setState(() {
+            listasMercado = List.from(listasMercado);
+          });
+        }
       } catch (e) {
         print("Erro ao carregar listas compartilhadas:: $e");
       }
