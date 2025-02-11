@@ -450,12 +450,14 @@ class _ActiveListState extends State<ScreenActiveList> with TickerProviderStateM
     if (temp != null && temp.precoAtual == 0.0) {
       db.inserirItem(widget.listaMercado, temp);
       listItensPendent.add(temp);
+      filteredListPendent.add(temp);
       setState(() {
         listItensPendent = Produto.ordenarItens(listItensPendent);
       });
     } else if (temp?.precoAtual != 0.0) {
       db.inserirItem(widget.listaMercado, temp!);
       listItensConfirmed.add(temp);
+      filteredListConfirmed.add(temp);
       setState(() {
         listItensConfirmed = Produto.ordenarItens(listItensConfirmed);
       });
